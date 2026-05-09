@@ -1,0 +1,330 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+ 
+        .admin-sidebar {
+          width: 260px;
+          flex-shrink: 0;
+          min-height: 100vh;
+          background: #0d0f14;
+          border-right: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          flex-direction: column;
+          font-family: 'DM Sans', sans-serif;
+          position: relative;
+          overflow: hidden;
+        }
+ 
+        .admin-sidebar::before {
+          content: '';
+          position: absolute;
+          top: -80px;
+          left: -80px;
+          width: 260px;
+          height: 260px;
+          background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+ 
+        .admin-sidebar::after {
+          content: '';
+          position: absolute;
+          bottom: 40px;
+          right: -60px;
+          width: 180px;
+          height: 180px;
+          background: radial-gradient(circle, rgba(16, 185, 129, 0.07) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+ 
+        .sidebar-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+ 
+        /* Brand */
+        .sidebar-brand {
+          padding: 24px 20px 20px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+ 
+        .brand-button {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          text-decoration: none;
+        }
+ 
+        .brand-logo {
+          width: 38px;
+          height: 38px;
+          background: linear-gradient(135deg, #6366f1, #4f46e5);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          flex-shrink: 0;
+        }
+ 
+        .brand-button:hover .brand-logo {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(99,102,241,0.5);
+        }
+ 
+        .brand-logo i {
+          font-size: 17px;
+          color: #fff;
+        }
+ 
+        .brand-text {
+          font-size: 15px;
+          font-weight: 700;
+          color: #fff;
+          letter-spacing: -0.3px;
+        }
+ 
+        .brand-tagline {
+          font-size: 10px;
+          color: rgba(255,255,255,0.35);
+          font-weight: 400;
+          margin-top: 1px;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+        }
+ 
+        /* Status indicator */
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          background: #10b981;
+          border-radius: 50%;
+          margin-left: auto;
+          box-shadow: 0 0 8px rgba(16,185,129,0.6);
+          animation: pulse-dot 2s infinite;
+        }
+ 
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+ 
+        /* Section label */
+        .nav-section-label {
+          font-size: 10px;
+          font-weight: 600;
+          color: rgba(255,255,255,0.25);
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+          padding: 0 16px;
+          margin: 20px 0 8px;
+        }
+ 
+        /* Nav item */
+        .nav-pill-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          padding: 10px 14px;
+          border-radius: 10px;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.18s ease;
+          background: transparent;
+          color: rgba(255,255,255,0.45);
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13.5px;
+          font-weight: 500;
+          position: relative;
+        }
+ 
+        .nav-pill-item:hover:not(.active) {
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.75);
+        }
+ 
+        .nav-pill-item.active {
+          background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(79,70,229,0.1));
+          color: #fff;
+          border: 1px solid rgba(99,102,241,0.3);
+        }
+ 
+        .nav-pill-item.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 3px;
+          height: 60%;
+          background: linear-gradient(180deg, #818cf8, #6366f1);
+          border-radius: 0 3px 3px 0;
+        }
+ 
+        .nav-icon-wrap {
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 7px;
+          flex-shrink: 0;
+          transition: background 0.18s ease;
+        }
+ 
+        .nav-pill-item.active .nav-icon-wrap {
+          background: rgba(99,102,241,0.25);
+        }
+ 
+        .nav-pill-item:hover:not(.active) .nav-icon-wrap {
+          background: rgba(255,255,255,0.06);
+        }
+ 
+        .nav-icon-wrap i {
+          font-size: 14px;
+        }
+ 
+        .nav-pill-item.active .nav-icon-wrap i {
+          color: #818cf8;
+        }
+ 
+        .nav-label {
+          flex: 1;
+        }
+ 
+        /* Badge */
+        .nav-badge {
+          font-size: 10px;
+          font-weight: 600;
+          padding: 2px 7px;
+          border-radius: 20px;
+          background: rgba(99,102,241,0.25);
+          color: #818cf8;
+          letter-spacing: 0.2px;
+          line-height: 1.5;
+        }
+ 
+        .nav-pill-item.active .nav-badge {
+          background: rgba(99,102,241,0.35);
+        }
+ 
+        /* Chevron */
+        .nav-chevron {
+          font-size: 11px;
+          color: rgba(255,255,255,0.3);
+          margin-left: 2px;
+        }
+ 
+        /* Divider */
+        .sidebar-divider {
+          height: 1px;
+          background: rgba(255,255,255,0.06);
+          margin: 12px 16px;
+        }
+ 
+        /* Footer */
+        .sidebar-footer {
+          border-top: 1px solid rgba(255,255,255,0.06);
+          padding: 16px;
+          margin-top: auto;
+        }
+ 
+        .user-card {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 10px;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.03);
+          margin-bottom: 8px;
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+ 
+        .user-avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 9px;
+          background: linear-gradient(135deg, #6366f1, #4f46e5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          font-weight: 700;
+          color: #fff;
+          flex-shrink: 0;
+          letter-spacing: 0.5px;
+        }
+ 
+        .user-info {
+          overflow: hidden;
+          flex: 1;
+        }
+ 
+        .user-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+ 
+        .user-email {
+          font-size: 11px;
+          color: rgba(255,255,255,0.35);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+ 
+        .user-options {
+          color: rgba(255,255,255,0.25);
+          font-size: 14px;
+          cursor: pointer;
+          padding: 2px;
+          transition: color 0.15s;
+        }
+ 
+        .user-options:hover {
+          color: rgba(255,255,255,0.6);
+        }
+ 
+        /* Logout */
+        .logout-button {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 9px 14px;
+          border-radius: 9px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          color: rgba(248, 113, 113, 0.7);
+          transition: all 0.18s ease;
+        }
+ 
+        .logout-button:hover {
+          background: rgba(239, 68, 68, 0.1);
+          color: #f87171;
+        }
+ 
+        .logout-button i {
+          font-size: 15px;
+          width: 20px;
+          text-align: center;
+        }
+      

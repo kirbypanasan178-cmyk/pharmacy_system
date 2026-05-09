@@ -1,0 +1,1 @@
+export type ValidationErrors = Partial<Record<string, string>>;
