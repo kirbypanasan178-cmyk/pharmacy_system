@@ -21,8 +21,8 @@ const productSchema = new Schema ({
         default: ""
     },
     category: {
-        type: String,
-        default: "General",
+        type: Schema.Types.ObjectId,
+        ref: "Category",
         trim: true
     },
     stock: {

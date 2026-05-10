@@ -28,7 +28,7 @@ export const getProductService = async (id: string) => {
 
 export const getAllProductsService = async () => {
     try {
-        const products = await Product.find()
+        const products = await Product.find().populate("category")
         return products
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Failed to get all products")
