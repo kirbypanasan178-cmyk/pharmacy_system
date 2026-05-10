@@ -3,11 +3,10 @@ import type { SignupFormType } from "../../types/user";
 import { Label } from "../ui/Label";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
-import { userValidation } from "../../validators/auth";
 import { ErrorLabel } from "../ui/errorLabel";
 import { useSignupUser } from "../../hooks/useSignupUser";
 import "../../css/SignupForm.css";
-import type { ValidationErrors } from "../../types/validation";
+import { signupValidation, type ValidationErrorsSignup } from "../../validators/signup";
 
 const PharmacyIcon = () => (
   <svg viewBox="0 0 24 24">
@@ -37,7 +36,7 @@ export const SignupForm: React.FC = () => {
     confirmPassword: "",
   });
 
-  const [error, setError] = useState<ValidationErrors>({});
+  const [error, setError] = useState<ValidationErrorsSignup>({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,7 +46,7 @@ export const SignupForm: React.FC = () => {
     e.preventDefault();
     setSubmitted(true);
 
-    const newErrors = userValidation(form);
+    const newErrors = signupValidation(form);
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);
@@ -86,15 +85,15 @@ export const SignupForm: React.FC = () => {
       const updatedForm = addressFields.includes(id)
         ? { ...form, address: { ...form.address, [id]: value } }
         : { ...form, [id]: id === "age" ? Number(value) || 0 : value };
-      setError(userValidation(updatedForm));
+      setError(signupValidation(updatedForm));
     }
   };
 
   // Helper: add input-error class when field has an error after submit
-  const inputClass = (field: keyof ValidationErrors) =>
+  const inputClass = (field: keyof ValidationErrorsSignup) =>
     `signup-input${submitted && error?.[field] ? " input-error" : ""}`;
 
-  const selectClass = (field: keyof ValidationErrors) =>
+  const selectClass = (field: keyof ValidationErrorsSignup) =>
     `signup-select${submitted && error?.[field] ? " input-error" : ""}`;
 
   return (

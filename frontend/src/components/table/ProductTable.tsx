@@ -1,42 +1,39 @@
-import { useEffect } from "react"
-import { useAppSelector } from "../../hooks/redux/reduxHooks"
-import { useGetAllProduct } from "../../hooks/useGetAllProduct"
-import type { ProductFormTypeProps } from "../../types/product"
-import { useDeleteProduct } from "../../hooks/useDeleteProduct"
+import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import type { ProductFormTypeProps } from "../../types/product";
+import { useDeleteProduct } from "../../hooks/product/useDeleteProduct";
 
 const stockStatus = (qty: number) => {
-  if (qty === 0) return { cls: "out-of-stock", label: "Out of stock" }
-  if (qty <= 5)  return { cls: "low-stock",    label: `Low (${qty})` }
-  return               { cls: "in-stock",      label: qty.toString() }
-}
+  if (qty === 0) return { cls: "out-of-stock", label: "Out of stock" };
+  if (qty <= 5) return { cls: "low-stock", label: `Low (${qty})` };
+  return { cls: "in-stock", label: qty.toString() };
+};
 
-export const ProductTable = ({ setEditingId, setForm, editingId }: ProductFormTypeProps) => {
-  const products = useAppSelector((state) => state.product.products)
-  const { getAllProduct } = useGetAllProduct()
-  const { deleteProduct } = useDeleteProduct()
-
-  useEffect(() => {
-    getAllProduct()
-  }, [])
+export const ProductTable = ({
+  setEditingId,
+  setForm,
+  editingId,
+}: ProductFormTypeProps) => {
+  const products = useAppSelector((state) => state.product.products);
+  const { deleteProduct } = useDeleteProduct();
 
   const handleEdit = (prod: any) => {
-    setEditingId(prod._id)
+    setEditingId(prod._id);
     setForm({
-      name:        prod.name,
-      price:       prod.price,
+      name: prod.name,
+      price: prod.price,
       description: prod.description ?? "",
-      image:       prod.image ?? "",
-      category:    prod.category,
-      stock:       prod.stock,
-    })
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+      image: prod.image ?? "",
+      category: prod.category,
+      stock: prod.stock,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Delete this product? This action cannot be undone.")) {
-      await deleteProduct(id)
+      await deleteProduct(id);
     }
-  }
+  };
 
   return (
     <div className="product-table-card">
@@ -84,13 +81,15 @@ export const ProductTable = ({ setEditingId, setForm, editingId }: ProductFormTy
                 <td colSpan={6}>
                   <div className="table-empty">
                     <div className="table-empty-icon">📭</div>
-                    <p className="table-empty-text">No products yet. Create one above!</p>
+                    <p className="table-empty-text">
+                      No products yet. Create one above!
+                    </p>
                   </div>
                 </td>
               </tr>
             ) : (
               products.map((product, index) => {
-                const { cls, label } = stockStatus(product.stock)
+                const { cls, label } = stockStatus(product.stock);
                 return (
                   <tr
                     key={product._id}
@@ -140,7 +139,8 @@ export const ProductTable = ({ setEditingId, setForm, editingId }: ProductFormTy
                     {/* Price */}
                     <td>
                       <span className="product-price">
-                        ₱{Number(product.price).toLocaleString("en-PH", {
+                        ₱
+                        {Number(product.price).toLocaleString("en-PH", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}
@@ -168,12 +168,12 @@ export const ProductTable = ({ setEditingId, setForm, editingId }: ProductFormTy
                       </button>
                     </td>
                   </tr>
-                )
+                );
               })
             )}
           </tbody>
         </table>
       </div>
     </div>
-  )
-}
+  );
+};

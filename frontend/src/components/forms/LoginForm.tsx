@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import { type LoginFormType } from "../../types/user";
-import { loginValidation } from "../../validators/auth";
 import { ErrorLabel } from "../ui/errorLabel";
 import { useLoginUser } from "../../hooks/useLoginUser";
 import "../../css/LoginForm.css";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
-import type { ValidationErrors } from "../../types/validation";
+import { loginValidation, type ValidationErrorsLogin } from "../../validators/login";
 
 
 const PharmacyIcon = () => (
@@ -26,7 +25,7 @@ export const LoginForm = () => {
   });
 
   const { loginUser } = useLoginUser();
-  const [formErrors, setFormErrors] = useState<ValidationErrors>({});
+  const [formErrors, setFormErrors] = useState<ValidationErrorsLogin>({});
   const { loading } = useAppSelector((state) => state.auth)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +35,7 @@ export const LoginForm = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
     // Clear field error on change
-    if (formErrors[name as keyof ValidationErrors]) {
+    if (formErrors[name as keyof ValidationErrorsLogin]) {
       setFormErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };

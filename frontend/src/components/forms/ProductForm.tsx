@@ -1,92 +1,103 @@
-import { useState, useRef, useEffect } from "react"
-import { Input } from "../ui/Input"
-import { Label } from "../ui/Label"
-import { Select } from "../ui/Select"
-import { productValidation } from "../../validators/product"
-import { type ValidationErrors } from "../../types/validation"
-import { useCreateProduct } from "../../hooks/useCreateProduct"
-import { ErrorLabel } from "../ui/errorLabel"
-import { useUpdateProduct } from "../../hooks/useUpdateProduct"
-import { productInitialForm, type ProductFormTypeProps } from "../../types/product"
+import { useState, useRef, useEffect } from "react";
+import { Input } from "../ui/Input";
+import { Label } from "../ui/Label";
+import { Select } from "../ui/Select";
+import { productValidation, type ValidationErrorsProduct } from "../../validators/product";
+import { useCreateProduct } from "../../hooks/product/useCreateProduct";
+import { ErrorLabel } from "../ui/errorLabel";
+import { useUpdateProduct } from "../../hooks/product/useUpdateProduct";
+import {
+  productInitialForm,
+  type ProductFormTypeProps,
+} from "../../types/product";
+import { useAppSelector } from "../../hooks/redux/reduxHooks";
 
-export const ProductForm = ({ editingId, form, setForm, setEditingId }: ProductFormTypeProps) => {
-  const { createProduct } = useCreateProduct()
-  const { updateProduct } = useUpdateProduct()
-  const [error, setError] = useState<ValidationErrors>({})
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export const ProductForm = ({
+  editingId,
+  form,
+  setForm,
+  setEditingId,
+}: ProductFormTypeProps) => {
+  const { createProduct } = useCreateProduct();
+  const { updateProduct } = useUpdateProduct();
+
+  const categories = useAppSelector((state) => state.category.categories)
+
+  const [error, setError] = useState<ValidationErrorsProduct>({});
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const newErrors = productValidation(form)
+    e.preventDefault();
+    const newErrors = productValidation(form);
     if (Object.keys(newErrors).length > 0) {
-      setError(newErrors)
-      return
+      setError(newErrors);
+      return;
     }
     if (editingId) {
-      await updateProduct(editingId, form)
+      await updateProduct(editingId, form);
     } else {
-      await createProduct(form)
+      await createProduct(form);
     }
-    setForm(productInitialForm)
-    setEditingId(null)
-    setError({})
-    setImagePreview(null)
-  }
+    setForm(productInitialForm);
+    setEditingId(null);
+    setError({});
+    setImagePreview(null);
+  };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
-    const { id, value } = e.target
+    const { id, value } = e.target;
     setForm((prev) => ({
       ...prev,
       [id]: id === "price" || id === "stock" ? Number(value) : value,
-    }))
-  }
+    }));
+  };
 
-  const handleImageChange = (
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
-  const file = e.target.files?.[0]
-  if (!file) return
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  // store actual file
-  setForm((prev) => ({
-    ...prev,
-    image: file,
-  }))
+    // store actual file
+    setForm((prev) => ({
+      ...prev,
+      image: file,
+    }));
 
-  // preview only
-  const reader = new FileReader()
+    // preview only
+    const reader = new FileReader();
 
-  reader.onloadend = () => {
-    setImagePreview(reader.result as string)
-  }
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
 
-  reader.readAsDataURL(file)
-}
+    reader.readAsDataURL(file);
+  };
 
   const handleRemoveImage = () => {
-    setImagePreview(null)
-    setForm((prev) => ({ ...prev, image: null }))
-    if (fileInputRef.current) fileInputRef.current.value = ""
-  }
+    setImagePreview(null);
+    setForm((prev) => ({ ...prev, image: null }));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleReset = () => {
-    setForm(productInitialForm)
-    setError({})
-    setEditingId(null)
-    setImagePreview(null)
-    if (fileInputRef.current) fileInputRef.current.value = ""
-  }
+    setForm(productInitialForm);
+    setError({});
+    setEditingId(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   useEffect(() => {
-  if (typeof form.image === "string" && form.image !== "") {
-    setImagePreview(form.image)  // existing cloudinary URL
-  } else if (!form.image) {
-    setImagePreview(null)        // reset when form is cleared
-  }
-}, [form.image])
+    if (typeof form.image === "string" && form.image !== "") {
+      setImagePreview(form.image); // existing cloudinary URL
+    } else if (!form.image) {
+      setImagePreview(null); // reset when form is cleared
+    }
+  }, [form.image]);
 
   return (
     <div className="product-card">
@@ -128,7 +139,6 @@ export const ProductForm = ({ editingId, form, setForm, setEditingId }: ProductF
       )}
 
       <form onSubmit={handleSubmit} className="product-form" noValidate>
-
         {/* ── Image Upload ── */}
         <div className="mb-3">
           <Label>Product Image</Label>
@@ -150,10 +160,12 @@ export const ProductForm = ({ editingId, form, setForm, setEditingId }: ProductF
               transition: "border-color 0.2s",
             }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--c-primary)")
+              ((e.currentTarget as HTMLDivElement).style.borderColor =
+                "var(--c-primary)")
             }
             onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--c-border)")
+              ((e.currentTarget as HTMLDivElement).style.borderColor =
+                "var(--c-border)")
             }
           >
             {imagePreview ? (
@@ -275,12 +287,12 @@ export const ProductForm = ({ editingId, form, setForm, setEditingId }: ProductF
             value={form.category}
             onChange={handleChange}
             selectSize="md"
-            options={[
-              { label: "Select a category", value: "" },
-              { label: "Fever",             value: "fever" },
-              { label: "Cough",             value: "cough" },
-              { label: "Other",             value: "other" },
-            ]}
+            options={
+              categories.map((category) => ({
+                label: category.name,
+                value: category._id
+              }))
+            }
           />
           <ErrorLabel message={error.category} className="field-error" />
         </div>
@@ -326,5 +338,5 @@ export const ProductForm = ({ editingId, form, setForm, setEditingId }: ProductF
         </div>
       </form>
     </div>
-  )
-}
+  );
+};

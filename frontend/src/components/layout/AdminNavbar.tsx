@@ -12,6 +12,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Products", path: "/admin/product", icon: "bi bi-box-seam-fill", badge: 3 },
   { label: "Orders", path: "/admin/order", icon: "bi bi-receipt", badge: 12 },
   { label: "Users", path: "/admin/user", icon: "bi bi-people-fill" },
+  { label: "Categories", path: "/admin/category", icon: "bi bi-tags-fill" },
   { label: "Settings", path: "/admin/settings", icon: "bi bi-gear-fill" },
 ];
  

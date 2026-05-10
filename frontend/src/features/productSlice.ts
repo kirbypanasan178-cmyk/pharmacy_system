@@ -70,7 +70,7 @@ const productSlice = createSlice({
         deleteProductStart: (state) => {
             state.loading = true
         },
-        deleteProductSuccess: (state, action: PayloadAction<string>) => {
+        deleteProductSuccess: (state, action: PayloadAction<string | null>) => {
             state.loading = false
             state.products = state.products.filter(
                 (p) => p._id !== action.payload

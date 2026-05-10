@@ -1,8 +1,11 @@
 import type {  ProductFormType } from "../types/product";
-import type { ValidationErrors } from "../types/validation";
 
-export const productValidation = (form: ProductFormType) => {
-    const errors: ValidationErrors = {}
+type ProductFields = "name" | "price" | "category" | "stock"
+
+export type ValidationErrorsProduct = Partial<Record<ProductFields, string>>
+
+export const productValidation = (form: ProductFormType): ValidationErrorsProduct => {
+    const errors: ValidationErrorsProduct = {}
 
     if (!form.name.trim()) {
         errors.name = "Product name is required"

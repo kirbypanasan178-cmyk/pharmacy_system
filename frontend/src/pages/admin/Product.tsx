@@ -1,12 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ProductForm } from "../../components/forms/ProductForm"
 import { ProductTable } from "../../components/table/ProductTable"
 import { productInitialForm, type ProductFormType } from "../../types/product"
 import "../../css/Product.css"
+import { useGetAllProduct } from "../../hooks/product/useGetAllProduct"
 
 export const Product = () => {
   const [form, setForm] = useState<ProductFormType>(productInitialForm)
   const [editingId, setEditingId] = useState<string | null>(null)
+
+  const { getAllProduct } = useGetAllProduct()
+
+   useEffect(() => {
+    getAllProduct();
+  }, []);
 
   return (
     <div className="product-page">
