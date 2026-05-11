@@ -13,6 +13,7 @@
     "@radix-ui/react-label": "^2.1.8",
     "@reduxjs/toolkit": "^2.11.2",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-redux": "^9.2.0",

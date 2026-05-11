@@ -1,0 +1,146 @@
+.product-card {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid #eef0f2;
+  transition: 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+}
+
+/* ── IMAGE ── */
+.product-img-wrapper {
+  position: relative;
+  background: #f7fafb;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-img img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.placeholder {
+  font-size: 40px;
+  opacity: 0.6;
+}
+
+/* badges */
+.badge-pill {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.badge-pill.otc {
+  background: #dff7ee;
+  color: #0f8f6a;
+}
+
+.badge-pill.rx {
+  background: #ffe9d6;
+  color: #d46a00;
+}
+
+/* wishlist */
+.wishlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: none;
+  background: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ── BODY ── */
+.product-body {
+  padding: 12px;
+}
+
+.category {
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.name {
+  font-size: 14px;
+  margin: 2px 0 6px;
+  font-weight: 600;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.current {
+  font-weight: 700;
+  color: #1b8a5a;
+}
+
+.old {
+  font-size: 12px;
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+/* ── FOOTER ── */
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px 12px;
+}
+
+.stock {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.stock.in-stock {
+  background: #e8f7ef;
+  color: #1b8a5a;
+}
+
+.stock.low {
+  background: #fff4e5;
+  color: #d98c00;
+}
+
+.stock.out {
+  background: #ffe8e8;
+  color: #c62828;
+}
+
+.add-btn {
+  border: none;
+  background: #1b8a5a;
+  color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.add-btn:disabled {
+  background: #ccc;
+}

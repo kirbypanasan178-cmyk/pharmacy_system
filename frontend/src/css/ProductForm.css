@@ -1,0 +1,137 @@
+/* ── ProductForm ─────────────────────────────────────────── */
+
+.product-form-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0D6EFD, #17C3A2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Section separator label */
+.product-form-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: 10px;
+}
+
+/* Thin divider between sections */
+.product-form-divider {
+  height: 1px;
+  background: var(--c-border);
+  margin: 1rem 0;
+}
+
+/* ── Upload zone ── */
+.product-upload-zone {
+  border: 2px dashed var(--c-border);
+  border-radius: 12px;
+  background: #FAFCFF;
+  cursor: pointer;
+  overflow: hidden;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.product-upload-zone:hover {
+  border-color: var(--c-primary);
+  background: #EFF6FF;
+}
+
+.product-upload-zone.has-preview {
+  background: #000;
+}
+
+.product-upload-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.product-upload-zone.has-preview:hover .product-upload-overlay {
+  opacity: 1;
+}
+
+.product-upload-placeholder {
+  text-align: center;
+  color: var(--c-muted);
+  pointer-events: none;
+}
+
+.product-upload-icon {
+  font-size: 2rem;
+  margin-bottom: 6px;
+}
+
+.product-upload-hint {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.product-upload-hint-sub {
+  font-size: 0.72rem;
+  margin: 2px 0 0;
+}
+
+/* ── Remove image button ── */
+.product-remove-btn {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--c-danger);
+  border: 1px solid rgba(229, 83, 75, 0.25);
+  border-radius: 8px;
+  padding: 3px 10px;
+  background: rgba(229, 83, 75, 0.06);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.product-remove-btn:hover {
+  background: rgba(229, 83, 75, 0.12);
+}
+
+/* ── Price prefix ── */
+.product-input-prefix-wrap {
+  position: relative;
+}
+
+.product-input-prefix {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--c-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.product-input-prefixed {
+  padding-left: 26px !important;
+}

@@ -12,17 +12,31 @@ import { Settings } from "./pages/admin/Settings";
 import { Category } from "./pages/admin/Category";
 import { useEffect } from "react";
 import { useGetAllCategory } from "./hooks/category/useGetAllCategory";
+import { Dashboard } from "./pages/admin/Dashboard";
+import { useGetAllProduct } from "./hooks/product/useGetAllProduct";
 
 function App() {
   const { getAllCategory } = useGetAllCategory()
+  const { getAllProduct } = useGetAllProduct()
 
   useEffect(() => {
     getAllCategory()
+    getAllProduct();
   }, [])
 
   return (
     <BrowserRouter>
-      <div className="d-flex min-vh-100">
+
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+
+  
+      <Route 
+      path="/admin/*"
+      element={
+        <div className="d-flex min-vh-100">
 
         {/* Sidebar / Navbar */}
         <AdminNavBar />
@@ -31,20 +45,21 @@ function App() {
         <div className="flex-grow-1 overflow-auto p-3">
 
           <Routes>
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-
-            <Route path="/admin/dashboard" element={<Home />} />
-            <Route path="/admin/product" element={<Product />} />
-            <Route path="/admin/category" element={<Category />} />
-            <Route path="/admin/order" element={<Order />} />
-            <Route path="/admin/user" element={<User />} />
-            <Route path="/admin/settings" element={<Settings />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="product" element={<Product />} />
+            <Route path="category" element={<Category />} />
+            <Route path="order" element={<Order />} />
+            <Route path="user" element={<User />} />
+            <Route path="settings" element={<Settings />} />
           </Routes>
 
         </div>
+      
 
       </div>
+      }
+      />
+      </Routes>
     </BrowserRouter>
   );
 }

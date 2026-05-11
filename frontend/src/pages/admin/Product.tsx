@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ProductForm } from "../../components/forms/ProductForm"
 import { ProductTable } from "../../components/table/ProductTable"
 import { productInitialForm, type ProductFormType } from "../../types/product"
 import "../../css/Product.css"
-import { useGetAllProduct } from "../../hooks/product/useGetAllProduct"
 
 export const Product = () => {
   const [form, setForm] = useState<ProductFormType>(productInitialForm)
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  const { getAllProduct } = useGetAllProduct()
-
-   useEffect(() => {
-    getAllProduct();
-  }, []);
-
   return (
     <div className="product-page">
+
       {/* Page header */}
       <div className="mb-4">
         <h1
@@ -36,11 +30,11 @@ export const Product = () => {
         </p>
       </div>
 
-      {/* Main layout */}
+      {/* Main layout — form gets col-5, table gets col-7 */}
       <div className="row g-4 align-items-start">
-        {/* Form column */}
-        <div className="col-12 col-lg-4">
-          {/* Sticky on desktop so form stays visible while scrolling the table */}
+
+        {/* Form column — wider now */}
+        <div className="col-12 col-xl-5 col-lg-6">
           <div style={{ position: "sticky", top: "1.5rem" }}>
             <ProductForm
               editingId={editingId}
@@ -52,7 +46,7 @@ export const Product = () => {
         </div>
 
         {/* Table column */}
-        <div className="col-12 col-lg-8">
+        <div className="col-12 col-xl-7 col-lg-6">
           <ProductTable
             editingId={editingId}
             setEditingId={setEditingId}
@@ -60,6 +54,7 @@ export const Product = () => {
             setForm={setForm}
           />
         </div>
+
       </div>
     </div>
   )

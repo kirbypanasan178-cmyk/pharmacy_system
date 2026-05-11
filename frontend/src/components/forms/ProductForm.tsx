@@ -11,6 +11,7 @@ import {
   type ProductFormTypeProps,
 } from "../../types/product";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import "../../css/ProductForm.css"
 
 export const ProductForm = ({
   editingId,
@@ -20,8 +21,7 @@ export const ProductForm = ({
 }: ProductFormTypeProps) => {
   const { createProduct } = useCreateProduct();
   const { updateProduct } = useUpdateProduct();
-
-  const categories = useAppSelector((state) => state.category.categories)
+  const categories = useAppSelector((state) => state.category.categories);
 
   const [error, setError] = useState<ValidationErrorsProduct>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -46,9 +46,7 @@ export const ProductForm = ({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
     setForm((prev) => ({
@@ -60,20 +58,9 @@ export const ProductForm = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // store actual file
-    setForm((prev) => ({
-      ...prev,
-      image: file,
-    }));
-
-    // preview only
+    setForm((prev) => ({ ...prev, image: file }));
     const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-
+    reader.onloadend = () => setImagePreview(reader.result as string);
     reader.readAsDataURL(file);
   };
 
@@ -93,30 +80,19 @@ export const ProductForm = ({
 
   useEffect(() => {
     if (typeof form.image === "string" && form.image !== "") {
-      setImagePreview(form.image); // existing cloudinary URL
+      setImagePreview(form.image);
     } else if (!form.image) {
-      setImagePreview(null); // reset when form is cleared
+      setImagePreview(null);
     }
   }, [form.image]);
 
   return (
     <div className="product-card">
-      {/* Card header */}
+
+      {/* ── Header ── */}
       <div className="d-flex align-items-center gap-2 mb-3">
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            background: "linear-gradient(135deg, #0D6EFD, #17C3A2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "1rem",
-            flexShrink: 0,
-          }}
-        >
-          📦
+        <div className="product-form-icon">
+          <span>📦</span>
         </div>
         <div>
           <p className="product-section-title mb-0">
@@ -130,7 +106,7 @@ export const ProductForm = ({
         </div>
       </div>
 
-      {/* Editing banner */}
+      {/* ── Editing banner ── */}
       {editingId && (
         <div className="editing-banner mb-3">
           ✏️ Editing product ID:{" "}
@@ -139,93 +115,36 @@ export const ProductForm = ({
       )}
 
       <form onSubmit={handleSubmit} className="product-form" noValidate>
-        {/* ── Image Upload ── */}
-        <div className="mb-3">
-          <Label>Product Image</Label>
 
+        {/* ── Section: Image ── */}
+        <div className="product-form-section-label">Product Image</div>
+
+        <div className="mb-3">
           {/* Drop zone / preview */}
           <div
+            className={`product-upload-zone ${imagePreview ? "has-preview" : ""}`}
             onClick={() => fileInputRef.current?.click()}
-            style={{
-              border: "2px dashed var(--c-border)",
-              borderRadius: 12,
-              background: imagePreview ? "#000" : "#FAFCFF",
-              cursor: "pointer",
-              overflow: "hidden",
-              height: 180,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              transition: "border-color 0.2s",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor =
-                "var(--c-primary)")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLDivElement).style.borderColor =
-                "var(--c-border)")
-            }
           >
             {imagePreview ? (
               <>
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
+                  className="product-upload-preview-img"
                 />
-                {/* Overlay on hover */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "rgba(0,0,0,0.45)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    opacity: 0,
-                    transition: "opacity 0.2s",
-                    color: "#fff",
-                    fontSize: "0.82rem",
-                    fontWeight: 600,
-                    gap: 6,
-                  }}
-                  className="img-overlay"
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLDivElement).style.opacity = "1")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLDivElement).style.opacity = "0")
-                  }
-                >
+                <div className="product-upload-overlay">
                   🔄 Click to change
                 </div>
               </>
             ) : (
-              <div
-                style={{
-                  textAlign: "center",
-                  color: "var(--c-muted)",
-                  pointerEvents: "none",
-                }}
-              >
-                <div style={{ fontSize: "2rem", marginBottom: 6 }}>🖼️</div>
-                <p style={{ fontSize: "0.82rem", fontWeight: 600, margin: 0 }}>
-                  Click to upload image
-                </p>
-                <p style={{ fontSize: "0.72rem", margin: "2px 0 0" }}>
-                  PNG, JPG, WEBP — max 5MB
-                </p>
+              <div className="product-upload-placeholder">
+                <div className="product-upload-icon">🖼️</div>
+                <p className="product-upload-hint">Click to upload image</p>
+                <p className="product-upload-hint-sub">PNG, JPG, WEBP — max 5MB</p>
               </div>
             )}
           </div>
 
-          {/* Hidden file input */}
           <input
             ref={fileInputRef}
             type="file"
@@ -234,25 +153,21 @@ export const ProductForm = ({
             style={{ display: "none" }}
           />
 
-          {/* Remove button */}
           {imagePreview && (
             <button
               type="button"
               onClick={handleRemoveImage}
-              className="btn btn-sm mt-2"
-              style={{
-                fontSize: "0.75rem",
-                color: "var(--c-danger)",
-                border: "1px solid rgba(229,83,75,0.25)",
-                borderRadius: 8,
-                padding: "3px 10px",
-                background: "rgba(229,83,75,0.06)",
-              }}
+              className="product-remove-btn"
             >
               🗑 Remove image
             </button>
           )}
         </div>
+
+        <div className="product-form-divider" />
+
+        {/* ── Section: Basic Info ── */}
+        <div className="product-form-section-label">Basic Info</div>
 
         {/* Name */}
         <div className="mb-3">
@@ -280,34 +195,40 @@ export const ProductForm = ({
         </div>
 
         {/* Category */}
-        <div className="mb-3">
+        <div className="mb-0">
           <Label>Category</Label>
           <Select
             id="category"
             value={form.category}
             onChange={handleChange}
             selectSize="md"
-            options={
-              categories.map((category) => ({
-                label: category.name,
-                value: category._id
-              }))
-            }
+            options={categories.map((category) => ({
+              label: category.name,
+              value: category._id,
+            }))}
           />
           <ErrorLabel message={error.category} className="field-error" />
         </div>
 
-        {/* Price & Stock */}
-        <div className="row g-3 mb-3">
+        <div className="product-form-divider" />
+
+        {/* ── Section: Pricing & Stock ── */}
+        <div className="product-form-section-label">Pricing & Stock</div>
+
+        <div className="row g-3 mb-0">
           <div className="col-6">
             <Label>Price (₱)</Label>
-            <Input
-              id="price"
-              value={form.price}
-              onChange={handleChange}
-              type="number"
-              placeholder="0.00"
-            />
+            <div className="product-input-prefix-wrap">
+              <span className="product-input-prefix">₱</span>
+              <Input
+                id="price"
+                value={form.price}
+                onChange={handleChange}
+                type="number"
+                placeholder="0.00"
+                className="product-input-prefixed"
+              />
+            </div>
             <ErrorLabel message={error.price} className="field-error" />
           </div>
           <div className="col-6">
@@ -323,8 +244,10 @@ export const ProductForm = ({
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="d-flex gap-2 pt-1">
+        <div className="product-form-divider" />
+
+        {/* ── Actions ── */}
+        <div className="d-flex gap-2">
           <button type="submit" className="btn btn-primary flex-fill">
             {editingId ? "💾 Save Changes" : "＋ Create Product"}
           </button>
@@ -336,6 +259,7 @@ export const ProductForm = ({
             Reset
           </button>
         </div>
+
       </form>
     </div>
   );

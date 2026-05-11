@@ -1,0 +1,367 @@
+/* ===== Pharmacare — Home.css ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+:root {
+  --brand-teal:    #0d7c66;
+  --brand-teal-lt: #e6f4f1;
+  --brand-teal-dk: #085a49;
+  --brand-accent:  #f4a228;
+  --surface:       #f7f9f8;
+  --card-bg:       #ffffff;
+  --text-primary:  #1a2e28;
+  --text-muted:    #6b7e79;
+  --border:        #d6e8e3;
+  --shadow-sm:     0 2px 8px rgba(13, 124, 102, 0.08);
+  --shadow-md:     0 6px 24px rgba(13, 124, 102, 0.13);
+  --radius-pill:   50px;
+  --radius-card:   16px;
+  --transition:    0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Base ───────────────────────────────── */
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+/* ── Hero Banner ────────────────────────── */
+.hero-banner {
+  background: linear-gradient(135deg, var(--brand-teal-dk) 0%, var(--brand-teal) 60%, #16a98a 100%);
+  border-radius: var(--radius-card);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 30%;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  margin-bottom: .5rem;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  opacity: .85;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-pill);
+  padding: .3rem .9rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+/* ── Search Bar ─────────────────────────── */
+.search-wrapper {
+  position: relative;
+  max-width: 560px;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: .75rem 1rem .75rem 2.8rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--brand-teal);
+  box-shadow: 0 0 0 3px rgba(13, 124, 102, 0.14);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ── Section Label ──────────────────────── */
+.section-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.section-divider {
+  width: 36px;
+  height: 3px;
+  background: var(--brand-teal);
+  border-radius: 2px;
+  margin-top: .35rem;
+  margin-bottom: 1.1rem;
+}
+
+/* ── Category Chips ─────────────────────── */
+.category-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .42rem 1.1rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: .85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.category-chip:hover {
+  border-color: var(--brand-teal);
+  color: var(--brand-teal);
+  background: var(--brand-teal-lt);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.category-chip.active {
+  background: var(--brand-teal);
+  border-color: var(--brand-teal);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13, 124, 102, 0.28);
+}
+
+/* ── Stats Row ──────────────────────────── */
+.stat-pill {
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: .75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--brand-teal-lt);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--brand-teal);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: .72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ── Product Grid ───────────────────────── */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Product Card ───────────────────────── */
+.pc-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.pc-img-wrap {
+  position: relative;
+  background: var(--brand-teal-lt);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+}
+
+.pc-img-wrap img {
+  max-height: 120px;
+  width: auto;
+  object-fit: contain;
+  transition: transform var(--transition);
+}
+
+.pc-card:hover .pc-img-wrap img {
+  transform: scale(1.05);
+}
+
+.pc-category-tag {
+  position: absolute;
+  top: .65rem; left: .65rem;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-pill);
+  padding: .18rem .65rem;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--brand-teal-dk);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.pc-body {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-bottom: .25rem;
+  line-height: 1.3;
+}
+
+.pc-price {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-teal);
+  margin-bottom: .9rem;
+}
+
+.pc-price span {
+  font-size: .8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.pc-add-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: .55rem 1rem;
+  border-radius: var(--radius-pill);
+  background: var(--brand-teal);
+  border: none;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+}
+
+.pc-add-btn:hover {
+  background: var(--brand-teal-dk);
+  transform: translateY(-1px);
+}
+
+/* ── Empty / Loading States ─────────────── */
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: .45;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8f2ef 25%, #d3ebe4 50%, #e8f2ef 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 10px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Results Count ──────────────────────── */
+.results-meta {
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+
+.results-meta strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ── Navbar override hint ───────────────── */
+.pharmacare-nav {
+  background: var(--brand-teal-dk) !important;
+}

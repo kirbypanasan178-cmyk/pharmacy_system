@@ -132,7 +132,7 @@ export const ProductTable = ({
                     {/* Category */}
                     <td>
                       <span className="category-badge">
-                        {product.category || "—"}
+                        {product.category?.name || "—"}
                       </span>
                     </td>
 

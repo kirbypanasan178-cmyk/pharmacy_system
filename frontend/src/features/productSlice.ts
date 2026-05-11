@@ -1,5 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+type Category = {
+    _id: string
+    name: string
+    description: string
+}
 
 export interface Product {
     _id: string;
@@ -7,7 +12,7 @@ export interface Product {
     price: number;
     description?: string;
     image?: string;
-    category: string;
+    category: Category;
     stock: number;
 }
 

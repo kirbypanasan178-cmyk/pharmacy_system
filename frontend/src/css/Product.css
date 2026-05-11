@@ -28,8 +28,11 @@
   font-family: 'DM Sans', sans-serif;
   background: var(--c-bg);
   min-height: 100vh;
-  padding: 2rem 1rem;
+  /* FIX: increased horizontal padding so Bootstrap row gutters don't bleed out */
+  padding: 2rem 1.5rem;
   color: var(--c-text);
+  /* FIX: ensure nothing clips the sticky form card */
+  overflow: visible;
 }
 
 /* ── Section headings ── */
@@ -54,8 +57,13 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 2rem 2rem 1.5rem;
+  /* FIX: reduced horizontal padding so content has more room */
+  padding: 1.5rem 1.5rem 1.25rem;
   transition: var(--transition);
+  /* FIX: ensure card never overflows its column */
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* ── Form Labels ── */
@@ -80,6 +88,10 @@
   padding: 0.6rem 0.85rem;
   transition: var(--transition);
   box-shadow: none;
+  /* FIX: prevent inputs from overflowing their container */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .product-form .form-control:focus,
@@ -357,7 +369,8 @@
 
 /* ── Responsive tweaks ── */
 @media (max-width: 768px) {
-  .product-card { padding: 1.25rem; }
+  .product-page { padding: 1rem 0.75rem; }
+  .product-card { padding: 1.25rem 1rem; }
   .product-table thead th,
   .product-table tbody td { padding: 0.65rem 0.6rem; }
 }
