@@ -8,6 +8,7 @@ import {
     updateUserController 
 } from "../controllers/userController"
 import  { signupValidation, loginValidation } from "../validators/userValidation"
+import { requireAuth } from "../middlewares/requireAuth"
 
 const router = express.Router()
 

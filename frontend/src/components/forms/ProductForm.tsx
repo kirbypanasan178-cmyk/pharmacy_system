@@ -39,10 +39,7 @@ export const ProductForm = ({
     } else {
       await createProduct(form);
     }
-    setForm(productInitialForm);
-    setEditingId(null);
-    setError({});
-    setImagePreview(null);
+    handleReset()
   };
 
   const handleChange = (

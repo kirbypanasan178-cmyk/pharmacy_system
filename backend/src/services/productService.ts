@@ -57,4 +57,14 @@ export const deleteProductService = async (id: string) => {
         throw new Error(error instanceof Error ? error.message : "Failed to delete product")
     }
     
-}   
+}  
+
+export const decreaseStockService = (id: string) => {
+    try {
+        const product = Product.findByIdAndUpdate(id)
+
+        return product 
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to decrease stock")
+    }
+}

@@ -2,6 +2,7 @@ import express from "express"
 import { createProductController, deleteProductController, getAllProductsController, getProductController, updateProductController } from "../controllers/productController"
 import { productValidation } from "../validators/productValidation"
 import { upload } from "../middlewares/upload"
+import { requireAuth } from "../middlewares/requireAuth"
 
 const router = express.Router()
 

@@ -36,7 +36,7 @@ export const ProductCard = ({
   };
 
   return (
-    <div className="product-card shadow-sm">
+    <div className="product-card shadow-sm h-100">
 
       {/* ── Image Section ── */}
       <div className="product-img-wrapper">

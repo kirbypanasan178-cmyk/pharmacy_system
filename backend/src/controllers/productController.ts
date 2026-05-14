@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { createProductService, deleteProductService, getAllProductsService, getProductService, updateProductService } from "../services/productService"
+import Product from "../models/productModel";
 
 interface Params {
     id: string;
@@ -85,4 +86,38 @@ export const deleteProductController = async (
   } catch (error) {
     res.status(500).json({ error: "Internal server error" })
   }
+}
+
+export const decreaseStockController = async (req: Request, res: Response) => {
+    const { stock } = req.body
+    const { productId } = req.params
+
+    try {
+        const parsedAmount = Number(stock)
+
+        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+            res.status(400).json({ error: "Invalid stock" })
+        }
+
+        const product = await Product.findByIdAndUpdate(
+            {
+                _id: productId,
+                stock: { $gte: parsedAmount },
+            },
+            { $inc: { stock: -parsedAmount} },
+            { new: true, runValidators: true}
+        ).select("stock")
+
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" })
+        }
+
+        res.status(200).json({
+            productId: product._id.toString(),
+            stock: product.stock
+        })
+
+    } catch (error) {
+
+    }
 }

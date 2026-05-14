@@ -6,6 +6,7 @@ import config from "./config/env.js"
 import userRoute from "./routes/userRoute.js"
 import productRoute from "./routes/productRoute.js"
 import categoryRoute from "./routes/categoryRoute.js"
+import cartRoute from "./routes/cartRoute.js"
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/user", userRoute)
 app.use("/api/product", productRoute)
 app.use("/api/category", categoryRoute)
+app.use("/api/cart", cartRoute)
 
 const startServer = async (): Promise<void> => {
     try {

@@ -14,14 +14,18 @@ import { useEffect } from "react";
 import { useGetAllCategory } from "./hooks/category/useGetAllCategory";
 import { Dashboard } from "./pages/admin/Dashboard";
 import { useGetAllProduct } from "./hooks/product/useGetAllProduct";
+import { Cart } from "./pages/user/Cart";
+import { useGetAllCart } from "./hooks/cart/useGetAllCart";
 
 function App() {
   const { getAllCategory } = useGetAllCategory()
   const { getAllProduct } = useGetAllProduct()
+  const { getAllCart } = useGetAllCart()
 
   useEffect(() => {
     getAllCategory()
     getAllProduct();
+    getAllCart()
   }, [])
 
   return (
@@ -31,6 +35,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart />} />
 
   
       <Route 
