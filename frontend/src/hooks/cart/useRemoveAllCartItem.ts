@@ -5,10 +5,10 @@ import { useAppDispatch } from "../redux/reduxHooks"
 
 export const useRemoveAllCartItem = () => {
     const dispatch = useAppDispatch()
-    const removeAllCartItem = async () => {
+    const removeAllCartItem = async (cartId: string) => {
         dispatch(cartStart())
         try {
-            await removeAllCartItemAPI()
+            await removeAllCartItemAPI(cartId)
             dispatch(removeAllCartItemSuccess())
         } catch (error: any){
             console.log(error)

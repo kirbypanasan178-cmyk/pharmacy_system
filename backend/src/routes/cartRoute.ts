@@ -8,8 +8,8 @@ const router = express.Router()
 
 router.post("/", createCartController)
 router.get("/", getCarByIdController)
-router.delete("/", removeAllCartItemController)
 router.patch("/:id", updateCartController)
-router.delete("/:id", removeCartItemController)
+router.patch("/clear/:itemId", removeAllCartItemController)
+router.patch("/item/:cartId", removeCartItemController)
 
 export default router

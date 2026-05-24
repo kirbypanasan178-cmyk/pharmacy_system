@@ -1,4 +1,4 @@
-import type { CartForm, CartItemForm } from "../types/cart"
+import type { CartForm } from "../types/cart"
 
 export const createCartAPI = async (form: CartForm) => {
     const response = await fetch("http://localhost:2000/api/cart/", {
@@ -35,13 +35,13 @@ export const getAllCartAPI = async () => {
     return data
 }
 
-export const updateCartAPI = async (id: string, form: CartItemForm) => {
+export const updateCartAPI = async (id: string, quantity: number) => {
     const response = await fetch(`http://localhost:2000/api/cart/${id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify({ quantity })
     })
 
     const data = await response.json()
@@ -54,8 +54,8 @@ export const updateCartAPI = async (id: string, form: CartItemForm) => {
 }
 
 export const removeCartItemAPI = async (itemId: string) => {
-    const response = await fetch(`http://localhost:2000/api/cart/${itemId}`, {
-        method: "DELETE",
+    const response = await fetch(`http://localhost:2000/api/cart/item/${itemId}`, {
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
@@ -70,9 +70,9 @@ export const removeCartItemAPI = async (itemId: string) => {
     return data
 }
 
-export const removeAllCartItemAPI = async () => {
-    const response = await fetch(`http://localhost:2000/api/cart/`, {
-        method: "DELETE",
+export const removeAllCartItemAPI = async (cartId: string) => {
+    const response = await fetch(`http://localhost:2000/api/cart/clear/${cartId}`, {
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },

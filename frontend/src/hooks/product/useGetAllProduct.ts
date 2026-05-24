@@ -12,7 +12,6 @@ export const useGetAllProduct = () => {
     dispatch(getAllProductStart());
     try {
       const data = await getAllProductAPI();
-      console.log(data);
       dispatch(getAllProductSuccess(data));
     } catch (error: any) {
       console.log(error);

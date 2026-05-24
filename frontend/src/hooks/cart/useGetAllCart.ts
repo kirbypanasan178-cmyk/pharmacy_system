@@ -8,7 +8,6 @@ export const useGetAllCart = () => {
         dispatch(cartStart())
         try {
             const data = await getAllCartAPI()
-            console.log(data)
             dispatch(cartSuccess(data))
         } catch (error: any) {
             console.log(error)

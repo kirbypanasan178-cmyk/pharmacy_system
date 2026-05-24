@@ -27,6 +27,10 @@ const cartSchema = new Schema({
         required: true,
     },
     items: [cartItemSchema],
+    shippingFee: {
+        type: Number,
+        default: 0,
+    },
     totalPrice: {
         type: Number,
         default: 0

@@ -1,15 +1,20 @@
 import { updateCartAPI } from "../../api/cartAPI"
-import { cartFailure, cartStart, cartSuccess } from "../../features/cartSlice"
-import type { CartItemForm } from "../../types/cart"
+import { cartFailure, cartStart, updateCartItemSuccess } from "../../features/cartSlice"
 import { useAppDispatch } from "../redux/reduxHooks"
 
 export const useUpdateCart = () => {
     const dispatch = useAppDispatch()
-    const updateCart = async (id: string, form: CartItemForm) => {
-        dispatch(cartStart())
+    const updateCart = async (id: string, quantity: number) => {
+
         try {
-            const data = await updateCartAPI(id, form)
-            dispatch(cartSuccess(data))
+            const data = await updateCartAPI(id, quantity)
+             if (!data) {
+                // Backend returned null — just stop loading, don't update state
+                dispatch(cartStart()) // reset loading
+                return
+            }
+            console.log("updateCartAPI response:", data)
+            dispatch(updateCartItemSuccess(data))
         } catch (error: any) {
             console.log(error)
             dispatch(cartFailure(error.message || "Failed to update cart"))

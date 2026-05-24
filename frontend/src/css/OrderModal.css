@@ -1,0 +1,19 @@
+/* The backdrop — covers the full screen */
+.modal-backdrop {
+  position: fixed;        /* ← fixed, not absolute */
+  inset: 0;               /* top/right/bottom/left: 0 */
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;    /* vertical center */
+  justify-content: center; /* horizontal center */
+  z-index: 1000;
+}
+
+/* The modal box itself */
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+}

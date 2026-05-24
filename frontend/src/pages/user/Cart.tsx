@@ -2,9 +2,14 @@ import { CartCard } from "../../components/cards/CartCard";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
 import "../../css/Card.css";
 import { useState } from "react";
+import { OrderModal } from "../../components/modals/OrderModal";
+import { useRemoveAllCartItem } from "../../hooks/cart/useRemoveAllCartItem";
 
 export const Cart = () => {
   const { cart, loading, error } = useAppSelector((state) => state.cart);
+  const { removeAllCartItem } = useRemoveAllCartItem() 
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   // state that holds the Ids of the cart
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -12,9 +17,7 @@ export const Cart = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  const items = cart?.items ?? [];
-  console.log("cart:", cart);
-  console.log("items:", items);
+  const items = cart?.items ?? []
 
   const allSelected = items.length > 0 && selectedIds.size === items.length;
 
@@ -40,7 +43,12 @@ export const Cart = () => {
         })
     }
 
+    const handleRemoveAllCart = async (cartId: string) => {
+      await removeAllCartItem(cartId) 
+    }
+
   return (
+    <div>
     <div className="cart-page">
       {/* Header Row */}
       <div className="cart-header">
@@ -85,7 +93,13 @@ export const Cart = () => {
         <div className="cart-footer__left">
           <input type="checkbox" className="form-check-input" />
           <span>Select All ({items.length})</span>
-          <button className="cart-footer__btn-delete">Delete</button>
+          <button 
+          className="cart-footer__btn-delete"
+          onClick={() => {
+            if (!cart) return
+            handleRemoveAllCart(cart._id)
+          }}
+          >Delete</button>
         </div>
         <div className="cart-footer__right">
           <div className="cart-footer__total-wrap">
@@ -96,9 +110,25 @@ export const Cart = () => {
               ₱{selectedTotal.toLocaleString() ?? 0}
             </span>
           </div>
-          <button className="cart-footer__btn-checkout">Check Out</button>
+          <button 
+          className="cart-footer__btn-checkout"
+          onClick={() => setIsModalOpen(true)}
+          >Check Out</button>
         </div>
       </div>
     </div>
+
+    <OrderModal 
+    items={selectedItems}
+    shippingFee={cart?.shippingFee}
+    isOpen={isModalOpen}
+    onClose={() => {
+      console.log("clicked")
+      setIsModalOpen(false)}}
+    
+    />
+  
+</div>
   );
+
 };

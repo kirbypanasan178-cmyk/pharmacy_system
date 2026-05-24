@@ -20,6 +20,7 @@ export interface CartItem {
 interface Cart {
     _id: string 
     items: CartItem[]
+    shippingFee: number
     totalPrice: number
 }
 
@@ -51,11 +52,24 @@ const cartSlice = createSlice({
             state.loading = false
             state.error = action.payload
         },
+        updateCartItemSuccess: (state, action: PayloadAction<CartItem>) => {
+    state.loading = false
+    if (state.cart) {
+        const index = state.cart.items.findIndex(
+            (item) => item._id === action.payload._id
+        )
+        if (index !== -1) {
+            state.cart.items[index] = action.payload
+        }
+    }
+},
         removeAllCartItemSuccess: (state) => {
+            state.loading = false
             state.cart = null
         },
         removeCartItemSuccess: (state, action: PayloadAction<string>) => {
     if (state.cart) {
+        state.loading = false
         state.cart.items = state.cart.items.filter(
             (item) => item._id !== action.payload
         )
@@ -68,6 +82,7 @@ export const {
     cartStart,
     cartSuccess,
     cartFailure,
+    updateCartItemSuccess,
     removeAllCartItemSuccess,
     removeCartItemSuccess,
 } = cartSlice.actions

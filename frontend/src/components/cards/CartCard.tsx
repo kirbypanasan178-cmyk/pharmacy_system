@@ -1,6 +1,8 @@
-import "../../css/CartCard.css"; // ✅ import directly from slice
+import { useState } from "react";
+import "../../css/CartCard.css";
 import type { CartItem } from "../../features/cartSlice";
 import { useRemoveCartItem } from "../../hooks/cart/useRemoveCartItem";
+import { useUpdateCart } from "../../hooks/cart/useUpdateCart";
 
 interface CartProps {
     item: CartItem
@@ -10,23 +12,32 @@ interface CartProps {
 
 export const CartCard = ({ item, checked, onSelect }: CartProps) => {
     const { removeCartItem } = useRemoveCartItem()
-    const totalPrice = item.price * item.quantity // ✅ compute it here
+    const { updateCart } = useUpdateCart()
+
+    const [count, setCount] = useState<number>(item.quantity ?? 1)
+    const [totalPrice, setTotalPrice] = useState(item.price * (item.quantity ?? 1))
 
     const handleRemoveCartItem = async (id: string) => {
         await removeCartItem(id)
     }
-    
+
+    const handleQuantityChange = async (newCount: number) => {
+        if (newCount < 1) return
+        setCount(newCount)
+        setTotalPrice(item.price * newCount)
+        await updateCart(item._id, newCount)
+    }
 
     return (
         <div className="cart-card">
 
             {/* Checkbox */}
             <div className="cart-card__checkbox form-check">
-                <input 
-                className="form-check-input" 
-                type="checkbox" 
-                checked={checked}
-                onChange={(e) => onSelect(item._id, e.target.checked)}
+                <input
+                    className="form-check-input"
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => onSelect(item._id, e.target.checked)}
                 />
             </div>
 
@@ -42,7 +53,7 @@ export const CartCard = ({ item, checked, onSelect }: CartProps) => {
             {/* Name + Variation */}
             <div className="cart-card__info">
                 <div className="cart-card__name">
-                    {item.product?.name ?? "Product Name"} {/* ✅ was item.name */}
+                    {item.product?.name ?? "Product Name"}
                 </div>
                 <button className="cart-card__variation">
                     Variations &nbsp;▾
@@ -59,14 +70,20 @@ export const CartCard = ({ item, checked, onSelect }: CartProps) => {
             {/* Quantity */}
             <div className="cart-card__quantity">
                 <div className="cart-card__qty-wrap">
-                    <button className="cart-card__qty-btn">−</button>
+                    <button
+                        className="cart-card__qty-btn"
+                        onClick={() => handleQuantityChange(Math.max(count - 1, 1))}
+                    >−</button>
                     <input
                         className="cart-card__qty-value"
                         type="text"
-                        value={item?.quantity ?? 1}
+                        value={count}
                         readOnly
                     />
-                    <button className="cart-card__qty-btn">+</button>
+                    <button
+                        className="cart-card__qty-btn"
+                        onClick={() => handleQuantityChange(count + 1)}
+                    >+</button>
                 </div>
                 <div><span>{item.product.stock}</span></div>
             </div>
@@ -74,15 +91,15 @@ export const CartCard = ({ item, checked, onSelect }: CartProps) => {
             {/* Total Price */}
             <div className="cart-card__total">
                 <div className="cart-card__total-value">
-                    ₱{totalPrice?.toLocaleString() ?? "0.00"} {/* ✅ computed above */}
+                    ₱{totalPrice.toLocaleString()}
                 </div>
             </div>
 
             {/* Actions */}
             <div className="cart-card__actions">
-                <button 
-                className="cart-card__btn-delete"
-                onClick={() => handleRemoveCartItem(item._id)}
+                <button
+                    className="cart-card__btn-delete"
+                    onClick={() => handleRemoveCartItem(item._id)}
                 >Delete</button>
                 <button className="cart-card__btn-similar">
                     Find Similar ▾

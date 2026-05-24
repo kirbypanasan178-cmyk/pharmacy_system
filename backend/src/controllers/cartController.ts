@@ -39,9 +39,14 @@ export const getCarByIdController = async (req: Request, res: Response): Promise
 
 export const updateCartController = async (req: Request, res: Response) => {
     const id = req.params.id
-    const { form } = req.body 
+    const { quantity } = req.body 
+
+      if (!quantity) {
+        return res.status(400).json({ error: "quantity is required" })
+    }
+    
     try {
-        const cart = await updateCartService(id.toString(), form)
+        const cart = await updateCartService(id.toString(), quantity)
 
         res.status(200).json(cart)
     } catch (error) {
@@ -74,14 +79,25 @@ export const removeCartItemController = async (req: Request, res: Response) => {
 }
 
 export const removeAllCartItemController = async (req: Request, res: Response) => {
-    const userId = "69f5f36b8a32efadf3c2909a"
+    const cartId = req.params.id as string
 
     try {
-        const updatedCart = await removeAllCartItemService(userId)
+        const updatedCart = await removeAllCartItemService(cartId)
 
-        res.status(200).json({ message: "Cart removed successfully" })
+        if (!updatedCart) {
+            return res.status(404).json({
+                message: "Cart not found"
+            })
+        }
+
+        res.status(200).json(updatedCart)
     } catch (error) {
-
+        if (error instanceof Error) {
+            res.status(400).json({ error: error.message })
+            return
+        }
+        res.status(500).json({ error: "Internal server error"})
+        return
     }
 }
 

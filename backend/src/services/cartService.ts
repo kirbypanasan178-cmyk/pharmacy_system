@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import { Cart } from "../models/cartModel"
 import { CartForm, CartItemForm } from "../types/cart"
 
@@ -11,16 +11,17 @@ export const createCartService = async (userId: string, items: CartItemForm[]) =
 
        let cart = await Cart.findOne({ userId })
 
-       
-
         if (!cart) {
              const totalPrice = items.reduce((sum, item) => {
                 return sum + item.price * item.quantity
             }, 0)
 
+            const shippingFee = totalPrice <= 20000 ? 150 : 200
+
             cart = await Cart.create({
                 userId,
                 items,
+                shippingFee,
                 totalPrice
             })
         } else {
@@ -39,6 +40,8 @@ export const createCartService = async (userId: string, items: CartItemForm[]) =
              cart.totalPrice = cart?.items.reduce((sum, item) => {
                 return sum + item.price * item.quantity
             }, 0)
+
+            cart.shippingFee = cart.totalPrice <= 20000 ? 150 : 200
 
             await cart.save()
         }
@@ -63,17 +66,23 @@ export const getCartByIdService = async (userId: string) => {
     }
 }
 
-export const updateCartService = async (id: string, form: CartForm) => {
+export const updateCartService = async (id: string, quantity: number) => {
     try {
-        const cart = await Cart.findByIdAndUpdate(
-            id,
-            form,
-            { returnDocument: "after"},
-        )
+        const cart = await Cart.findOneAndUpdate(
+            { "items._id": new mongoose.Types.ObjectId(id) },  // ✅ cast to ObjectId
+            { $set: { "items.$.quantity": quantity } },
+            { new: true }
+        ).populate("items.product")
 
-        return cart
-    } 
-    catch (error) {
+        if (!cart) throw new Error("Cart item not found")
+
+        const updatedItem = cart.items.find(item => item._id.toString() === id)
+
+        if (!updatedItem) throw new Error("Cart item not found after update")
+
+        return updatedItem
+
+    } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Failed to update cart")
     }
 }
@@ -94,10 +103,10 @@ export const removeCartItemService = async (userId: string, itemId: string) => {
     }
 }
 
-export const removeAllCartItemService = async (userId: string) => {
+export const removeAllCartItemService = async (cartId: string) => {
     try {
         const updatedCart = await Cart.findByIdAndUpdate(
-            { userId },
+            cartId,
             { 
                 $set: {
                     items: []
