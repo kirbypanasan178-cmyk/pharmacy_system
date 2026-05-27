@@ -1,5 +1,5 @@
 import { updateAdminOrderAPI } from "../../api/orderAPI"
-import { orderFailure, orderStart, orderSuccess } from "../../features/orderSlice"
+import { orderFailure, orderStart, updateOrderSuccess } from "../../features/orderSlice"
 import type { PaymentStatus, Status } from "../../types/order"
 import { useAppDispatch } from "../redux/reduxHooks"
 
@@ -9,7 +9,9 @@ export const useUpdateAdminOrder = () => {
         dispatch(orderStart())
         try {
             const data = await updateAdminOrderAPI(id, status, paymentStatus)
-            dispatch(orderSuccess(data))
+            console.log("API RESPONSE:", data)
+console.log("IS ARRAY:", Array.isArray(data))
+            dispatch(updateOrderSuccess(data))
         } catch (error: any) {
             console.log(error)
             dispatch(orderFailure(error.message))

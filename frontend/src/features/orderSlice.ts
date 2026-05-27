@@ -49,6 +49,15 @@ const orderSlice = createSlice({
             state.loading = false
             state.order = action.payload
         },
+        updateOrderSuccess: (state, action: PayloadAction<Order>) => {
+            const index = state.order.findIndex((o) =>
+                o._id === action.payload._id
+            )
+
+            if (index !== -1) {
+                state.order[index] = action.payload
+            }
+        },
         orderFailure: (state, action: PayloadAction<string | null>) => {
             state.loading = false
             state.error = action.payload
@@ -59,7 +68,8 @@ const orderSlice = createSlice({
 export const {
     orderStart,
     orderSuccess,
-    orderFailure
+    orderFailure,
+    updateOrderSuccess
 } = orderSlice.actions
 
 export default orderSlice.reducer

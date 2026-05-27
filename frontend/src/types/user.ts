@@ -1,4 +1,5 @@
-export interface User {
+export interface UserInfo {
+    _id: string
     fullname: string;
     age: number;
     gender: "male" | "female" | "other";
@@ -12,6 +13,15 @@ export interface User {
         zipcode: string;
     }
     email: string;
+}
+
+export interface User {
+    _id: string
+    users: UserInfo
+    role: string
+    isActive: boolean
+    createdAt: string
+    totalOrders: number
 }
 
 export type SignupFormType = {

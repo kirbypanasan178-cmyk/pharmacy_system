@@ -16,16 +16,19 @@ import { Dashboard } from "./pages/admin/Dashboard";
 import { useGetAllProduct } from "./hooks/product/useGetAllProduct";
 import { Cart } from "./pages/user/Cart";
 import { useGetAllCart } from "./hooks/cart/useGetAllCart";
+import { useGetAllOrder } from "./hooks/order/useGetAllOrder";
 
 function App() {
   const { getAllCategory } = useGetAllCategory()
   const { getAllProduct } = useGetAllProduct()
   const { getAllCart } = useGetAllCart()
+  const { getAllOrder } = useGetAllOrder()
 
   useEffect(() => {
     getAllCategory()
     getAllProduct();
     getAllCart()
+    getAllOrder()
   }, [])
 
   return (

@@ -109,4 +109,26 @@ export const deleteUserService = async (id: string) => {
   return { message: "User deleted successfully" };
 };
 
+export const blockUserService = async (id: string) => {
+    const user = await User.findByIdAndUpdate(
+        id,
+        { isActive: false },
+        { returnDocument: "after"}
+    ).select("-password")
 
+    if (!user) throw new Error("User not found")
+
+    return user
+}
+
+export const unblockUserService = async (id: string) => {
+    const user = await User.findByIdAndUpdate(
+        id,
+        { isActive: true },
+        { returnDocument: "after"}
+    ).select("-password")
+
+    if (!user) throw new Error("User not found")
+
+    return user
+}

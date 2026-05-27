@@ -24,7 +24,7 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: string }[] = 
   { value: "card",  label: "Card",              icon: "ti-credit-card" },
 ];
 
-export const OrderModal: React.FC<OrderModalProps> = ({
+export const OrderFormModal: React.FC<OrderModalProps> = ({
   items,
   shippingFee = 0,
   isOpen,

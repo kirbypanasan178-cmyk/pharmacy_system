@@ -1,0 +1,404 @@
+/* ════════════════════════════════════════════
+   OrderTable.css
+   ════════════════════════════════════════════ */
+
+/* ─── Outer wrap ─── */
+.ot-wrap {
+  width: 100%;
+}
+
+/* ─── Toolbar: title + count ─── */
+.ot-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 2px;
+}
+
+.ot-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.ot-count {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ─── Table container ─── */
+.ot-table-wrap {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Table ─── */
+.ot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.ot-table thead tr {
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ot-table th {
+  text-align: left;
+  padding: 12px 18px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ot-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.12s;
+}
+
+.ot-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ot-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.ot-table tbody tr.ot-row--editing {
+  background-color: #f5f3ff;
+}
+
+.ot-table td {
+  padding: 13px 18px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+/* ─── Customer cell ─── */
+.ot-customer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ot-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ot-customer-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+/* ─── Misc cells ─── */
+.ot-amount {
+  font-weight: 600;
+  color: #111827;
+}
+
+.ot-dim {
+  color: #6b7280;
+}
+
+/* ─── Badges ─── */
+.ot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.ot-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Status colours */
+.ot-badge--pending  { background: #fef9c3; color: #a16207; }
+.ot-badge--pending  .ot-badge-dot { background: #a16207; }
+
+.ot-badge--shipped  { background: #dbeafe; color: #1d4ed8; }
+.ot-badge--shipped  .ot-badge-dot { background: #1d4ed8; }
+
+.ot-badge--delivered { background: #dcfce7; color: #15803d; }
+.ot-badge--delivered .ot-badge-dot { background: #15803d; }
+
+.ot-badge--cancelled { background: #fee2e2; color: #b91c1c; }
+.ot-badge--cancelled .ot-badge-dot { background: #b91c1c; }
+
+/* Payment colours */
+.ot-badge--paid     { background: #dcfce7; color: #15803d; }
+.ot-badge--paid     .ot-badge-dot { background: #15803d; }
+
+.ot-badge--unpaid   { background: #fef9c3; color: #a16207; }
+.ot-badge--unpaid   .ot-badge-dot { background: #a16207; }
+
+.ot-badge--refunded { background: #f3e8ff; color: #7e22ce; }
+.ot-badge--refunded .ot-badge-dot { background: #7e22ce; }
+
+/* ─── Three-dots button ─────────────────────
+   Root cause of the "capsule outline" bug:
+   the browser was applying its default
+   [type=button] / :focus styles.  We reset
+   everything explicitly.
+   ─────────────────────────────────────────── */
+.ot-menu-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.ot-dots-btn {
+  /* reset browser defaults completely */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+
+  /* layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.ot-dots-btn:hover {
+  background: #f3f4f6;
+}
+
+.ot-dots-btn:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 1px;
+}
+
+.ot-dots-btn span {
+  display: block;
+  width: 4px;
+  height: 4px;
+  background-color: #6b7280;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ─── Dropdown ─── */
+.ot-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  min-width: 168px;
+  z-index: 50;
+  padding: 6px;
+  animation: ot-fadeIn 0.12s ease;
+}
+
+@keyframes ot-fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ot-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #374151;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.ot-dd-item:hover {
+  background: #f3f4f6;
+}
+
+.ot-dd-item--danger       { color: #dc2626; }
+.ot-dd-item--danger:hover { background: #fef2f2; }
+
+.ot-dd-sep {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 4px 0;
+}
+
+/* ─── Edit-mode inline actions ─── */
+.ot-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ot-btn {
+  padding: 5px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.ot-btn:hover {
+  background: #f3f4f6;
+}
+
+.ot-btn--save {
+  background: #6366f1;
+  color: #fff;
+  border-color: #6366f1;
+}
+
+.ot-btn--save:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+/* ─── Inline selects (edit mode) ─── */
+.ot-select {
+  padding: 5px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #374151;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.ot-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+
+/* ════════════════════════════════════════════
+   Order Controls  (Search + Filters)
+   — kept here so everything ships in one file
+   ════════════════════════════════════════════ */
+
+.order-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;        /* graceful on small screens */
+}
+
+/* Search */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 9px 14px 9px 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  font-size: 13.5px;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder { color: #9ca3af; }
+
+.search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Filters — inline, side-by-side with search */
+.filters-wrapper {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;   /* don't let them shrink below their natural width */
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #6b7280;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.filter-group:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13.5px;
+  color: #374151;
+  cursor: pointer;
+  /* keep the native arrow but remove extra padding */
+  padding-right: 2px;
+}

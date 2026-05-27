@@ -1,8 +1,9 @@
 import User from "../models/userModel";
 import { Request, Response } from "express";
-import { signupService, deleteUserService, getAllUsersService, getUserByIdService, updateUserService, loginService } from "../services/userService";
+import { signupService, deleteUserService, getAllUsersService, getUserByIdService, updateUserService, loginService, blockUserService, unblockUserService } from "../services/userService";
 import jwt from "jsonwebtoken";
 import config from "../config/env";
+import { Order } from "../models/orderModel";
 
 export const createToken = (_id: string): string => {
   return jwt.sign(
@@ -42,7 +43,7 @@ export const loginController = async (req: Request, res: Response) => {
 }
 }
 
-export const getUserController = async (req: Request, res: Response) => {
+export const getUserByIdController = async (req: Request, res: Response) => {
     const id = req.params.id
 
     try {
@@ -63,6 +64,21 @@ export const getUserController = async (req: Request, res: Response) => {
 export const getAllUsersController = async (req: Request, res: Response) => {
     try {
         const users = await getAllUsersService()
+
+        const usersWithOrders = await Promise.all(
+            users.map(async (user) => {
+                const totalOrders = await Order.countDocuments({
+                    userId: user._id
+                })
+
+                return {
+                    ...user.toObject(),
+                    totalOrders
+                }
+            })
+        ) 
+
+        res.status(200).json(usersWithOrders)
 
         res.status(200).json(users)
 
@@ -97,10 +113,36 @@ export const deleteUserController = async (req: Request, res: Response) => {
             throw new Error("Invalid id")
         }
 
-        const result = await deleteUserService(id);
+        const user = await deleteUserService(id);
 
-        res.status(200).json(result);
+        res.status(200).json(user);
     } catch (err: any) {
         res.status(404).json({ error: err.message });
     }
 };
+
+export const blockUserController = async (req: Request, res: Response) => {
+    const id = req.params.id as string
+
+    try {
+        const user = await blockUserService(id)
+        
+        res.status(200).json(user)
+
+    } catch (err: any) {
+        res.status(404).json({ error: err.message });
+    }
+}
+
+export const unblockUserController = async (req: Request, res: Response) => {
+    const id = req.params.id as string
+
+    try {
+        const user = await unblockUserService(id)
+        
+        res.status(200).json(user)
+
+    } catch (err: any) {
+        res.status(404).json({ error: err.message });
+    }
+}

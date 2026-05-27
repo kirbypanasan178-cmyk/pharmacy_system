@@ -6,16 +6,17 @@ interface User {
     role: string;
     token: string;
     isActive: string;
+    createdAt: string
 }
 
 type AuthState = {
-    user: User | null;
+    user: User[] | null;
     loading: boolean;
     error: string | null;
 }
 
  const initialState: AuthState = {
-    user: null,
+    user: [],
     loading: false,
     error: null,
  }
@@ -28,7 +29,7 @@ type AuthState = {
             state.loading = true;
             state.error = null;
         },
-        loginSuccess (state, action: PayloadAction<User>) {
+        loginSuccess (state, action: PayloadAction<User[]>) {
             state.loading = false;
             state.user = action.payload
         },

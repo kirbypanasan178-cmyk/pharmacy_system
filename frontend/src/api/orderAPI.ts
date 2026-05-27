@@ -50,8 +50,8 @@ export const getOrderAPI = async (id: string) => {
 }
 
 export const updateAdminOrderAPI = async (id: string, status: Status, paymentStatus: PaymentStatus) => {
-    const response = await fetch(`http://localhost:2000/api/order/${id}`, {
-        method: "POST",
+    const response = await fetch(`http://localhost:2000/api/order/admin/${id}`, {
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
@@ -71,15 +71,19 @@ export const updateAdminOrderAPI = async (id: string, status: Status, paymentSta
 }
 
 export const updateUserOrderAPI = async (id: string, status: Status) => {
-    const response = await fetch(`http://localhost:2000/api/order/${id}`, {
+    const response = await fetch(`http://localhost:2000/api/order/user/${id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(status)
+        body: JSON.stringify({status})
     })
+    
 
     const data = await response.json()
+
+    
+    
 
     if (!response.ok) {
         throw new Error(data.error)

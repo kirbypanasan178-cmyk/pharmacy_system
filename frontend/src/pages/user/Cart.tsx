@@ -2,8 +2,8 @@ import { CartCard } from "../../components/cards/CartCard";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
 import "../../css/Card.css";
 import { useState } from "react";
-import { OrderModal } from "../../components/modals/OrderModal";
 import { useRemoveAllCartItem } from "../../hooks/cart/useRemoveAllCartItem";
+import { OrderFormModal } from "../../components/modals/OrderFormModal";
 
 export const Cart = () => {
   const { cart, loading, error } = useAppSelector((state) => state.cart);
@@ -118,7 +118,7 @@ export const Cart = () => {
       </div>
     </div>
 
-    <OrderModal 
+    <OrderFormModal
     items={selectedItems}
     shippingFee={cart?.shippingFee}
     isOpen={isModalOpen}

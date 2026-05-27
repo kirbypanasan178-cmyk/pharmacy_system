@@ -1,0 +1,32 @@
+.order-page {
+    padding: 32px 24px;
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+.order-page__heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 6px;
+}
+
+.order-page__subheading {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7280;
+    margin: 0 0 28px;
+}
+
+.order-page__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .order-page__cards {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
