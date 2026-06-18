@@ -11,6 +11,8 @@ import {
 } from "../controllers/userController"
 import  { signupValidation, loginValidation } from "../validators/userValidation"
 import { requireAuth } from "../middlewares/requireAuth"
+import { isAdmin } from "../middlewares/isAdmin"
+import { updateValidation } from "../validators/updateValidation"
 
 const router = express.Router()
 
@@ -19,17 +21,17 @@ router.post("/signup", signupValidation, signupController)
 // for users and admin
 router.post("/login", loginValidation, loginController)
 // for admins only
-router.get("/users", getAllUsersController)
+router.get("/users", requireAuth, isAdmin, getAllUsersController)
 // for admins and users
-router.get("/users/:id", getUserByIdController)
+router.get("/users/:id", requireAuth, getUserByIdController)
 // for admins and users
-router.patch("/users/:id", signupValidation, updateUserController)
+router.patch("/users/:id", requireAuth, updateValidation, updateUserController)
 // for admins only
-router.delete("/users/:id", deleteUserController)
+router.delete("/users/:id", requireAuth, isAdmin, deleteUserController)
 
 // for admin
-router.patch("/block/:id", blockUserController)
-router.patch("/unblock/:id", unblockUserController)
+router.patch("/block/:id", requireAuth, isAdmin, blockUserController)
+router.patch("/unblock/:id", requireAuth, isAdmin, unblockUserController)
 
 
 

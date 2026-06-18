@@ -15,7 +15,7 @@ interface ShippingAddress {
 interface Order {
     _id: string
     userId: string
-    items: CartItem
+    items: CartItem[]
     status: Status
     totalPrice: number
     shippingFee: number
@@ -24,16 +24,23 @@ interface Order {
     shippingAddress: ShippingAddress
     createdAt: string
     updatedAt: string
+    shippedAt: string
+    deliveredAt: string
+    cancelledAt: string
+    paid: string
+    refunded: string
 }
 
 interface OrderState {
-    order: Order[]
+    userOrders: Order[]
+    adminOrders: Order[]
     loading: boolean
     error: string | null
 }
 
 const initialState: OrderState = {
-    order: [],
+    userOrders: [],
+    adminOrders: [],
     loading: false,
     error: null
 }
@@ -42,23 +49,27 @@ const orderSlice = createSlice({
     name: "order",
     initialState,
     reducers: {
-        orderStart: (state) => {
+        getOrderStart: (state) => {
             state.loading = true
         },
-        orderSuccess: (state, action: PayloadAction<Order[]>) => {
+        getOrderByIdSuccess: (state, action: PayloadAction<Order[]>) => {
             state.loading = false
-            state.order = action.payload
+            state.userOrders = action.payload
         },
-        updateOrderSuccess: (state, action: PayloadAction<Order>) => {
-            const index = state.order.findIndex((o) =>
+        getAllOrderSuccess: (state, action: PayloadAction<Order[]>) => {
+            state.loading = false
+            state.adminOrders = action.payload
+        },
+        updateOrderByIdSuccess: (state, action: PayloadAction<Order>) => {
+            const index = state.adminOrders.findIndex((o) =>
                 o._id === action.payload._id
             )
 
             if (index !== -1) {
-                state.order[index] = action.payload
+                state.adminOrders[index] = action.payload
             }
         },
-        orderFailure: (state, action: PayloadAction<string | null>) => {
+        getOrderFailure: (state, action: PayloadAction<string | null>) => {
             state.loading = false
             state.error = action.payload
         }
@@ -66,10 +77,11 @@ const orderSlice = createSlice({
 })
 
 export const {
-    orderStart,
-    orderSuccess,
-    orderFailure,
-    updateOrderSuccess
+    getOrderStart,
+    getOrderByIdSuccess,
+    getAllOrderSuccess,
+    updateOrderByIdSuccess,
+    getOrderFailure,
 } = orderSlice.actions
 
 export default orderSlice.reducer

@@ -93,7 +93,7 @@ export const updateUserService = async (
     const user = await User.findByIdAndUpdate(
         id,
         { $set: data},
-        { returnDocument: "after"}
+        { returnDocument: "after", runValidators: false}
     ).select("-password")
 
     if (!user) throw new Error("User not found")

@@ -1,10 +1,13 @@
 import type { AddressFormType, PaymentMethod, PaymentStatus, Status } from "../types/order"
+import { getToken } from "../utils/getToken"
 
-export const createOrderAPI = async (shippingAddress: AddressFormType, paymentMethod: PaymentMethod) => {
-    const response = await fetch("http://localhost:2000/api/order/", {
+export const createOrderAPI = async (userId: string, shippingAddress: AddressFormType, paymentMethod: PaymentMethod) => {
+    const token = getToken()
+    const response = await fetch(`http://localhost:2000/api/order/${userId}`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
             shippingAddress,
@@ -22,8 +25,12 @@ export const createOrderAPI = async (shippingAddress: AddressFormType, paymentMe
 }
 
 export const getAllOrderAPI = async () => {
+    const token = getToken()
     const response = await fetch("http://localhost:2000/api/order/", {
         method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
     })
 
     const data = await response.json()
@@ -36,8 +43,12 @@ export const getAllOrderAPI = async () => {
 }
 
 export const getOrderAPI = async (id: string) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/order/${id}`, {
         method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
     })
 
     const data = await response.json()
@@ -50,10 +61,12 @@ export const getOrderAPI = async (id: string) => {
 }
 
 export const updateAdminOrderAPI = async (id: string, status: Status, paymentStatus: PaymentStatus) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/order/admin/${id}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
             status,
@@ -71,10 +84,12 @@ export const updateAdminOrderAPI = async (id: string, status: Status, paymentSta
 }
 
 export const updateUserOrderAPI = async (id: string, status: Status) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/order/user/${id}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({status})
     })
@@ -84,6 +99,46 @@ export const updateUserOrderAPI = async (id: string, status: Status) => {
 
     
     
+
+    if (!response.ok) {
+        throw new Error(data.error)
+    }
+
+    return data
+}
+
+export const getOrdersTodayCountAPI = async () => {
+    const token = getToken()
+    const response = await fetch("http://localhost:2000/api/order/today/count", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        throw new Error(data.error)
+    }
+
+    return data
+
+}
+
+export const getSalesTodayAPI = async () => {
+    const token = getToken()
+    const response = await fetch("http://localhost:2000/api/order/today/sales", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+
+    const data = await response.json()
 
     if (!response.ok) {
         throw new Error(data.error)

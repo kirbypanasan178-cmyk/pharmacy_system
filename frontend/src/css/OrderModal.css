@@ -1,19 +1,52 @@
-/* The backdrop — covers the full screen */
-.modal-backdrop {
-  position: fixed;        /* ← fixed, not absolute */
-  inset: 0;               /* top/right/bottom/left: 0 */
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;    /* vertical center */
-  justify-content: center; /* horizontal center */
-  z-index: 1000;
+/* OrderModal.css — green theme overrides */
+
+/* Input focus ring */
+.form-control:focus {
+  border-color: #1D9E75;
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.12);
 }
 
-/* The modal box itself */
-.modal-content {
-  background: white;
+/* Payment buttons */
+.payment-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: all 0.15s;
+  width: 100%;
   border-radius: 8px;
-  padding: 24px;
-  width: 90%;
-  max-width: 500px;
+  border: 0.5px solid #D3D1C7;
+  background: #F1EFE8;
+  color: #5F5E5A;
+  cursor: pointer;
+}
+
+.payment-btn:hover {
+  border-color: #5DCAA5;
+  background: #E1F5EE;
+  color: #0F6E56;
+}
+
+.payment-btn.active {
+  border: 2px solid #0F6E56;
+  background: #E1F5EE;
+  color: #0F6E56;
+}
+
+/* Section labels */
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+}
+
+/* Total pill */
+.total-pill {
+  background: #E1F5EE;
+  border-radius: 10px;
+  padding: 10px 14px;
 }

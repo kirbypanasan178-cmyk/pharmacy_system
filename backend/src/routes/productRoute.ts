@@ -3,10 +3,13 @@ import { createProductController, deleteProductController, getAllProductsControl
 import { productValidation } from "../validators/productValidation"
 import { upload } from "../middlewares/upload"
 import { requireAuth } from "../middlewares/requireAuth"
+import { isAdmin } from "../middlewares/isAdmin"
 
 const router = express.Router()
 
-router.post("/", 
+router.use(requireAuth)
+
+router.post("/", isAdmin,
     (req, res, next) => {
         upload.single("image")(req, res, (err) => {
             if (err) {
@@ -22,7 +25,7 @@ router.post("/",
 )
 router.get("/", getAllProductsController)
 router.get("/:id", getProductController)
-router.patch("/:id", productValidation, updateProductController)
-router.delete("/:id", deleteProductController)
+router.patch("/:id", isAdmin, upload.single("image"), productValidation, updateProductController)
+router.delete("/:id", isAdmin, deleteProductController)
 
 export default router

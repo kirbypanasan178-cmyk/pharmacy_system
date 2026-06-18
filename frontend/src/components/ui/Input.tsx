@@ -40,7 +40,7 @@ export const Input: React.FC<InputProps> = ({
       {label && <label className="form-label fw-medium">{label}</label>}
 
       <input
-        className={`form-control bg-secondary-subtle ${sizeClass} ${variantClass} ${className}`}
+        className={`form-control bg-light-subtle ${sizeClass} ${variantClass} ${className}`}
         {...props}
       />
 

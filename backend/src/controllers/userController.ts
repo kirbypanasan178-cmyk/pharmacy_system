@@ -32,7 +32,14 @@ export const loginController = async (req: Request, res: Response) => {
         const user = await loginService(email, password)
         const token = createToken(user._id.toString())
 
-        res.status(200).json({ user, token })
+        res.status(200).json({ 
+            user: {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+                isActive: user.isActive
+            },
+            token })
 
     } catch (error: unknown) {
     if (error instanceof Error) {
@@ -79,8 +86,6 @@ export const getAllUsersController = async (req: Request, res: Response) => {
         ) 
 
         res.status(200).json(usersWithOrders)
-
-        res.status(200).json(users)
 
     } catch (error: any) {
         res.status(400).json({ error: error.message })

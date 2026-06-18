@@ -23,12 +23,14 @@ interface User {
 }
 
 interface UserState {
+    user: User | null
     users: User[]
     loading: boolean
     error: string | null
 }
 
 const initialState: UserState = {
+    user: null,
     users: [],
     loading: false,
     error: null
@@ -44,6 +46,10 @@ const userSlice = createSlice({
         userSuccess: (state, action: PayloadAction<User[]>) => {
             state.loading = false
             state.users = action.payload
+        },
+        setUser: (state, action: PayloadAction<User>) => {
+            state.loading = false
+            state.user = action.payload
         },
         updateUserSuccess: (state, action: PayloadAction<User>) => {
             state.loading = false
@@ -65,6 +71,7 @@ const userSlice = createSlice({
 export const {
     userStart,
     userSuccess,
+    setUser,
     updateUserSuccess,
     userFailed
 } = userSlice.actions

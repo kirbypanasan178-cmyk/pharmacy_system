@@ -1,4 +1,4 @@
-export type PaymentMethod  = "cod" | "gcash" | "card"
+export type PaymentMethod  = "cod" | "gcash" | "card" | "paypal"
 
 export type Status = "pending" | "confirmed" | "shipped" | "delivered" | "cancelled"
 

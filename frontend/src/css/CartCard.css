@@ -1,208 +1,376 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
 
 * {
-    box-sizing: border-box;
-    font-family: 'DM Sans', sans-serif;
+  box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
 }
 
+/* ══════════════════════════════
+   DESKTOP: horizontal grid row
+══════════════════════════════ */
 .cart-card {
-    display: grid;
-    grid-template-columns: 32px 80px 1fr 130px 160px 110px 90px;
-    align-items: center;
-    gap: 1rem;
-    background: #fff;
-    border: 1px solid #f0f0f0;
-    border-radius: 4px;
-    padding: 1.25rem 1rem;
+  display: grid;
+  grid-template-columns: 32px 84px 1fr 120px 160px 120px 100px;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #dce8e2;
+  border-radius: 10px;
+  padding: 1.1rem 1.1rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Checkbox */
+.cart-card:hover {
+  border-color: #b6d9c8;
+  box-shadow: 0 3px 14px rgba(13, 51, 33, 0.09);
+}
+
+/* ── Checkbox ── */
 .cart-card__checkbox .form-check-input {
-    width: 1.1rem;
-    height: 1.1rem;
-    border: 1.5px solid #ccc;
-    border-radius: 3px;
-    cursor: pointer;
-    accent-color: #ee4d2d;
-    margin: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1.5px solid #9abfaf;
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: #1a7a4e;
+  margin: 0;
+  transition: border-color 0.15s;
 }
 
-/* Image */
+.cart-card__checkbox .form-check-input:hover {
+  border-color: #1a7a4e;
+}
+
+/* ── Image ── */
 .cart-card__image-wrap {
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid #f0f0f0;
+  width: 84px;
+  height: 84px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e8f2ec;
+  flex-shrink: 0;
+  background: #f3f7f5;
 }
 
 .cart-card__image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.cart-card:hover .cart-card__image-wrap img {
+  transform: scale(1.04);
 }
 
 .cart-card__image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-    color: #ccc;
-    font-size: 1.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf9f3;
+  color: #9abfaf;
+  font-size: 1.6rem;
 }
 
-/* Info */
+/* ── Info ── */
 .cart-card__info {
-    min-width: 0;
+  min-width: 0;
 }
 
 .cart-card__name {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #212121;
-    margin-bottom: 0.5rem;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.4;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111e17;
+  margin-bottom: 0.45rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.45;
 }
 
 .cart-card__variation {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.75rem;
-    color: #757575;
-    background: #f5f5f5;
-    border-radius: 2px;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    border: none;
-    transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #1a7a4e;
+  background: #edf9f3;
+  border: 1px solid #d4f0e4;
+  border-radius: 20px;
+  padding: 0.2rem 0.65rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .cart-card__variation:hover {
-    background: #ebebeb;
+  background: #d4f0e4;
+  border-color: #b6d9c8;
 }
 
-/* Unit Price */
+/* ── Unit Price ── */
 .cart-card__unit-price {
-    text-align: center;
+  text-align: center;
 }
 
 .cart-card__original-price {
-    font-size: 0.72rem;
-    color: #bbb;
-    text-decoration: line-through;
-    margin-bottom: 0.1rem;
+  font-size: 0.7rem;
+  color: #9abfaf;
+  text-decoration: line-through;
+  margin-bottom: 0.1rem;
 }
 
 .cart-card__price-value {
-    font-size: 0.9rem;
-    color: #212121;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3d5246;
 }
 
-/* Quantity */
+/* ── Quantity ── */
 .cart-card__quantity {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .cart-card__qty-wrap {
-    display: flex;
-    align-items: center;
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #dce8e2;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.cart-card__qty-wrap:focus-within {
+  border-color: #1a7a4e;
 }
 
 .cart-card__qty-btn {
-    width: 32px;
-    height: 32px;
-    background: #fff;
-    border: none;
-    font-size: 1rem;
-    color: #444;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-    line-height: 1;
+  width: 30px;
+  height: 30px;
+  background: #f3f7f5;
+  border: none;
+  font-size: 1rem;
+  color: #3d5246;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+  font-weight: 500;
 }
 
 .cart-card__qty-btn:hover {
-    background: #f5f5f5;
+  background: #d4f0e4;
+  color: #155c3a;
 }
 
 .cart-card__qty-value {
-    width: 44px;
-    height: 32px;
-    border: none;
-    border-left: 1px solid #e0e0e0;
-    border-right: 1px solid #e0e0e0;
-    text-align: center;
-    font-size: 0.875rem;
-    color: #212121;
-    outline: none;
-    background: #fff;
+  width: 40px;
+  height: 30px;
+  border: none;
+  border-left: 1.5px solid #dce8e2;
+  border-right: 1.5px solid #dce8e2;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111e17;
+  outline: none;
+  background: #fff;
 }
 
-.cart-card__stock-warning {
-    font-size: 0.7rem;
-    color: #ee4d2d;
+/* Stock label */
+.cart-card__quantity > div[style] {
+  font-size: 0.7rem !important;
+  color: #7a9188 !important;
+  letter-spacing: 0.01em;
 }
 
-/* Total Price */
+/* ── Total Price ── */
 .cart-card__total {
-    text-align: center;
+  text-align: center;
 }
 
 .cart-card__total-value {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #ee4d2d;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a7a4e;
+  letter-spacing: -0.01em;
 }
 
-/* Actions */
+/* ── Actions ── */
 .cart-card__actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .cart-card__btn-delete {
-    background: none;
-    border: none;
-    font-size: 0.8rem;
-    color: #212121;
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.15s;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #7a9188;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 0.15s;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .cart-card__btn-delete:hover {
-    color: #ee4d2d;
+  color: #c94040;
 }
 
 .cart-card__btn-similar {
-    background: none;
-    border: none;
-    font-size: 0.8rem;
-    color: #ee4d2d;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-    transition: opacity 0.15s;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #22a06b;
+  cursor: pointer;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: color 0.15s;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .cart-card__btn-similar:hover {
-    opacity: 0.75;
+  color: #155c3a;
+}
+
+/* ── Mobile label (hidden on desktop) ── */
+.cart-card__mobile-label {
+  display: none;
+  font-size: 0.68rem;
+  color: #7a9188;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════
+   MOBILE: stacked card layout ≤ 640px
+══════════════════════════════ */
+@media (max-width: 640px) {
+  .cart-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
+    gap: 0;
+    padding: 0.9rem;
+    align-items: start;
+  }
+
+  /* Checkbox: top-left */
+  .cart-card__checkbox {
+    grid-column: 1;
+    grid-row: 1;
+    padding-top: 3px;
+    padding-right: 10px;
+  }
+
+  /* Image: col 1, spans rows 2–5 */
+  .cart-card__image-wrap {
+    grid-column: 1;
+    grid-row: 2 / 6;
+    width: 72px;
+    height: 72px;
+    margin-right: 12px;
+    align-self: start;
+  }
+
+  /* Info: col 2 row 1 */
+  .cart-card__info {
+    grid-column: 2;
+    grid-row: 1;
+    padding-bottom: 8px;
+  }
+
+  /* Unit price: col 2 row 2 */
+  .cart-card__unit-price {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+    padding-bottom: 6px;
+  }
+
+  /* Quantity: col 2 row 3 */
+  .cart-card__quantity {
+    grid-column: 2;
+    grid-row: 3;
+    align-items: flex-start;
+    padding-bottom: 8px;
+  }
+
+  /* Total: col 2 row 4 */
+  .cart-card__total {
+    grid-column: 2;
+    grid-row: 4;
+    text-align: left;
+    padding-bottom: 8px;
+  }
+
+  /* Actions: bottom row spanning both cols */
+  .cart-card__actions {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid #edf5f0;
+    padding-top: 9px;
+    margin-top: 4px;
+  }
+
+  /* Show mobile labels */
+  .cart-card__mobile-label {
+    display: block;
+  }
+
+  .cart-card__price-value {
+    font-size: 0.85rem;
+  }
+
+  .cart-card__total-value {
+    font-size: 0.95rem;
+  }
+
+  .cart-card__btn-delete,
+  .cart-card__btn-similar {
+    font-size: 0.85rem;
+    padding: 4px 0;
+  }
+}
+
+/* ── Stock limit styles ── */
+.cart-card__qty-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: #f3f7f5;
+    color: #9abfaf;
+}
+
+.cart-card__qty-btn:disabled:hover {
+    background: #f3f7f5;
+    color: #9abfaf;
+}
+
+.cart-card__stock-label {
+    font-size: 0.7rem;
+    color: #7a9188;
+    letter-spacing: 0.01em;
+}
+
+.cart-card__stock-label--warn {
+    color: #c94040;
+    font-weight: 600;
 }

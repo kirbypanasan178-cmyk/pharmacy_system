@@ -1,6 +1,7 @@
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
 import type { ProductFormTypeProps } from "../../types/product";
 import { useDeleteProduct } from "../../hooks/product/useDeleteProduct";
+import "../../css/ProductTable.css"
 
 const stockStatus = (qty: number) => {
   if (qty === 0) return { cls: "out-of-stock", label: "Out of stock" };

@@ -1,6 +1,5 @@
 import { deleteUserAPI } from "../../api/userAPI"
-import { orderFailure } from "../../features/orderSlice"
-import { userStart, userSuccess } from "../../features/userSlice"
+import { userFailed, userStart, userSuccess } from "../../features/userSlice"
 import { useAppDispatch } from "../redux/reduxHooks"
 
 export const useDeleteUser = () => {
@@ -13,7 +12,7 @@ export const useDeleteUser = () => {
             dispatch(userSuccess(data))
         } catch (error: any) {
             console.log(error)
-            dispatch(orderFailure(error))
+            dispatch(userFailed(error))
         }
     }
 

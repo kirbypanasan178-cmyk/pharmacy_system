@@ -43,8 +43,62 @@ export type SignupFormType = {
     confirmPassword: string;
 }
 
+export const signupFormInitialState: SignupFormType = {
+    fullname: "",
+        age: 0,
+        gender: "male",
+        birthdate: "",
+        birthplace: "",
+        phone: "",
+        address: {
+          street: "",
+          barangay: "",
+          city: "",
+          province: "",
+          zipcode: "",
+        },
+        email: "",
+        password: "",
+        confirmPassword: "",
+}
+
 export interface LoginFormType {
     email: string;
     password: string;
     rememberMe: false;
 }
+
+export type ProfileFormType = {
+    fullname: string;
+    age: number;
+    gender: "male" | "female" | "other";
+    birthdate: string;
+    birthplace: string;
+    phone: string;
+    address: {
+        street: string;
+        barangay: string;
+        city: string;
+        province: string;
+        zipcode: string;
+    }
+    email: string
+}
+
+export const profileFormInitialState: ProfileFormType = {
+    fullname: "",
+    age: 0,
+    gender: "male",
+    birthdate: "",
+    birthplace: "",
+    phone: "",
+    address: {
+        street: "",
+        barangay: "",
+        city: "",
+        province: "",
+        zipcode: "",
+    },
+    email: "",
+}
+

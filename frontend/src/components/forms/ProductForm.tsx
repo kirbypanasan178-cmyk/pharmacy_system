@@ -39,7 +39,7 @@ export const ProductForm = ({
     } else {
       await createProduct(form);
     }
-    handleReset()
+    handleReset();
   };
 
   const handleChange = (
@@ -86,8 +86,8 @@ export const ProductForm = ({
   return (
     <div className="product-card">
 
-      {/* ── Header ── */}
-      <div className="d-flex align-items-center gap-2 mb-3">
+      {/* Header */}
+      <div className="d-flex align-items-center gap-2 mb-2">
         <div className="product-form-icon">
           <span>📦</span>
         </div>
@@ -96,42 +96,30 @@ export const ProductForm = ({
             {editingId ? "Edit Product" : "New Product"}
           </p>
           <p className="product-section-subtitle mb-0">
-            {editingId
-              ? "Update the fields below and save"
-              : "Fill in the details to add a product"}
+            {editingId ? "Update the fields below and save" : "Fill in the details to add a product"}
           </p>
         </div>
       </div>
 
-      {/* ── Editing banner ── */}
       {editingId && (
-        <div className="editing-banner mb-3">
-          ✏️ Editing product ID:{" "}
-          <strong style={{ fontFamily: "monospace" }}>{editingId}</strong>
+        <div className="editing-banner mb-2">
+          ✏️ Editing ID: <strong style={{ fontFamily: "monospace" }}>{editingId}</strong>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="product-form" noValidate>
 
-        {/* ── Section: Image ── */}
+        {/* Image */}
         <div className="product-form-section-label">Product Image</div>
-
-        <div className="mb-3">
-          {/* Drop zone / preview */}
+        <div className="mb-2">
           <div
             className={`product-upload-zone ${imagePreview ? "has-preview" : ""}`}
             onClick={() => fileInputRef.current?.click()}
           >
             {imagePreview ? (
               <>
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="product-upload-preview-img"
-                />
-                <div className="product-upload-overlay">
-                  🔄 Click to change
-                </div>
+                <img src={imagePreview} alt="Preview" className="product-upload-preview-img" />
+                <div className="product-upload-overlay">🔄 Click to change</div>
               </>
             ) : (
               <div className="product-upload-placeholder">
@@ -141,7 +129,6 @@ export const ProductForm = ({
               </div>
             )}
           </div>
-
           <input
             ref={fileInputRef}
             type="file"
@@ -149,13 +136,8 @@ export const ProductForm = ({
             onChange={handleImageChange}
             style={{ display: "none" }}
           />
-
           {imagePreview && (
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className="product-remove-btn"
-            >
+            <button type="button" onClick={handleRemoveImage} className="product-remove-btn">
               🗑 Remove image
             </button>
           )}
@@ -163,23 +145,16 @@ export const ProductForm = ({
 
         <div className="product-form-divider" />
 
-        {/* ── Section: Basic Info ── */}
+        {/* Basic Info */}
         <div className="product-form-section-label">Basic Info</div>
 
-        {/* Name */}
-        <div className="mb-3">
+        <div className="mb-2">
           <Label>Name</Label>
-          <Input
-            id="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="e.g. Paracetamol 500mg"
-          />
+          <Input id="name" value={form.name} onChange={handleChange} placeholder="e.g. Paracetamol 500mg" />
           <ErrorLabel message={error.name} className="field-error" />
         </div>
 
-        {/* Description */}
-        <div className="mb-3">
+        <div className="mb-2">
           <Label>Description</Label>
           <textarea
             id="description"
@@ -187,11 +162,10 @@ export const ProductForm = ({
             onChange={handleChange}
             className="form-control"
             placeholder="Short product description…"
-            rows={3}
+            rows={2}
           />
         </div>
 
-        {/* Category */}
         <div className="mb-0">
           <Label>Category</Label>
           <Select
@@ -209,14 +183,14 @@ export const ProductForm = ({
 
         <div className="product-form-divider" />
 
-        {/* ── Section: Pricing & Stock ── */}
+        {/* Pricing & Stock */}
         <div className="product-form-section-label">Pricing & Stock</div>
 
-        <div className="row g-3 mb-0">
+        <div className="row g-2 mb-0">
           <div className="col-6">
             <Label>Price (₱)</Label>
             <div className="product-input-prefix-wrap">
-              <span className="product-input-prefix">₱</span>
+              <span className="product-input-prefix"></span>
               <Input
                 id="price"
                 value={form.price}
@@ -230,29 +204,19 @@ export const ProductForm = ({
           </div>
           <div className="col-6">
             <Label>Stock</Label>
-            <Input
-              id="stock"
-              value={form.stock}
-              onChange={handleChange}
-              type="number"
-              placeholder="0"
-            />
+            <Input id="stock" value={form.stock} onChange={handleChange} type="number" placeholder="0" />
             <ErrorLabel message={error.stock} className="field-error" />
           </div>
         </div>
 
         <div className="product-form-divider" />
 
-        {/* ── Actions ── */}
+        {/* Actions */}
         <div className="d-flex gap-2">
           <button type="submit" className="btn btn-primary flex-fill">
             {editingId ? "💾 Save Changes" : "＋ Create Product"}
           </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="btn btn-outline-secondary"
-          >
+          <button type="button" onClick={handleReset} className="btn btn-outline-secondary">
             Reset
           </button>
         </div>

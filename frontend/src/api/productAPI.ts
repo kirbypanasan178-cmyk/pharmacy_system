@@ -1,7 +1,8 @@
 import type { ProductFormType } from "../types/product"
+import { getToken } from "../utils/getToken"
 
 export const createProductAPI = async (form: ProductFormType) => {
-
+    const token = getToken()
     const formData = new FormData()
 
     formData.append("name", form.name)
@@ -16,6 +17,9 @@ export const createProductAPI = async (form: ProductFormType) => {
 
     const response = await fetch("http://localhost:2000/api/product/", {
         method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
         body: formData
     })
 
@@ -29,8 +33,12 @@ export const createProductAPI = async (form: ProductFormType) => {
 }
 
 export const getAllProductAPI = async () => {
+    const token = getToken()
     const response = await fetch("http://localhost:2000/api/product/", {
         method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
     })
 
     const data = await response.json()
@@ -43,10 +51,12 @@ export const getAllProductAPI = async () => {
 }
 
 export const updateProductAPI = async (id: string, form: ProductFormType) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/product/${id}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(form)
     })
@@ -61,10 +71,12 @@ export const updateProductAPI = async (id: string, form: ProductFormType) => {
 }
 
 export const deleteProductAPI = async (id: string) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/product/${id}`, {
         method: "DELETE",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
     })
 

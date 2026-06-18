@@ -1,8 +1,7 @@
 import "./App.css";
-import { AdminNavBar } from "./components/layout/AdminNavbar";
 import { Login } from "./pages/auth/Login";
 import { Signup } from "./pages/auth/Signup";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Home } from "./pages/user/Home";
 import { Product } from "./pages/admin/Product";
@@ -10,63 +9,79 @@ import { Order } from "./pages/admin/Order";
 import { User } from "./pages/admin/User";
 import { Settings } from "./pages/admin/Settings";
 import { Category } from "./pages/admin/Category";
-import { useEffect } from "react";
-import { useGetAllCategory } from "./hooks/category/useGetAllCategory";
 import { Dashboard } from "./pages/admin/Dashboard";
-import { useGetAllProduct } from "./hooks/product/useGetAllProduct";
 import { Cart } from "./pages/user/Cart";
-import { useGetAllCart } from "./hooks/cart/useGetAllCart";
-import { useGetAllOrder } from "./hooks/order/useGetAllOrder";
+import { ProfileSection } from "./components/accounts/ProfileSection";
+import { PasswordSection } from "./components/accounts/PasswordSection";
+import { PrivacySection } from "./components/accounts/PrivacySection";
+import { OrderSection } from "./components/accounts/OrderSection";
+import { PayPalSuccess } from "./pages/user/PayPalSuccess";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
+import { AdminLayout } from "./components/layout/AdminLayout";
+import { Map } from "./pages/admin/Map";
+import { Account } from "./pages/user/Account";
 
 function App() {
-  const { getAllCategory } = useGetAllCategory()
-  const { getAllProduct } = useGetAllProduct()
-  const { getAllCart } = useGetAllCart()
-  const { getAllOrder } = useGetAllOrder()
-
-  useEffect(() => {
-    getAllCategory()
-    getAllProduct();
-    getAllCart()
-    getAllOrder()
-  }, [])
-
   return (
     <BrowserRouter>
-
       <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* Public only */}
         <Route path="/login" element={<Login />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/signup" element={<Signup />} />
 
-  
-      <Route 
-      path="/admin/*"
-      element={
-        <div className="d-flex min-vh-100">
+        {/* Protected routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/paypal-success"
+          element={
+            <ProtectedRoute>
+              <PayPalSuccess />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Sidebar / Navbar */}
-        <AdminNavBar />
+        {/* Account routes - cleaner pattern */}
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="profile" replace />} />
+          <Route path="profile" element={<ProfileSection />} />
+          <Route path="password" element={<PasswordSection />} />
+          <Route path="privacy" element={<PrivacySection />} />
+          <Route path="orders" element={<OrderSection />} />
+        </Route>
 
-        {/* Main Content */}
-        <div className="flex-grow-1 overflow-auto p-3">
+        {/* Admin routes */}
 
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="product" element={<Product />} />
-            <Route path="category" element={<Category />} />
-            <Route path="order" element={<Order />} />
-            <Route path="user" element={<User />} />
-            <Route path="settings" element={<Settings />} />
-          </Routes>
-
-        </div>
-      
-
-      </div>
-      }
-      />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="product" element={<Product />} />
+          <Route path="category" element={<Category />} />
+          <Route path="order" element={<Order />} />
+          <Route path="user" element={<User />} />
+          <Route path="map" element={<Map />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

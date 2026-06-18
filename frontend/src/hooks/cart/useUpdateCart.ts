@@ -13,7 +13,6 @@ export const useUpdateCart = () => {
                 dispatch(cartStart()) // reset loading
                 return
             }
-            console.log("updateCartAPI response:", data)
             dispatch(updateCartItemSuccess(data))
         } catch (error: any) {
             console.log(error)

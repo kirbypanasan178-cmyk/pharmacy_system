@@ -1,6 +1,6 @@
-import "../../css/User.css"
 import { useBlockUser } from "../../hooks/users/useBlockUser"
 import { useUnBlockUser } from "../../hooks/users/useUnblockUser"
+import { getInitials } from "../../utils/getInitials"
 
 const formatDate = (dateStr: string) => {
   if (!dateStr) return "—"
@@ -11,87 +11,115 @@ const formatDate = (dateStr: string) => {
   })
 }
 
-const getInitials = (name: string) => {
-  if (!name) return "?"
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase()
-}
-
 export const UserTable = ({ filteredUsers }: { filteredUsers: any[] }) => {
-    const { blockUser } = useBlockUser()
-    const { unblockUser } = useUnBlockUser()
-
-    const handleBlockUser = async (id: string) => {
-        await blockUser(id)
-    }
-    const handleUnBlockUser = async (id: string) => {
-        await unblockUser(id)
-    }
+  const { blockUser }   = useBlockUser()
+  const { unblockUser } = useUnBlockUser()
 
   return (
-    <div className="table-card">
-      <div className="table-card__header">
-        <h2 className="table-card__title">All Users</h2>
-        <span className="table-card__count">{filteredUsers.length} total</span>
+    <div className="card border-0 shadow-sm rounded-3 overflow-hidden">
+      {/* Header */}
+      <div className="card-header bg-white d-flex align-items-center justify-content-between py-3 px-4 border-bottom">
+        <h2 className="fs-6 fw-bold text-dark mb-0">User List</h2>
+        <span className="badge rounded-pill text-bg-success bg-opacity-10 text-success fw-semibold">
+          {filteredUsers.length} users
+        </span>
       </div>
 
-      <div className="user-table-wrap">
-        <table className="user-table">
-          <thead>
+      {/* Table */}
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="table-light">
             <tr>
-              <th className="col-name">Name</th>
-              <th className="col-email">Email</th>
-              <th className="col-role">Role</th>
-              <th className="col-status">Status</th>
-              <th className="col-orders">Orders</th>
-              <th className="col-joined">Joined</th>
-              <th className="col-actions">Actions</th>
+              <th className="text-uppercase text-secondary fw-semibold small ps-4">Customer</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Email</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Role</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Status</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Orders</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Date Joined</th>
+              <th className="text-uppercase text-secondary fw-semibold small">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.map((user) => (
               <tr key={user._id}>
-                <td>
-                  <div className="avatar-cell">
-                    <div className="avatar">{getInitials(user.fullname)}</div>
-                    <span className="cell-name">{user.fullname}</span>
+                {/* Customer */}
+                <td className="ps-4">
+                  <div className="d-flex align-items-center gap-2">
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
+                      style={{ width: 34, height: 34, fontSize: "0.7rem", background: "#085a49" }}
+                    >
+                      {getInitials (user.fullname)}
+                    </div>
+                    <span className="fw-semibold text-dark">{user.fullname}</span>
                   </div>
                 </td>
+
+                {/* Email */}
                 <td>
-                  <span className="cell-email">{user.email}</span>
+                  <span className="text-secondary small">{user.email}</span>
                 </td>
+
+                {/* Role */}
                 <td>
-                  <span className={`badge badge--${user.role === "admin" ? "admin" : "user"}`}>
-                    {user.role}
-                  </span>
+                  {user.role === "admin" ? (
+                    <span className="badge rounded-pill bg-warning bg-opacity-25 text-warning-emphasis border border-warning-subtle fw-semibold">
+                      {user.role}
+                    </span>
+                  ) : (
+                    <span className="badge rounded-pill bg-success bg-opacity-10 text-success border border-success-subtle fw-semibold">
+                      {user.role}
+                    </span>
+                  )}
                 </td>
-                <td>
-                  <span className={`badge badge--${user.isActive ? "active" : "inactive"}`}>
-                    <span className="badge__dot" />
-                    {user.isActive ? "Active" : "Inactive"}
-                  </span>
-                </td>
-                <td>
-                  <span className="cell-orders">{user.totalOrders ?? 0}</span>
-                </td>
-                <td>
-                  <span className="cell-date">{formatDate(user.createdAt)}</span>
-                </td>
+
+                {/* Status */}
                 <td>
                   {user.isActive ? (
-                    <button 
-                    className="btn-save"
-                    onClick={() => handleBlockUser(user._id)}
-                    >Block</button>
+                    <span className="badge rounded-pill bg-success bg-opacity-10 text-success border border-success-subtle fw-semibold d-inline-flex align-items-center gap-1">
+                      <span
+                        className="rounded-circle bg-success"
+                        style={{ width: 6, height: 6, display: "inline-block" }}
+                      />
+                      Active
+                    </span>
                   ) : (
-                    <button 
-                    className="btn-save"
-                    onClick={() => handleUnBlockUser(user._id)}
-                    >Unblock</button>
+                    <span className="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger-subtle fw-semibold d-inline-flex align-items-center gap-1">
+                      <span
+                        className="rounded-circle bg-danger"
+                        style={{ width: 6, height: 6, display: "inline-block" }}
+                      />
+                      Inactive
+                    </span>
+                  )}
+                </td>
+
+                {/* Orders */}
+                <td>
+                  <span className="fw-semibold text-dark">{user.totalOrders ?? 0}</span>
+                </td>
+
+                {/* Date Joined */}
+                <td>
+                  <span className="text-secondary small">{formatDate(user.createdAt)}</span>
+                </td>
+
+                {/* Actions */}
+                <td>
+                  {user.isActive ? (
+                    <button
+                      className="btn btn-sm btn-outline-danger fw-semibold"
+                      onClick={() => blockUser(user._id)}
+                    >
+                      Block
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-sm btn-outline-success fw-semibold"
+                      onClick={() => unblockUser(user._id)}
+                    >
+                      Unblock
+                    </button>
                   )}
                 </td>
               </tr>

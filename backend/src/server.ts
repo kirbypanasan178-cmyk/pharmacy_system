@@ -8,12 +8,17 @@ import productRoute from "./routes/productRoute.js"
 import categoryRoute from "./routes/categoryRoute.js"
 import cartRoute from "./routes/cartRoute.js"
 import orderRoute from "./routes/orderRoute.js"
+import analyticsRoute from "./routes/analyticsRoute.js"
+import pharmacyRoute from "./routes/pharmacyRoute.js"
 
 dotenv.config()
 
 const app = express();
 
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:5173", // 👈 exact origin, not wildcard
+  credentials: true,               // 👈 required for cookies
+}))
 
 
 // Middleware
@@ -24,6 +29,8 @@ app.use("/api/product", productRoute)
 app.use("/api/category", categoryRoute)
 app.use("/api/cart", cartRoute)
 app.use("/api/order", orderRoute)
+app.use("/api/analytics", analyticsRoute)
+app.use("/api/pharmacy", pharmacyRoute)
 
 const startServer = async (): Promise<void> => {
     try {

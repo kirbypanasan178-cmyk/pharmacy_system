@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { SignupFormType } from "../../types/user";
+import { signupFormInitialState, type SignupFormType } from "../../types/user";
 import { Label } from "../ui/Label";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
@@ -7,6 +7,7 @@ import { ErrorLabel } from "../ui/errorLabel";
 import { useSignupUser } from "../../hooks/useSignupUser";
 import "../../css/SignupForm.css";
 import { signupValidation, type ValidationErrorsSignup } from "../../validators/signup";
+import { useAppSelector } from "../../hooks/redux/reduxHooks";
 
 const PharmacyIcon = () => (
   <svg viewBox="0 0 24 24">
@@ -17,30 +18,14 @@ const PharmacyIcon = () => (
 );
 
 export const SignupForm: React.FC = () => {
-  const [form, setForm] = useState<SignupFormType>({
-    fullname: "",
-    age: 0,
-    gender: "male",
-    birthdate: "",
-    birthplace: "",
-    phone: "",
-    address: {
-      street: "",
-      barangay: "",
-      city: "",
-      province: "",
-      zipcode: "",
-    },
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [form, setForm] = useState<SignupFormType>(signupFormInitialState);
 
-  const [error, setError] = useState<ValidationErrorsSignup>({});
+  const [errors, setErrors] = useState<ValidationErrorsSignup>({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { signupUser } = useSignupUser();
+  const { error, loading } = useAppSelector((state) => state.auth)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,14 +34,19 @@ export const SignupForm: React.FC = () => {
     const newErrors = signupValidation(form);
 
     if (Object.keys(newErrors).length > 0) {
-      setError(newErrors);
+      setErrors(newErrors);
       return;
     }
 
     setIsLoading(true);
     try {
-      await signupUser(form);
-      setError({});
+      const success = await signupUser(form);
+      if (!success) {
+        console.log("Signup failed")
+        return
+      }
+      setErrors({});
+      setForm(signupFormInitialState)
       console.log("SIGNUP SUCCESS", form);
     } finally {
       setIsLoading(false);
@@ -85,16 +75,16 @@ export const SignupForm: React.FC = () => {
       const updatedForm = addressFields.includes(id)
         ? { ...form, address: { ...form.address, [id]: value } }
         : { ...form, [id]: id === "age" ? Number(value) || 0 : value };
-      setError(signupValidation(updatedForm));
+      setErrors(signupValidation(updatedForm));
     }
   };
 
   // Helper: add input-error class when field has an error after submit
   const inputClass = (field: keyof ValidationErrorsSignup) =>
-    `signup-input${submitted && error?.[field] ? " input-error" : ""}`;
+    `signup-input${submitted && errors?.[field] ? " input-error" : ""}`;
 
   const selectClass = (field: keyof ValidationErrorsSignup) =>
-    `signup-select${submitted && error?.[field] ? " input-error" : ""}`;
+    `signup-select${submitted && errors?.[field] ? " input-error" : ""}`;
 
   return (
     <div className="signup-page">
@@ -131,8 +121,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="John H. Batumbakal"
                   className={inputClass("fullname")}
                 />
-                {submitted && error?.fullname && (
-                  <ErrorLabel message={error.fullname} className="signup-error" />
+                {submitted && errors?.fullname && (
+                  <ErrorLabel message={errors.fullname} className="signup-error" />
                 )}
               </div>
 
@@ -147,8 +137,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="Davao City"
                   className={inputClass("birthplace")}
                 />
-                {submitted && error?.birthplace && (
-                  <ErrorLabel message={error.birthplace} className="signup-error" />
+                {submitted && errors?.birthplace && (
+                  <ErrorLabel message={errors.birthplace} className="signup-error" />
                 )}
               </div>
             </div>
@@ -166,8 +156,8 @@ export const SignupForm: React.FC = () => {
                   onChange={handleChange}
                   className={inputClass("age")}
                 />
-                {submitted && error?.age && (
-                  <ErrorLabel message={error.age} className="signup-error" />
+                {submitted && errors?.age && (
+                  <ErrorLabel message={errors.age} className="signup-error" />
                 )}
               </div>
 
@@ -187,8 +177,8 @@ export const SignupForm: React.FC = () => {
                     { label: "Other",  value: "other"  },
                   ]}
                 />
-                {submitted && error?.gender && (
-                  <ErrorLabel message={error.gender} className="signup-error" />
+                {submitted && errors?.gender && (
+                  <ErrorLabel message={errors.gender} className="signup-error" />
                 )}
               </div>
 
@@ -203,8 +193,8 @@ export const SignupForm: React.FC = () => {
                   onChange={handleChange}
                   className={inputClass("birthdate")}
                 />
-                {submitted && error?.birthdate && (
-                  <ErrorLabel message={error.birthdate} className="signup-error" />
+                {submitted && errors?.birthdate && (
+                  <ErrorLabel message={errors.birthdate} className="signup-error" />
                 )}
               </div>
             </div>
@@ -221,8 +211,8 @@ export const SignupForm: React.FC = () => {
                 placeholder="09XXXXXXXX"
                 className={inputClass("phone")}
               />
-              {submitted && error?.phone && (
-                <ErrorLabel message={error.phone} className="signup-error" />
+              {submitted && errors?.phone && (
+                <ErrorLabel message={errors.phone} className="signup-error" />
               )}
             </div>
           </div>
@@ -242,8 +232,8 @@ export const SignupForm: React.FC = () => {
                 placeholder="Jacinto Street"
                 className={inputClass("street")}
               />
-              {submitted && error?.street && (
-                <ErrorLabel message={error.street} className="signup-error" />
+              {submitted && errors?.street && (
+                <ErrorLabel message={errors.street} className="signup-error" />
               )}
             </div>
 
@@ -259,8 +249,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="Brgy. New Clarin"
                   className={inputClass("barangay")}
                 />
-                {submitted && error?.barangay && (
-                  <ErrorLabel message={error.barangay} className="signup-error" />
+                {submitted && errors?.barangay && (
+                  <ErrorLabel message={errors.barangay} className="signup-error" />
                 )}
               </div>
 
@@ -275,8 +265,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="Davao City"
                   className={inputClass("city")}
                 />
-                {submitted && error?.city && (
-                  <ErrorLabel message={error.city} className="signup-error" />
+                {submitted && errors?.city && (
+                  <ErrorLabel message={errors.city} className="signup-error" />
                 )}
               </div>
             </div>
@@ -293,8 +283,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="Davao del Sur"
                   className={inputClass("province")}
                 />
-                {submitted && error?.province && (
-                  <ErrorLabel message={error.province} className="signup-error" />
+                {submitted && errors?.province && (
+                  <ErrorLabel message={errors.province} className="signup-error" />
                 )}
               </div>
 
@@ -309,8 +299,8 @@ export const SignupForm: React.FC = () => {
                   placeholder="8000"
                   className={inputClass("zipcode")}
                 />
-                {submitted && error?.zipcode && (
-                  <ErrorLabel message={error.zipcode} className="signup-error" />
+                {submitted && errors?.zipcode && (
+                  <ErrorLabel message={errors.zipcode} className="signup-error" />
                 )}
               </div>
             </div>
@@ -332,8 +322,8 @@ export const SignupForm: React.FC = () => {
                 placeholder="johntest@gmail.com"
                 className={inputClass("email")}
               />
-              {submitted && error?.email && (
-                <ErrorLabel message={error.email} className="signup-error" />
+              {submitted && errors?.email && (
+                <ErrorLabel message={errors.email} className="signup-error" />
               )}
             </div>
 
@@ -349,8 +339,11 @@ export const SignupForm: React.FC = () => {
                   onChange={handleChange}
                   className={inputClass("password")}
                 />
-                {submitted && error?.password && (
-                  <ErrorLabel message={error.password} className="signup-error" />
+                {submitted && errors?.password && (
+                  <ErrorLabel message={errors.password ?? error ?? undefined} className="signup-error" />
+                )}
+                {submitted && error && (
+                  <ErrorLabel message={error} className="signup-error"/>
                 )}
               </div>
 
@@ -365,15 +358,15 @@ export const SignupForm: React.FC = () => {
                   onChange={handleChange}
                   className={inputClass("confirmPassword")}
                 />
-                {submitted && error?.confirmPassword && (
-                  <ErrorLabel message={error.confirmPassword} className="signup-error" />
+                {submitted && errors?.confirmPassword && (
+                  <ErrorLabel message={errors.confirmPassword }  className="signup-error" />
                 )}
               </div>
             </div>
           </div>
 
           <button type="submit" className="signup-btn" disabled={isLoading}>
-            {isLoading ? "Creating account…" : "Create Account"}
+            {loading ? "Creating account…" : "Create Account"}
           </button>
         </form>
 

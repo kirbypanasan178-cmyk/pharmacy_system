@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
-import { createCartService, removeAllCartItemService, removeCartItemService, getCartByIdService, updateCartService } from "../services/cartService";
+import { createCartService, removeAllCartItemService, removeCartItemService, getCartByIdService, updateCartService, removeSelectedCartItemService } from "../services/cartService";
 
 export const createCartController = async (req: Request, res: Response): Promise<void> => {
-    const id = "69f5f36b8a32efadf3c2909a"
+    const userId = req.user?._id.toString()
     
     const { items } = req.body
     try {
 
-        const cart = await createCartService(id.toString(), items)
+        if (!userId) {
+            res.status(401).json({ error: "User can't be found" })
+            return
+        }
+
+        const cart = await createCartService(userId, items)
 
         res.status(200).json(cart)
     } catch (error) {
@@ -21,7 +26,8 @@ export const createCartController = async (req: Request, res: Response): Promise
 }
 
 export const getCarByIdController = async (req: Request, res: Response): Promise<void> => {
-    const userId = "69f5f36b8a32efadf3c2909a"
+    const userId = req.params.userId as string
+    
     try {
         const carts = await getCartByIdService(userId)
 
@@ -60,14 +66,30 @@ export const updateCartController = async (req: Request, res: Response) => {
 }
 
 export const removeCartItemController = async (req: Request, res: Response) => {
-    const userId = "69f5f36b8a32efadf3c2909a"
+    const cartId = req.params.cartId as string
+    const { itemId } = req.body
+    try {
+        const updatedCart = await removeCartItemService(cartId, itemId)
+
+        res.status(200).json({ message: "Cart item remove successfully" })
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(400).json({ error: error.message })
+            return
+        }
+        res.status(500).json({ error: "Internal server error"})
+        return
+    }
+}
+
+export const removeSelectedCartItemController = async (req: Request, res: Response) => {
+    const cartId = req.params.cartId as string
+    const { selectedItemIds } = req.body
 
     try {
-        const itemId = req.params.id as string
-        
-        const updatedCart = await removeCartItemService(userId, itemId)
+        await removeSelectedCartItemService(cartId, selectedItemIds)
 
-        res.status(200).json(updatedCart)
+        res.status(200).json({ message: " Selected cart item remove successfully "})
     } catch (error) {
         if (error instanceof Error) {
             res.status(400).json({ error: error.message })
@@ -79,7 +101,7 @@ export const removeCartItemController = async (req: Request, res: Response) => {
 }
 
 export const removeAllCartItemController = async (req: Request, res: Response) => {
-    const cartId = req.params.id as string
+    const cartId = req.params.cartId as string
 
     try {
         const updatedCart = await removeAllCartItemService(cartId)

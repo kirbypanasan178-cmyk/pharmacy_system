@@ -1,22 +1,32 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ProductForm } from "../../components/forms/ProductForm"
 import { ProductTable } from "../../components/table/ProductTable"
 import { productInitialForm, type ProductFormType } from "../../types/product"
 import "../../css/Product.css"
+import { useGetAllCategory } from "../../hooks/category/useGetAllCategory"
+import { useGetAllProduct } from "../../hooks/product/useGetAllProduct"
 
 export const Product = () => {
   const [form, setForm] = useState<ProductFormType>(productInitialForm)
   const [editingId, setEditingId] = useState<string | null>(null)
 
+  const { getAllCategory } = useGetAllCategory()
+  const { getAllProduct } = useGetAllProduct()
+
+  useEffect(() => {
+    getAllCategory()
+    getAllProduct()
+  }, [])
+
   return (
-    <div className="product-page">
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden", padding: "2rem 2rem 3rem" }}>
 
       {/* Page header */}
-      <div className="mb-4">
+      <div className="mb-3 flex-shrink-0">
         <h1
           style={{
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 800,
+            fontFamily: "sans-serif",
+            fontWeight: 600,
             fontSize: "1.75rem",
             color: "var(--c-text)",
             letterSpacing: "-0.5px",
@@ -30,23 +40,21 @@ export const Product = () => {
         </p>
       </div>
 
-      {/* Main layout — form gets col-5, table gets col-7 */}
-      <div className="row g-4 align-items-start">
+      {/* Main layout */}
+      <div className="row g-4 flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
 
-        {/* Form column — wider now */}
-        <div className="col-12 col-xl-5 col-lg-6">
-          <div style={{ position: "sticky", top: "1.5rem" }}>
-            <ProductForm
-              editingId={editingId}
-              setEditingId={setEditingId}
-              form={form}
-              setForm={setForm}
-            />
-          </div>
+        {/* Form column */}
+        <div className="col-12 col-xl-4 col-lg-6 h-100 overflow-y-auto">
+          <ProductForm
+            editingId={editingId}
+            setEditingId={setEditingId}
+            form={form}
+            setForm={setForm}
+          />
         </div>
 
         {/* Table column */}
-        <div className="col-12 col-xl-7 col-lg-6">
+        <div className="col-12 col-xl-8 col-lg-6 h-100 overflow-y-auto">
           <ProductTable
             editingId={editingId}
             setEditingId={setEditingId}

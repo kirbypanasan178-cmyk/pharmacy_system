@@ -1,63 +1,89 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "../../components/cards/ProductCard";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
 import "../../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { useCreateCart } from "../../hooks/cart/useCreateCart";
 import type { Product } from "../../features/productSlice";
+import { useGetAllCategory } from "../../hooks/category/useGetAllCategory";
+import { useGetAllProduct } from "../../hooks/product/useGetAllProduct";
+import { useGetAllCart } from "../../hooks/cart/useGetAllCart";
+
+const getStockStatus = (stock: number): "in-stock" | "low-stock" | "out" => {
+  if (stock <= 0)  return "out";
+  if (stock <= 10) return "low-stock";
+  return "in-stock";
+};
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
 
 export const Home = () => {
   const { products, error, loading } = useAppSelector((state) => state.product);
-  const { createCart } = useCreateCart()
+
+  const { createCart } = useCreateCart();
+  const { getAllCategory } = useGetAllCategory();
+  const { getAllProduct } = useGetAllProduct();
+  const { getAllCart } = useGetAllCart();
+
   const categories = useAppSelector((state) => state.category.categories);
-
-
   const navigate = useNavigate();
 
   const [search, setSearch] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const cart = useAppSelector((state) => state.cart.cart);
 
-  const cart = useAppSelector((state) => state.cart.cart)
-  const items = cart?.items ?? []
+  const windowWidth = useWindowWidth();
+  const isMobile = windowWidth <= 768;
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+    const user = parsedUser?.user;
+    const fetch = async () => {
+      getAllCategory();
+      getAllProduct();
+      if (!user || !user._id) return;
+      await getAllCart(user._id);
+    };
+    fetch();
+  }, []);
+
+  const items = cart?.items ?? [];
   const cartCount = items.length ?? 0;
 
   const handleAddToCart = async (product: Product) => {
-     await createCart({
-      items: [
-        {
-          product: product._id,
-          quantity: 1,
-          price: product.price
-        }
-      ]
-     })
+    await createCart({
+      items: [{ product: product._id, quantity: 1, price: product.price }],
+    });
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
-      selectedCategory === "all" ||
-      product.category?.name === selectedCategory;
+      selectedCategory === "all" || product.category?.name === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const handleCart = () => {
-    navigate("/cart");
-  };
+  const handleCart = () => navigate("/cart");
+  const handleAccount = () => navigate("/account");
 
   return (
     <>
-      {/* ── Top Navbar (Shopee-style) ─────────── */}
+      {/* ── Top Navbar ── */}
       <nav className="pc-navbar">
         <div className="pc-navbar-inner">
           {/* Brand */}
           <div className="pc-navbar-brand">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-              strokeLinejoin="round">
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
@@ -83,7 +109,7 @@ export const Home = () => {
             </div>
           </div>
 
-          {/* Right actions */}
+          {/* Actions */}
           <div className="pc-navbar-actions">
             <button onClick={handleCart} className="pc-nav-btn" title="Cart">
               <span className="pc-nav-btn-inner">
@@ -101,10 +127,10 @@ export const Home = () => {
                   <span className="pc-badge">{cartCount > 99 ? "99+" : cartCount}</span>
                 )}
               </span>
-              <span className="pc-nav-label">Cart</span>
+              {!isMobile && <span className="pc-nav-label">Cart</span>}
             </button>
 
-            <button className="pc-nav-btn" title="Profile">
+            <button onClick={handleAccount} className="pc-nav-btn" title="Profile">
               <span className="pc-nav-btn-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                   fill="currentColor" viewBox="0 0 16 16">
@@ -115,16 +141,16 @@ export const Home = () => {
                     1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                 </svg>
               </span>
-              <span className="pc-nav-label">Profile</span>
+              {!isMobile && <span className="pc-nav-label">Profile</span>}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* ── Page content ──────────────────────── */}
-      <div className="container py-4" style={{ maxWidth: 1280 }}>
+      {/* ── Page content ── */}
+      <div className="pc-page-content">
 
-        {/* ── Hero Banner ───────────────────────── */}
+        {/* ── Hero Banner ── */}
         <div className="hero-banner mb-4">
           <span className="hero-badge">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
@@ -141,62 +167,8 @@ export const Home = () => {
           </p>
         </div>
 
-        {/* ── Stats Row ────────────────────────── */}
-        <div className="row align-items-center g-3 mb-4">
-          <div className="col-12">
-            <div className="d-flex flex-wrap gap-2 justify-content-start">
-              <div className="stat-pill">
-                <div className="stat-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                    fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0
-                      0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2
-                      2h10a2 2 0 0 0 2-2V4h-3.5z"/>
-                  </svg>
-                </div>
-                <div>
-                  <div className="stat-value">{products.length}</div>
-                  <div className="stat-label">Products</div>
-                </div>
-              </div>
-              <div className="stat-pill">
-                <div className="stat-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                    fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674
-                      8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15
-                      5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11z"/>
-                    <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1
-                      6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0
-                      1.5-1.5V6.954z"/>
-                  </svg>
-                </div>
-                <div>
-                  <div className="stat-value">{categories.length}</div>
-                  <div className="stat-label">Categories</div>
-                </div>
-              </div>
-              <div className="stat-pill">
-                <div className="stat-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                    fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1
-                      4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703
-                      0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381
-                      2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                  </svg>
-                </div>
-                <div>
-                  <div className="stat-value">{filteredProducts.length}</div>
-                  <div className="stat-label">Results</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Category Filter ───────────────────── */}
-        <div className="mb-4">
+        {/* ── Category Filter ── */}
+        <div className="category-filter mb-3">
           <p className="section-label">Shop by Category</p>
           <div className="section-divider" />
           <div className="category-scroll">
@@ -222,9 +194,7 @@ export const Home = () => {
             {categories.map((category) => (
               <button
                 key={category._id}
-                className={`category-chip ${
-                  selectedCategory === category.name ? "active" : ""
-                }`}
+                className={`category-chip ${selectedCategory === category.name ? "active" : ""}`}
                 onClick={() => setSelectedCategory(category.name)}
               >
                 {category.name}
@@ -233,8 +203,8 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* ── Product Grid ──────────────────────── */}
-        <div className="d-flex align-items-center justify-content-between mb-3">
+        {/* ── Product Grid ── */}
+        <div className="products-header mb-3">
           <p className="section-label">Products</p>
           {!loading && (
             <span className="results-meta">
@@ -247,16 +217,14 @@ export const Home = () => {
 
         {/* Loading skeletons */}
         {loading && (
-          <div className="row g-3 mb-5">
+          <div className="product-grid mb-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="col-12 col-md-4 col-lg-3">
-                <div className="pc-card h-100">
-                  <div className="skeleton" style={{ height: 220 }} />
-                  <div className="pc-body gap-2">
-                    <div className="skeleton" style={{ height: 18, width: "70%" }} />
-                    <div className="skeleton" style={{ height: 14, width: "40%" }} />
-                    <div className="skeleton mt-2" style={{ height: 36, borderRadius: 50 }} />
-                  </div>
+              <div key={i} className="pc-card">
+                <div className="skeleton" style={{ height: 180 }} />
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 14 }}>
+                  <div className="skeleton" style={{ height: 18, width: "70%" }} />
+                  <div className="skeleton" style={{ height: 14, width: "40%" }} />
+                  <div className="skeleton" style={{ height: 36, borderRadius: 50, marginTop: 8 }} />
                 </div>
               </div>
             ))}
@@ -265,9 +233,7 @@ export const Home = () => {
 
         {/* Error */}
         {error && !loading && (
-          <div className="alert d-flex align-items-center gap-2"
-            style={{ background: "#fff3f3", border: "1.5px solid #f9c6c6",
-              borderRadius: 12, color: "#b91c1c" }}>
+          <div className="pc-alert-error">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
               fill="currentColor" viewBox="0 0 16 16">
               <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8
@@ -284,12 +250,8 @@ export const Home = () => {
         {!loading && !error && filteredProducts.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">🔍</div>
-            <h5 style={{ fontFamily: "'DM Serif Display', serif" }}>
-              No products found
-            </h5>
-            <p className="mb-3" style={{ fontSize: ".9rem" }}>
-              Try a different keyword or browse all categories.
-            </p>
+            <h5>No products found</h5>
+            <p>Try a different keyword or browse all categories.</p>
             <button
               className="category-chip active"
               onClick={() => { setSearch(""); setSelectedCategory("all"); }}
@@ -301,17 +263,19 @@ export const Home = () => {
 
         {/* Cards */}
         {!loading && !error && filteredProducts.length > 0 && (
-          <div className="row g-3 mb-5">
+          <div className="product-grid mb-5 p-2">
             {filteredProducts.map((product) => (
-              <div key={product._id} className="col-12 col-md-4 col-lg-3">
-                <ProductCard
-                  name={product.name}
-                  price={product.price}
-                  image={product.image}
-                  category={product.category?.name || "Unknown Category"}
-                  onAdd={() => handleAddToCart(product)}
-                />
-              </div>
+              <ProductCard
+                key={product._id}
+                name={product.name}
+                category={product.category?.name ?? ""}
+                price={product.price}
+                originalPrice={product.price}
+                image={product.image}
+                stock={product.stock}
+                stockStatus={getStockStatus(product.stock)}
+                onAdd={() => handleAddToCart(product)}
+              />
             ))}
           </div>
         )}

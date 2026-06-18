@@ -1,18 +1,18 @@
 import { updateUserOrderAPI } from "../../api/orderAPI"
-import { orderFailure, orderStart, orderSuccess } from "../../features/orderSlice"
+import { getOrderFailure, getOrderStart, updateOrderByIdSuccess } from "../../features/orderSlice"
 import type { Status } from "../../types/order"
 import { useAppDispatch } from "../redux/reduxHooks"
 
 export const useUpdateUserOrder = () => {
     const dispatch = useAppDispatch()
     const updateUserOrder = async (id: string, status: Status) => {
-        dispatch(orderStart())
+        dispatch(getOrderStart())
         try {
             const data = await updateUserOrderAPI(id, status)
-            dispatch(orderSuccess(data))
+            dispatch(updateOrderByIdSuccess(data))
         } catch (error: any) {
             console.log(error)
-            dispatch(orderFailure(error.message))
+            dispatch(getOrderFailure(error.message))
         }
     }
 

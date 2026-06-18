@@ -1,10 +1,13 @@
 import type { CartForm } from "../types/cart"
+import { getToken } from "../utils/getToken"
 
 export const createCartAPI = async (form: CartForm) => {
+    const token = getToken()
     const response = await fetch("http://localhost:2000/api/cart/", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(form)
     })
@@ -18,11 +21,13 @@ export const createCartAPI = async (form: CartForm) => {
     return data
 }
 
-export const getAllCartAPI = async () => {
-    const response = await fetch("http://localhost:2000/api/cart/", {
+export const getAllCartAPI = async (userId: string) => {
+    const token = getToken()
+    const response = await fetch(`http://localhost:2000/api/cart/${userId}`, {
         method: "GET",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
     })
 
@@ -36,10 +41,12 @@ export const getAllCartAPI = async () => {
 }
 
 export const updateCartAPI = async (id: string, quantity: number) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/cart/${id}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ quantity })
     })
@@ -53,12 +60,15 @@ export const updateCartAPI = async (id: string, quantity: number) => {
     return data
 }
 
-export const removeCartItemAPI = async (itemId: string) => {
-    const response = await fetch(`http://localhost:2000/api/cart/item/${itemId}`, {
+export const removeCartItemAPI = async (cartId: string, itemId: string) => {
+    const token = getToken()
+    const response = await fetch(`http://localhost:2000/api/cart/item/${cartId}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
+        body: JSON.stringify({ itemId })
     })
 
     const data = await response.json()
@@ -70,11 +80,33 @@ export const removeCartItemAPI = async (itemId: string) => {
     return data
 }
 
+export const removeSelectedCartItemAPI = async (cartId: string, selectedItemIds: string[]) => {
+    const token = getToken()
+    const response = await fetch(`http://localhost:2000/api/cart/selected-items/${cartId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ selectedItemIds })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        throw new Error(data?.error || "Failed to remove selected cart")
+    }
+
+    return data
+}
+
 export const removeAllCartItemAPI = async (cartId: string) => {
+    const token = getToken()
     const response = await fetch(`http://localhost:2000/api/cart/clear/${cartId}`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
     })
 

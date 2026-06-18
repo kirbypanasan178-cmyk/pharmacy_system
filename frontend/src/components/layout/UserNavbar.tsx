@@ -33,6 +33,8 @@ export const UserNavbar = () => {
           </div>
         </div>
 
+        <button className="btn btn-primary">Search</button>
+
         {/* Actions */}
         <div className="pc-navbar-actions">
 

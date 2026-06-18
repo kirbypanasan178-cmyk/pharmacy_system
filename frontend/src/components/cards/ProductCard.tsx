@@ -1,9 +1,5 @@
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../css/ProductCard.css";
-
-type StockStatus = "in-stock" | "low" | "out";
-type BadgeType = "OTC" | "Rx";
 
 type ProductCardProps = {
   name: string;
@@ -11,10 +7,9 @@ type ProductCardProps = {
   price: number;
   originalPrice?: number;
   image?: string;
-  badge?: BadgeType;
-  stock?: StockStatus;
+  stockStatus: string;
+  stock?: number;
   onAdd?: () => void;
-  onWishList?: () => void;
 };
 
 export const ProductCard = ({
@@ -23,67 +18,70 @@ export const ProductCard = ({
   price,
   originalPrice,
   image,
-  badge = "OTC",
-  stock = "in-stock",
+  stock,
+  stockStatus,
   onAdd,
-  onWishList,
 }: ProductCardProps) => {
-  const [wishlisted, setWishlisted] = useState(false);
-
-  const handleWishlist = () => {
-    setWishlisted((prev) => !prev);
-    onWishList?.();
-  };
+  const discountPct =
+    originalPrice && originalPrice !== price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+      : null;
 
   return (
-    <div className="product-card shadow-sm h-100">
+    <div className="sp-card">
 
-      {/* ── Image Section ── */}
-      <div className="product-img-wrapper">
-        <span className={`badge-pill ${badge === "Rx" ? "rx" : "otc"}`}>
-          {badge}
+      {/* ── Image ── */}
+      <div className="sp-img-wrap">
+        <span
+          className={`sp-badge ${
+            stockStatus === "in-stock"
+              ? "in-stock"
+              : stockStatus === "low-stock"
+              ? "low-stock"
+              : "out"
+          }`}
+        >
+          {stockStatus === "in-stock" && "In Stock"}
+          {stockStatus === "low-stock" && "Low Stock"}
+          {stockStatus === "out" && "Out of Stock"}
         </span>
 
-        <button className="wishlist-btn" onClick={handleWishlist}>
-          <i className={`bi ${wishlisted ? "bi-heart-fill" : "bi-heart"}`} />
-        </button>
-
-        <div className="product-img">
+        <div className="sp-img-inner">
           {image ? (
             <img src={image} alt={name} />
           ) : (
-            <div className="placeholder">💊</div>
+            <div className="sp-img-placeholder">💊</div>
           )}
         </div>
       </div>
 
       {/* ── Body ── */}
-      <div className="product-body">
-        <small className="category">{category}</small>
-        <h6 className="name">{name}</h6>
-
-        <div className="price">
-          <span className="current">₱{price.toLocaleString()}</span>
-          {originalPrice && (
-            <span className="old">₱{originalPrice.toLocaleString()}</span>
+      <div className="sp-body">
+        {category && <span className="sp-category">{category}</span>}
+        <h6 className="sp-name">{name}</h6>
+        {stock !== undefined && (
+          <span className="sp-stock-qty">{stock} items in stock</span>
+        )}
+        <div className="sp-price-row">
+          <span className="sp-price">₱{price.toLocaleString()}</span>
+          {originalPrice && originalPrice !== price && (
+            <span className="sp-orig">₱{originalPrice.toLocaleString()}</span>
+          )}
+          {discountPct && (
+            <span className="sp-discount">-{discountPct}%</span>
           )}
         </div>
       </div>
 
       {/* ── Footer ── */}
-      <div className="product-footer">
-        <span className={`stock ${stock}`}>
-          {stock === "in-stock" && "In stock"}
-          {stock === "low" && "Low stock"}
-          {stock === "out" && "Out of stock"}
-        </span>
-
+      <div className="sp-footer">
         <button
-          className="add-btn"
-          disabled={stock === "out"}
+          className="sp-add-btn"
+          disabled={stockStatus === "out"}
           onClick={onAdd}
         >
-          <i className="bi bi-cart-plus" /> Add
+          <i className="bi bi-cart-plus" />
+          Add to Cart
         </button>
       </div>
     </div>

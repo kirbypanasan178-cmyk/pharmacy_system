@@ -1,0 +1,80 @@
+/* OrderSummary.css */
+
+.chart-card {
+  background: #ffffff;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 1.25rem 1.4rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9a9a8f;
+  margin: 0 0 0.6rem;
+}
+
+.chart-loading {
+  color: #999;
+  font-size: 13px;
+  margin: 1rem 0;
+}
+
+/* Order Summary specific */
+.order-summary-card .chart-big-number {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #1c1c1a;
+  margin: 0 0 1.1rem;
+  line-height: 1.1;
+}
+
+.chart-big-number-suffix {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b6b63;
+}
+
+.order-days {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.order-day-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 28px;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.order-day-name {
+  font-size: 0.75rem;
+  color: #8a8a80;
+  font-weight: 500;
+}
+
+.order-day-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #eef1e8;
+  overflow: hidden;
+}
+
+.order-day-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #4d7c3f;
+  transition: width 0.3s ease;
+}
+
+.order-day-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4a4a44;
+  text-align: right;
+}

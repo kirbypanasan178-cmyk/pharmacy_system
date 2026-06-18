@@ -1,0 +1,217 @@
+/* ── Wrapper ──────────────────────────────────────────── */
+.admin-wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #f5f5f3;
+}
+
+.admin-main {
+    flex: 1;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+/* ── Sidebar ──────────────────────────────────────────── */
+.adm-sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: #18181a;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Logo */
+.adm-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 16px 12px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.07);
+}
+
+.adm-logo-icon {
+    width: 28px;
+    height: 28px;
+    background: #7c3aed;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.adm-logo-text {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* Nav */
+.adm-nav {
+    flex: 1;
+    padding: 8px 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.adm-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    margin: 1px 8px;
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: background 0.12s, color 0.12s;
+    cursor: pointer;
+}
+
+.adm-nav-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.adm-nav-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.adm-nav-icon {
+    font-size: 15px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Badges */
+.adm-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.adm-badge.purple {
+    background: #7c3aed;
+    color: #ffffff;
+}
+
+.adm-badge.gray {
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Section label */
+.adm-section-label {
+    padding: 10px 22px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.22);
+}
+
+/* Footer */
+.adm-sidebar-footer {
+    border-top: 0.5px solid rgba(255, 255, 255, 0.07);
+    padding: 10px 8px 8px;
+}
+
+.adm-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 8px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.adm-user:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.adm-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #7c3aed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.adm-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.adm-user-name {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adm-user-email {
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adm-user-menu-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.12s;
+}
+
+.adm-user-menu-btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.adm-signout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    margin: 2px 0;
+    color: #ef4444;
+    font-size: 12px;
+    font-weight: 400;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.12s;
+}
+
+.adm-signout:hover {
+    background: rgba(239, 68, 68, 0.1);
+}

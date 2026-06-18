@@ -1,4 +1,5 @@
-import type { LoginFormType, SignupFormType, User } from "../types/user";
+import type { LoginFormType, ProfileFormType, SignupFormType } from "../types/user";
+import { getToken } from "../utils/getToken";
 
 export const signupUserAPI = async (form: SignupFormType) => {
   try {
@@ -49,11 +50,13 @@ export const loginUserAPI = async (form: LoginFormType) => {
 };
 
 export const getUserAPI = async (userId: string) => {
+  const token = getToken()
   try {
     const response = await fetch(`http://localhost:2000/api/user/users/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
     });
 
@@ -72,11 +75,13 @@ export const getUserAPI = async (userId: string) => {
 };
 
 export const getAllUsersAPI = async () => {
+  const token = getToken()
   try {
     const response = await fetch("http://localhost:2000/api/user/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
     });
 
@@ -94,12 +99,14 @@ export const getAllUsersAPI = async () => {
   }
 };
 
-export const updateUserAPI = async (userId: string, form: User) => {
+export const updateUserAPI = async (userId: string, form: ProfileFormType) => {
+  const token = getToken()
   try {
     const response = await fetch(`http://localhost:2000/api/user/users/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+         "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(form),
     });
@@ -119,11 +126,13 @@ export const updateUserAPI = async (userId: string, form: User) => {
 };
 
 export const deleteUserAPI = async (userId: string) => {
+  const token = getToken()
   try {
     const response = await fetch(`http://localhost:2000/api/user/users/${userId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+         "Authorization": `Bearer ${token}`,
       },
     });
 
@@ -142,11 +151,13 @@ export const deleteUserAPI = async (userId: string) => {
 };
 
 export const blockUserAPI = async (id: string) => {
+  const token = getToken()
   try {
     const response = await fetch(`http://localhost:2000/api/user/block/${id}`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+       "Authorization": `Bearer ${token}`,
     }
   })
 
@@ -166,11 +177,13 @@ export const blockUserAPI = async (id: string) => {
 }
 
 export const unblockUserAPI = async (id: string) => {
+  const token = getToken()
   try {
     const response = await fetch(`http://localhost:2000/api/user/unblock/${id}`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+       "Authorization": `Bearer ${token}`,
     }
   })
 

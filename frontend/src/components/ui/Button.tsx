@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonVariant = "primary" | "secondary" | "danger" | "outline";
+type ButtonVariant = "primary" | "secondary" | "danger" | "outline" | "success";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,6 +16,7 @@ const variantMap: Record<ButtonVariant, string> = {
   secondary: "btn-secondary",
   danger: "btn-danger",
   outline: "btn-outline-secondary",
+  success: "btn btn-success"
 };
 
 const sizeMap: Record<ButtonSize, string> = {

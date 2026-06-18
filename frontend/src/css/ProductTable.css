@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --g50:  #EAF3DE;
+  --g100: #C0DD97;
+  --g200: #97C459;
+  --g600: #3B6D11;
+  --g800: #27500A;
+  --g900: #173404;
+}
+
+* { font-family: 'Inter', sans-serif; }
+
+/* ── Table card ── */
+.product-table-card {
+  background: var(--color-background-primary, #fff);
+  border: 0.5px solid var(--color-border-tertiary, rgba(0,0,0,0.12));
+  border-radius: 12px;
+  overflow: visible; /* was: hidden — this was clipping the scrollbar */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary, #111);
+}
+
+.product-section-subtitle {
+  font-size: 12px;
+  color: var(--color-text-secondary, #666);
+}
+
+/* ── Scrollable table body ── */
+.table-responsive {
+  overflow-y: auto;
+  overflow-x: auto;
+  flex: 1;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ── Table ── */
+.product-table {
+  margin-bottom: 0;
+}
+
+.product-table thead tr {
+  background: var(--g50);
+}
+
+.product-table thead th {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--g600);
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--g100);
+  position: sticky;
+  top: 0;
+  background: var(--g50);
+  z-index: 1;
+}
+
+.product-table tbody td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 0.5px solid var(--color-border-tertiary, rgba(0,0,0,0.07));
+}
+
+.product-table tbody tr:last-child td { border-bottom: none; }
+.product-table tbody tr:hover td { background: var(--g50); }
+
+.product-table tbody tr.table-active td {
+  background: var(--g50);
+  border-left: 3px solid var(--g600);
+}
+
+/* ── Thumbnail ── */
+.product-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 0.5px solid var(--g100);
+}
+
+.product-thumb-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--g50);
+  border: 0.5px solid var(--g100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* ── Product name ── */
+.product-name {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--color-text-primary, #111);
+}
+
+/* ── Category badge ── */
+.category-badge {
+  background: var(--g50);
+  color: var(--g800);
+  border: 0.5px solid var(--g100);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ── Price ── */
+.product-price {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--g800);
+}
+
+/* ── Stock pills ── */
+.stock-pill { border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+.stock-pill.in-stock     { background: var(--g50); color: var(--g800); }
+.stock-pill.low-stock    { background: #faeeda;    color: #854F0B; }
+.stock-pill.out-of-stock { background: #fcebeb;    color: #a32d2d; }
+
+/* ── Action buttons ── */
+.btn-action-edit {
+  background: var(--g50);
+  color: var(--g800);
+  border: 0.5px solid var(--g100);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.btn-action-edit:hover {
+  background: var(--g100);
+  border-color: var(--g200);
+}
+
+.btn-action-delete {
+  background: #fcebeb;
+  color: #a32d2d;
+  border: 0.5px solid #f7c1c1;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.btn-action-delete:hover { background: #f7c1c1; }
+
+/* ── Empty state ── */
+.table-empty { text-align: center; padding: 40px 0; }
+.table-empty-icon { font-size: 32px; margin-bottom: 8px; }
+.table-empty-text {
+  font-size: 13px;
+  color: var(--color-text-secondary, #888);
+}

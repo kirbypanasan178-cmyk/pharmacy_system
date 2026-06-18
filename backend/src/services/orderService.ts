@@ -43,7 +43,9 @@ export const createOrderService = async (
 
 export const getOrderService = async (userId: string) => {
     try {
-        const order = await Order.findOne({ userId })
+        const order = await Order.find({
+            userId
+        }).populate("items.product")
 
         return order
     } catch (error) {
@@ -68,10 +70,30 @@ export const updateAdminOrderService = async (
         paymentStatus: PaymentStatus
     }>) => {
     try {   
+        const timestampMap: Record<string, string> = {
+            // status timestamps
+            shipped:   "shippedAt",
+            delivered: "deliveredAt",
+            cancelled: "cancelledAt",
+            // paymentStatus timestamps
+            paid:      "paidAt",
+            refunded:  "refundedAt",
+        }
+
+        const updateData: Record<string, any> = { ...data }
+
+        if (data.status && timestampMap[data.status]) {
+            updateData[timestampMap[data.status]] = new Date()
+        }
+
+        if (data.paymentStatus && timestampMap[data.paymentStatus]) {
+            updateData[timestampMap[data.paymentStatus]] = new Date()
+        }
+
         const order = await Order.findByIdAndUpdate(
             orderId,
             { $set: 
-                data 
+                updateData 
             },
             {
                 returnDocument: "after"
@@ -98,5 +120,55 @@ export const updateUserOrderService = async (orderId: string, status: Status) =>
         return order
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Failed to update order")
+    }
+}
+
+export const getOrdersTodayCountService = async () => {
+    try {
+        const startOfDay = new Date()
+        startOfDay.setHours(0, 0, 0, 0)
+
+        const endOfDay = new Date()
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const ordersToday = Order.countDocuments({
+            createdAt: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            }
+        })
+
+        return ordersToday
+
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to get orders today")
+    }
+}
+
+export const getTotalSalesTodayService = async () => {
+    try {
+        const startOfDay = new Date()
+        startOfDay.setHours(0, 0, 0, 0)
+
+        const endOfDay = new Date()
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const salesToday = await Order.find({
+            paidAt: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            },
+            paymentStatus: "paid"
+        })
+
+        const totalSalesToday = salesToday.reduce(
+            (sum, order) => sum + order.totalPrice,
+            0
+        )
+
+        return totalSalesToday
+
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Failed to get orders today")
     }
 }

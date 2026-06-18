@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const orderItemSchema = new Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
+    ref: "Product",
     required: true,
   },
   quantity: {
@@ -41,7 +41,7 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
     totalPrice: {
@@ -54,7 +54,7 @@ const orderSchema = new Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["cod", "gcash", "card"],
+      enum: ["cod", "gcash", "card", "paypal"],
       default: "cod",
     },
     paymentStatus: {
@@ -62,10 +62,22 @@ const orderSchema = new Schema(
       enum: ["unpaid", "paid", "refunded"],
       default: "unpaid",
     },
+    
+    paypalOrderId: {
+      type: String,
+      default: null,
+    },
+
     shippingAddress: {
       type: shippingAddressSchema,
       required: true,
     },
+
+    shippedAt:    { type: Date, default: null },
+    deliveredAt:  { type: Date, default: null },
+    cancelledAt:  { type: Date, default: null },
+    paidAt:       { type: Date, default: null },
+    refundedAt:   { type: Date, default: null },
   },
   { timestamps: true }
 );

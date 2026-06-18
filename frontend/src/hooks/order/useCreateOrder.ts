@@ -1,19 +1,22 @@
 import { createOrderAPI } from "../../api/orderAPI"
-import { orderFailure, orderStart, orderSuccess } from "../../features/orderSlice"
+import { getAllOrderSuccess, getOrderFailure, getOrderStart } from "../../features/orderSlice"
 import type { AddressFormType, PaymentMethod } from "../../types/order"
 import { useAppDispatch } from "../redux/reduxHooks"
 
 export const useCreateOrder = () => {
+    const storedUser = localStorage.getItem("user")
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null
     const dispatch = useAppDispatch()
     const createOrder = async (form: AddressFormType, paymentMethod: PaymentMethod) => {
-        dispatch(orderStart())
+        dispatch(getOrderStart())
         try {
-            const data = await createOrderAPI(form, paymentMethod)
+            const data = await createOrderAPI(parsedUser.user._id, form, paymentMethod)
             console.log("Data:", data)
-            dispatch(orderSuccess(data))
+            dispatch(getAllOrderSuccess(data))
+            return data
         } catch (error: any) {
             console.log(error)
-            dispatch(orderFailure(error.message))
+            dispatch(getOrderFailure(error.message))
         }
     }
 

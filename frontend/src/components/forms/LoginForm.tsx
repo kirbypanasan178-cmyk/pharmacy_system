@@ -7,6 +7,7 @@ import { useLoginUser } from "../../hooks/useLoginUser";
 import "../../css/LoginForm.css";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
 import { loginValidation, type ValidationErrorsLogin } from "../../validators/login";
+import { useNavigate } from "react-router-dom";
 
 
 const PharmacyIcon = () => (
@@ -23,6 +24,8 @@ export const LoginForm = () => {
     password: "",
     rememberMe: false,
   });
+
+  const navigate = useNavigate()
 
   const { loginUser } = useLoginUser();
   const [formErrors, setFormErrors] = useState<ValidationErrorsLogin>({});
@@ -45,11 +48,23 @@ export const LoginForm = () => {
 
     const newErrors = loginValidation(form);
     setFormErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-    const user = await loginUser(form);
-    console.log("LOGIN SUCCESS", user);
 
-  };
+    if (Object.keys(newErrors).length > 0) return;
+
+    try {
+        const user = await loginUser(form);
+        if (!user) return;
+
+        if (user.user.role === "admin") {
+          navigate("/admin")
+        } else {
+           navigate("/home")
+        }
+       
+    } catch (error) {
+        console.error("Login failed:", error);
+    }
+};
 
   return (
     <div className="login-page">
