@@ -16,13 +16,13 @@ const NAV_ITEMS: NavItem[] = [
 
 interface AccountNavbarProps {
   onNavigate?: (path: string) => void;
-  onLogout?: () => void;
+  handleLogout?: () => void;
   user?: { name: string; email: string; initials: string };
 }
 
 export const AccountNavbar = ({
   onNavigate,
-  onLogout,
+  handleLogout,
 }: AccountNavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,7 +59,7 @@ export const AccountNavbar = ({
 
       {/* Logout */}
       <div className="account-nav-logout-wrap">
-        <button className="account-nav-btn account-nav-logout" onClick={onLogout}>
+        <button className="account-nav-btn account-nav-logout" onClick={handleLogout}>
           <i className="ti ti-logout account-nav-icon" aria-hidden="true" />
           <span>Log out</span>
         </button>

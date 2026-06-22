@@ -23,6 +23,8 @@ export const ProductForm = ({
   const { updateProduct } = useUpdateProduct();
   const categories = useAppSelector((state) => state.category.categories);
 
+  const { loading } = useAppSelector((state) => state.product)
+
   const [error, setError] = useState<ValidationErrorsProduct>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -213,8 +215,10 @@ export const ProductForm = ({
 
         {/* Actions */}
         <div className="d-flex gap-2">
-          <button type="submit" className="btn btn-primary flex-fill">
-            {editingId ? "💾 Save Changes" : "＋ Create Product"}
+          <button 
+          disabled={loading}
+          type="submit" className="btn btn-primary flex-fill">
+            {loading ? "Loading..." : editingId ? "💾 Save Changes" : "＋ Create Product"}
           </button>
           <button type="button" onClick={handleReset} className="btn btn-outline-secondary">
             Reset

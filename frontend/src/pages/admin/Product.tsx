@@ -14,8 +14,10 @@ export const Product = () => {
   const { getAllProduct } = useGetAllProduct()
 
   useEffect(() => {
-    getAllCategory()
-    getAllProduct()
+    const fetchData = async () => {
+      await Promise.all([getAllCategory(), getAllProduct()])
+    }
+    fetchData()
   }, [])
 
   return (

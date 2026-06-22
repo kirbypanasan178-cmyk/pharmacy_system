@@ -99,8 +99,12 @@ export const Order = () => {
     );
 
   useEffect(() => {
-    getAllOrder();
-  });
+  const fetchOrders = async () => {
+    await getAllOrder();
+  };
+
+  fetchOrders();
+}, []);
 
   return (
     <div className="order-page">

@@ -67,7 +67,11 @@ export const User = () => {
   }).length || 0
 
   useEffect(() => {
-    getAllUsers()
+    const fetchData = async () => {
+      await getAllUsers()
+    }
+
+    fetchData()
   }, [])
 
   return (

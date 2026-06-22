@@ -16,7 +16,7 @@ export const ProductTable = ({
   setForm,
   editingId,
 }: ProductFormTypeProps) => {
-  const products = useAppSelector((state) => state.product.products);
+  const { products, loading } = useAppSelector((state) => state.product);
   const { deleteProduct } = useDeleteProduct();
 
   const { search, setSearch, category, setCategory, filteredProducts } =
@@ -263,7 +263,7 @@ export const ProductTable = ({
                           className="btn btn-action-delete"
                           onClick={() => handleDelete(product._id)}
                         >
-                          🗑 Delete
+                          {loading ? "🗑 Deleting..." : "🗑 Delete"}
                         </button>
                       </td>
                     </tr>

@@ -10,6 +10,7 @@ export const createOrderAPI = async (
   userId: string,
   shippingAddress: AddressFormType,
   paymentMethod: PaymentMethod,
+  selectedCartItemIds: string[],
   idempotencyKey: string,
 ) => {
   const token = getToken();
@@ -23,6 +24,7 @@ export const createOrderAPI = async (
     body: JSON.stringify({
       shippingAddress,
       paymentMethod,
+      selectedCartItemIds,
     }),
   });
 

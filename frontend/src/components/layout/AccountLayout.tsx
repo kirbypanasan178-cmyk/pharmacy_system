@@ -17,6 +17,8 @@ export const AccountLayout = () => {
   const cartCount = items.length ?? 0;
 
   const handleLogout = () => {
+    localStorage.removeItem("user")
+    localStorage.removeItem("cartId")
     navigate("/login");
   };
 
@@ -107,7 +109,7 @@ export const AccountLayout = () => {
           {/* Sidebar */}
           <aside className={`account-sidebar${sidebarOpen ? " open" : ""}`}>
             <AccountNavbar
-              onLogout={handleLogout}
+              handleLogout={handleLogout}
               onNavigate={() => setSidebarOpen(false)}
             />
           </aside>

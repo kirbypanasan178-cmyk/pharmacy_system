@@ -1,22 +1,29 @@
 import { createOrderAPI } from "../../api/orderAPI"
 import { getAllOrderSuccess, getOrderFailure, getOrderStart } from "../../features/orderSlice"
 import type { AddressFormType, PaymentMethod } from "../../types/order"
+import { getErrorMessage } from "../../utils/getErrorMessage"
+import { getUserId } from "../../utils/getUserId"
 import { clearIdempotencyKey, createIdempotencyKey } from "../../utils/idempotencyKey"
-import { useAppDispatch } from "../redux/reduxHooks"
+import { useAppDispatch, useAppSelector } from "../redux/reduxHooks"
 
 export const useCreateOrder = () => {
-    const storedUser = localStorage.getItem("user")
-    const parsedUser = storedUser ? JSON.parse(storedUser) : null
+    const selectedCartItemIds = useAppSelector((state) => state.cart.selectedCartItemIds)
     const dispatch = useAppDispatch()
-    const createOrder = async (form: AddressFormType, paymentMethod: PaymentMethod) => {
+    const createOrder = async (
+        form: AddressFormType, 
+        paymentMethod: PaymentMethod,
+    ) => {
         dispatch(getOrderStart())
         try {
+            const userId = getUserId()
+
             const idempotencyKey = createIdempotencyKey()
 
             const data = await createOrderAPI(
-                parsedUser.user._id, 
+                userId,
                 form, 
                 paymentMethod,
+                selectedCartItemIds,
                 idempotencyKey,
             )
             dispatch(getAllOrderSuccess(data))
@@ -24,9 +31,10 @@ export const useCreateOrder = () => {
             clearIdempotencyKey()
 
             return data
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error)
-            dispatch(getOrderFailure(error.message))
+            const message = getErrorMessage(error)
+            dispatch(getOrderFailure(message))
             throw error
         }
     }

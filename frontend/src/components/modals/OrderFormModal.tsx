@@ -5,11 +5,12 @@ import {
 } from "../../validators/orderValidation";
 import { useCreateOrder } from "../../hooks/order/useCreateOrder";
 import { addressInitialForm, type AddressFormType } from "../../types/order";
-import type { CartItem } from "../../features/cartSlice";
+import { removeSelectedCartItemSuccess, type CartItem } from "../../features/cartSlice";
 import "../../css/OrderModal.css";
-import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux/reduxHooks";
 import { useCreateGCashPaymentSource } from "../../hooks/payment/useCreateGcashPaymentSource";
-import { useRemoveSelectedCartItem } from "../../hooks/cart/useRemoveSelectedCartItem";
+import { getCartId } from "../../utils/getCartId";
+import { useNavigate } from "react-router-dom";
 
 type PaymentMethod = "cod" | "gcash" | "card" | "paypal";
 
@@ -116,10 +117,12 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
 }) => {
   const { createOrder } = useCreateOrder();
   const { createGCashPaymentSource } = useCreateGCashPaymentSource();
-  const { removeSelectedCartItem } = useRemoveSelectedCartItem()
 
   const { cart, selectedCartItemIds } = useAppSelector((state) => state.cart);
   const { loading } = useAppSelector((state) => state.order);
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [form, setForm] = useState<AddressFormType>(addressInitialForm);
   const [selectPayment, setSelectPayment] = useState<PaymentMethod>("cod");
@@ -146,15 +149,23 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
     }
     if (!cart) return;
 
+    console.log("Selected cart Item Ids: ", selectedCartItemIds)
 
     try {
       const result = await createOrder(form, selectPayment);
-      console.log("Result: ", result.order._id)
+      const cartId = getCartId()
+
+      if (!cartId) {
+        console.error("Cart ID missing")
+        return
+      }
+
+      console.log("Result: ", result)
 
       if (!result) {
-  console.error("Order creation failed")
-  return  // ← stop execution, don't try to access result._id
-}
+        console.error("Order creation failed")
+        return  // ← stop execution, don't try to access result._id
+      }
 
       if (!result.order._id) {
         console.error("Order id not found")
@@ -170,13 +181,15 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
       }
 
       else if (selectPayment === "gcash") {
-        await createGCashPaymentSource(result._id, total);
+        await createGCashPaymentSource(result.order._id, total);
+        return
       }
-       
+
       else if (selectPayment === "cod") {
-        await removeSelectedCartItem(cart._id, selectedCartItemIds)
-        console.log("Cart items remove successfully")
+        navigate("/account/orders")
+        dispatch(removeSelectedCartItemSuccess(selectedCartItemIds))
       }
+      
 
       onClose();
       handleReset();

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { createGCashPaymentService, createGCashPaymentSourceService } from "../services/paymongoService";
 import { Order } from "../models/orderModel";
+import { Cart } from "../models/cartModel";
+import { removeAllCartItemService, removeSelectedCartItemService } from "../services/cartService";
 
 // frontend redirects the user to checkout url 
 export const createGcashPaymentSourceController = async (req: Request, res: Response) => {
@@ -26,6 +28,10 @@ export const createGCashPaymentController = async (req: Request, res: Response) 
         if (event.attributes.type === "source.chargeable") {
             const source = event.attributes.data
 
+            const sourceId = source.id
+
+            console.log("Weebhook source object: ", JSON.stringify(source, null, 2))
+
             const orderId = new URL(source.attributes.redirect.success).searchParams.get("order_id")
             
             if (!orderId) {
@@ -48,11 +54,35 @@ export const createGCashPaymentController = async (req: Request, res: Response) 
                     source.attributes.amount / 100, 
                     orderId
                 )
-                await Order.findByIdAndUpdate(
+                const updateOrder = await Order.findByIdAndUpdate(
                 orderId,
-                { paymentStatus: "paid", paidAt: new Date(), status: "pending" },
+                { 
+                    paymentStatus: "paid", 
+                    paidAt: new Date(), 
+                    status: "pending" 
+                    
+                },
                 { new: true }
                 )
+
+                console.log("G-cash orders: ", updateOrder)
+
+                if (updateOrder) {
+                    const cart = await Cart.findOne({ userId: updateOrder.userId })
+                    if (cart) {
+
+                        const orderedProductIds = new Set(
+                            updateOrder.items.map((item) => item.product.toString())
+                        )
+
+                        const cartItemsIdsToRemove = cart.items
+                        .filter((cartItem) => orderedProductIds.has(cartItem.product.toString()))
+                        .map(cartItem => cartItem._id.toString())
+
+                        await removeSelectedCartItemService(cart._id.toString(), cartItemsIdsToRemove)
+                    }
+
+                } 
             }
   
         }

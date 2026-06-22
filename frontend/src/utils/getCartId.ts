@@ -1,5 +1,16 @@
-export const getCartId = () => {
-    const storedCartId = localStorage.getItem("cartId")
+export const getCartId = (): string | null => {
+    return localStorage.getItem("cartId")
+}
 
-    return storedCartId ? storedCartId : null
+export const getSelectedCartItemIds = () => {
+    const storedSelectedItemIds = localStorage.getItem("selectedItemIds")
+
+    if (!storedSelectedItemIds) return null
+
+    try {
+        return JSON.parse(storedSelectedItemIds)
+    } catch (err) {   
+        console.error("Invalid selectedItemIds in local storage: ", err)
+        return null
+    }
 }

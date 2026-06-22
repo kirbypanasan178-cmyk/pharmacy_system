@@ -1,7 +1,6 @@
 import { useDeleteCategory } from "../../hooks/category/useDeleteCategory"
 import { useAppSelector } from "../../hooks/redux/reduxHooks"
 import type { CategoryFormType, CategoryFormTypeProps } from "../../types/category"
-import "../../css/CategoryTable.css"
 
 export const CategoryTable = ({ setForm, setEditingId }: CategoryFormTypeProps) => {
     const { deleteCategory } = useDeleteCategory()
@@ -19,61 +18,145 @@ export const CategoryTable = ({ setForm, setEditingId }: CategoryFormTypeProps) 
         }
     }
 
+    if (categories.length === 0) {
+        return (
+            <div className="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+                <i className="bi bi-tags mb-2" style={{ fontSize: "2rem", color: "#b6cfb6" }} />
+                <p className="mb-0" style={{ color: "#8a9e8a", fontSize: "0.875rem" }}>
+                    No categories yet. Create one to get started.
+                </p>
+            </div>
+        )
+    }
+
     return (
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-            {categories.length === 0 ? (
-                <div className="ct-empty">
-                    <i className="bi bi-tags ct-empty-icon" />
-                    <p className="ct-empty-text">No categories yet. Create one to get started.</p>
-                </div>
-            ) : (
-                <div className="ct-table-wrap">
-                    <table className="ct-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th style={{ textAlign: "right" }}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categories.map((category, index) => (
-                                <tr key={category._id} className="ct-row">
-                                    <td>
-                                        <span className="ct-index">{index + 1}</span>
-                                    </td>
-                                    <td className="ct-name">{category.name}</td>
-                                    <td className="ct-desc">
-                                        {category.description
-                                            ? category.description
-                                            : <span className="ct-no-desc">—</span>
-                                        }
-                                    </td>
-                                    <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                                        <button
-                                            className="ct-action-edit me-2"
-                                            title="Edit category"
-                                            onClick={() => handleEdit(category._id, category)}
-                                        >
-                                            <i className="bi bi-pencil-fill" />
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="ct-action-delete"
-                                            title="Delete category"
-                                            onClick={() => handleDelete(category._id)}
-                                        >
-                                            <i className="bi bi-trash3-fill" />
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+        <div className="table-responsive">
+            <table className="table mb-0" style={{ fontSize: "0.875rem" }}>
+                <thead>
+                    <tr style={{ backgroundColor: "#f4f7f4", borderBottom: "1px solid #dde8dd" }}>
+                        <th
+                            style={{
+                                width: 40,
+                                color: "#5a7a5a",
+                                fontWeight: 600,
+                                fontSize: "0.72rem",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.06em",
+                                padding: "10px 12px",
+                                border: "none",
+                            }}
+                        >
+                            #
+                        </th>
+                        <th
+                            style={{
+                                color: "#5a7a5a",
+                                fontWeight: 600,
+                                fontSize: "0.72rem",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.06em",
+                                padding: "10px 12px",
+                                border: "none",
+                            }}
+                        >
+                            Name
+                        </th>
+                        <th
+                            style={{
+                                color: "#5a7a5a",
+                                fontWeight: 600,
+                                fontSize: "0.72rem",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.06em",
+                                padding: "10px 12px",
+                                border: "none",
+                            }}
+                        >
+                            Description
+                        </th>
+                        <th
+                            style={{
+                                color: "#5a7a5a",
+                                fontWeight: 600,
+                                fontSize: "0.72rem",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.06em",
+                                padding: "10px 12px",
+                                border: "none",
+                                textAlign: "right",
+                            }}
+                        >
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {categories.map((category, index) => (
+                        <tr
+                            key={category._id}
+                            style={{ borderBottom: "1px solid #f0f4f0", transition: "background 0.15s" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fafcfa")}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
+                        >
+                            <td style={{ padding: "12px 12px", color: "#8a9e8a", fontWeight: 500, border: "none" }}>
+                                {index + 1}
+                            </td>
+                            <td style={{ padding: "12px 12px", fontWeight: 500, color: "#1a2e1a", border: "none" }}>
+                                {category.name}
+                            </td>
+                            <td
+                                style={{
+                                    padding: "12px 12px",
+                                    color: "#6b826b",
+                                    border: "none",
+                                    maxWidth: 280,
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {category.description || (
+                                    <span style={{ color: "#c0cfc0" }}>—</span>
+                                )}
+                            </td>
+                            <td style={{ padding: "12px 12px", border: "none", textAlign: "right", whiteSpace: "nowrap" }}>
+                                <button
+                                    className="btn btn-sm me-2"
+                                    onClick={() => handleEdit(category._id, category)}
+                                    title="Edit category"
+                                    style={{
+                                        color: "#1a7a4a",
+                                        background: "none",
+                                        border: "none",
+                                        padding: "2px 6px",
+                                        fontWeight: 500,
+                                        fontSize: "0.8rem",
+                                    }}
+                                >
+                                    <i className="bi bi-pencil-fill me-1" />
+                                    Edit
+                                </button>
+                                <button
+                                    className="btn btn-sm"
+                                    onClick={() => handleDelete(category._id)}
+                                    title="Delete category"
+                                    style={{
+                                        color: "#c0392b",
+                                        background: "none",
+                                        border: "none",
+                                        padding: "2px 6px",
+                                        fontWeight: 500,
+                                        fontSize: "0.8rem",
+                                    }}
+                                >
+                                    <i className="bi bi-trash3-fill me-1" />
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     )
 }

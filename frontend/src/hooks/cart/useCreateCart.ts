@@ -29,6 +29,8 @@ export const useCreateCart = () => {
                 localStorage.setItem("cartId", data._id)
             }
 
+            return data
+
         } catch (error: any) {
             console.log(error)
             dispatch(cartFailure(error.message || "Failed to create cart"))

@@ -94,14 +94,13 @@ export const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAllProduct();
-      await getAllOrder();
-      const orderCount = await getOrdersTodayCount();
-      const sales = await getSalesToday();
-      console.log("Order today: ", orderCount)
-      console.log("sales: ", sales)
+      await Promise.all([getAllProduct(), getAllOrder()])
+      const [orderCount, sales] = await Promise.all([
+        getOrdersTodayCount(),
+        getSalesToday(),
+      ])
       setOrdersTodayCount(orderCount);
-      setSalesToday(sales);
+    setSalesToday(sales);
     };
     fetchData();
   }, []);

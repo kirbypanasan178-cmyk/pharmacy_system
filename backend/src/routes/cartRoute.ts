@@ -1,12 +1,13 @@
 import express from "express"
 import { createCartController, removeCartItemController, getCarByIdController, updateCartController, removeAllCartItemController, removeSelectedCartItemController } from "../controllers/cartController"
 import { requireAuth } from "../middlewares/requireAuth"
+import { addToCartLimiter } from "../middlewares/rateLimiter"
 
 const router = express.Router()
 
 router.use(requireAuth)
 
-router.post("/", createCartController)
+router.post("/", addToCartLimiter, createCartController)
 router.get("/:userId", getCarByIdController)
 router.patch("/:id", updateCartController)
 router.patch("/clear/:cartId", removeAllCartItemController)

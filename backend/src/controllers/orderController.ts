@@ -15,19 +15,23 @@ import {
 } from "../services/paypalService";
 import { Order } from "../models/orderModel";
 import { redisClient } from "../config/redis";
+import User from "../models/userModel";
+import { removeSelectedCartItemService } from "../services/cartService";
+import { Cart } from "../models/cartModel";
 
-const TTL_SECONDS = 60 * 60 * 24
+const TTL_SECONDS = 60 * 60 * 24;
 
 export const createOrderController = async (req: Request, res: Response) => {
   const userId = req.params.userId as string;
-  const { paymentMethod, shippingAddress } = req.body;
-  const idempotencyKey = (req as any).idempotencyKey
+  const { paymentMethod, shippingAddress, selectedCartItemIds } = req.body;
+  const idempotencyKey = (req as any).idempotencyKey;
 
   try {
     const order = await createOrderService(
       userId,
       paymentMethod,
       shippingAddress,
+      selectedCartItemIds,
     );
 
     if (paymentMethod === "paypal") {
@@ -49,38 +53,45 @@ export const createOrderController = async (req: Request, res: Response) => {
         throw new Error("PayPal approve link missing");
       }
 
-     const responsePayload = {
+      const responsePayload = {
         order,
         paypalOrderId: paypalOrder.id,
         approveUrl: approveLink.href,
-      }
-      
+      };
+
       if (idempotencyKey) {
         await redisClient.set(
           `idempotency:${idempotencyKey}:response`,
           JSON.stringify(responsePayload),
           "EX",
-          TTL_SECONDS
-        )
-      };
+          TTL_SECONDS,
+        );
+      }
 
-      return res.status(200).json(responsePayload)
+      return res.status(200).json(responsePayload);
     }
 
     if (idempotencyKey) {
       await redisClient.set(
         `idempotency:${idempotencyKey}:response`,
         JSON.stringify(order),
-        'EX',
+        "EX",
         TTL_SECONDS,
       );
     }
+    const cart = await Cart.findOne({ userId });
 
-    res.status(200).json(order);
+    if (cart) {
+      await removeSelectedCartItemService(
+        cart._id.toString(),
+        selectedCartItemIds,
+      );
+    }
+
+    res.status(200).json({ order });
   } catch (error: unknown) {
-
     if (idempotencyKey) {
-      await redisClient.del(`idempotency:${idempotencyKey}`)
+      await redisClient.del(`idempotency:${idempotencyKey}`);
     }
 
     if (error instanceof Error) {
@@ -111,7 +122,7 @@ export const capturePayPalOrderController = async (
 
     const data = await response.json();
 
-    console.log("Paypal response: ", data)
+    console.log("Paypal response: ", data);
 
     if (!response.ok) {
       const isAlreadyCaptured =
@@ -135,15 +146,31 @@ export const capturePayPalOrderController = async (
       { paypalOrderId: orderId },
       { paymentStatus: "paid", paidAt: new Date(), status: "pending" },
       { new: true },
-    )
+    );
 
     if (!updateOrder) {
-      console.error("Order not found in DB for paypalOrderId: ", orderId)
-      return res.status(404).json({ error: "Order not found" })
+      return res.status(404).json({ error: "Order not found" });
     }
 
-    return res.json({ data, order: updateOrder })
+    const cart = await Cart.findOne({ userId: updateOrder.userId });
+    if (cart) {
+      
+      const orderedProductIds = new Set(
+        updateOrder.items.map((item) => item.product.toString()), // or item.productId
+      );
+      const cartItemIdsToRemove = cart.items
+        .filter((cartItem) =>
+          orderedProductIds.has(cartItem.product.toString()),
+        )
+        .map((cartItem) => cartItem._id.toString());
 
+      await removeSelectedCartItemService(
+        cart._id.toString(),
+        cartItemIdsToRemove,
+      );
+    }
+
+    return res.json({ data, order: updateOrder });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });

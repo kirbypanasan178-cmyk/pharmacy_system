@@ -84,6 +84,7 @@ const cartSlice = createSlice({
     setSelectedCartItemIds: (state, action: PayloadAction<string[]>) => {
       state.selectedCartItemIds = action.payload
     },
+    
     removeSelectedCartItemSuccess: (state, action: PayloadAction<string[]>) => {
       if (state.cart) {
         state.loading = false;

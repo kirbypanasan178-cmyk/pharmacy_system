@@ -7,6 +7,7 @@ export const createOrderService = async (
     userId: string, 
     paymentMethod: PaymentMethod,
     shippingAddress: AddressType,
+    selectedCartItemIds: string[]
 ) => {
     try {
         const cart = await Cart.findOne({ userId })
@@ -15,13 +16,19 @@ export const createOrderService = async (
             throw new Error("Cart is empty")
         }
 
-        const totalPrice = cart.totalPrice
+        const selectedItems = cart.items.filter(
+            (item) => selectedCartItemIds.includes(item._id.toString())
+        )
+
+        const totalPrice = selectedItems.reduce(
+            (sum, item) => sum + item.price * item.quantity, 0
+        )
 
         const shippingFee =  totalPrice <= 20000 ? 150 : 200 
 
         const order = await Order.create({
             userId,
-            items: cart.items.map(item => ({
+            items: selectedItems.map(item => ({
                 product: item.product,
                 quantity: item.quantity,
                 price: item.price
