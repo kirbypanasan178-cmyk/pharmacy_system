@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useAppSelector } from "../../hooks/redux/reduxHooks"
 import "../../css/OrderCard.css"
-import { useGetOrder } from "../../hooks/order/useGetOrder"
 
 const paymentMethodLabel: Record<string, string> = {
     cod:   "Cash on delivery",
@@ -10,14 +9,48 @@ const paymentMethodLabel: Record<string, string> = {
 }
 
 const paymentMethodIcon: Record<string, string> = {
-    cod:   "💵",
-    gcash: "📱",
-    card:  "💳",
+    cod:   "ti-cash",
+    gcash: "ti-device-mobile",
+    card:  "ti-credit-card",
 }
+
+const paymentStatusIcon: Record<string, string> = {
+    paid:     "ti-circle-check",
+    pending:  "ti-clock",
+    refunded: "ti-corner-up-left",
+}
+
+// Maps order/payment statuses to their timestamp fields
+const orderTimestampFields: { label: string; field: string }[] = [
+    { label: "Order placed",  field: "createdAt" },
+    { label: "Paid",          field: "paidAt" },
+    { label: "Shipped",       field: "shippedAt" },
+    { label: "Delivered",     field: "deliveredAt" },
+]
+
+const cancellationTimestampFields: { label: string; field: string }[] = [
+    { label: "Cancelled",     field: "cancelledAt" },
+    { label: "Refunded",      field: "refundedAt" },
+]
+
+const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-PH", {
+        month: "short", day: "numeric",
+    }) + " · " +
+    new Date(iso).toLocaleTimeString("en-PH", {
+        hour: "numeric", minute: "2-digit",
+    })
+
+const formatFullDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-PH", {
+        month: "long", day: "numeric", year: "numeric",
+    }) + " at " +
+    new Date(iso).toLocaleTimeString("en-PH", {
+        hour: "numeric", minute: "2-digit",
+    })
 
 export const OrderCard = () => {
     const orders = useAppSelector((state) => state.order.userOrders)
-    const { getOrder } = useGetOrder()
     const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
     const toggleExpand = (id: string) => {
@@ -28,31 +61,24 @@ export const OrderCard = () => {
         })
     }
 
-    useEffect(() => {
-        const fetchOrder = async () => {
-            await getOrder("69f5f36b8a32efadf3c2909a")
-        }
-        fetchOrder()
-    }, [])
-
     return (
         <div className="order-card-list">
             {orders.length === 0 && (
-                <div className="text-center py-5" style={{ color: "#9ca3af", fontSize: 13 }}>
+                <div className="order-empty">
                     You have no orders yet.
                 </div>
             )}
 
             {orders.map((order) => {
                 const isExpanded = expandedIds.has(order._id)
+                const isCancelled = order.status === "cancelled"
 
-                const formattedDate =
-                    new Date(order.createdAt).toLocaleDateString("en-PH", {
-                        month: "long", day: "numeric", year: "numeric",
-                    }) + " at " +
-                    new Date(order.createdAt).toLocaleTimeString("en-PH", {
-                        hour: "numeric", minute: "2-digit",
-                    })
+                const timeline = isCancelled
+                    ? [
+                        { label: "Order placed", field: "createdAt" },
+                        ...cancellationTimestampFields,
+                    ]
+                    : orderTimestampFields
 
                 return (
                     <div key={order._id} className="order-card">
@@ -61,13 +87,14 @@ export const OrderCard = () => {
                         <div className="order-header">
                             <div>
                                 <div className="order-meta-id">
-                                    <span>🧾</span>
+                                    <i className="ti ti-receipt" aria-hidden="true" />
                                     <span>{order._id}</span>
                                 </div>
-                                <div className="order-meta-date">{formattedDate}</div>
+                                <div className="order-meta-date">{formatFullDate(order.createdAt)}</div>
                             </div>
                             <span className={`order-status ${order.status}`}>
                                 {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    
                             </span>
                         </div>
 
@@ -79,7 +106,7 @@ export const OrderCard = () => {
                                         {item.product?.image ? (
                                             <img src={item.product.image} alt="product" />
                                         ) : (
-                                            "📦"
+                                            <i className="ti ti-package" aria-hidden="true" />
                                         )}
                                     </div>
                                     <span className="order-item-name">{item.product?.name ?? "Product"}</span>
@@ -93,9 +120,11 @@ export const OrderCard = () => {
                         <div className="order-footer">
                             <div className="order-payment">
                                 <span className="order-payment-method">
-                                    {paymentMethodIcon[order.paymentMethod]} {paymentMethodLabel[order.paymentMethod] ?? order.paymentMethod}
+                                    <i className={`ti ${paymentMethodIcon[order.paymentMethod] ?? "ti-cash"}`} aria-hidden="true" />
+                                    {paymentMethodLabel[order.paymentMethod] ?? order.paymentMethod}
                                 </span>
                                 <span className={`order-payment-status ${order.paymentStatus}`}>
+                                    <i className={`ti ${paymentStatusIcon[order.paymentStatus] ?? "ti-clock"}`} aria-hidden="true" />
                                     {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
                                 </span>
                             </div>
@@ -104,8 +133,9 @@ export const OrderCard = () => {
                                 <button
                                     className="order-details-toggle"
                                     onClick={() => toggleExpand(order._id)}
+                                    aria-expanded={isExpanded}
                                 >
-                                    <span className={`chevron ${isExpanded ? "open" : ""}`}>▼</span>
+                                    <i className={`ti ti-chevron-down chevron ${isExpanded ? "open" : ""}`} aria-hidden="true" />
                                     Details
                                 </button>
                                 <div className="order-total-block">
@@ -118,6 +148,8 @@ export const OrderCard = () => {
                         {/* Expandable detail panel */}
                         {isExpanded && (
                             <div className="order-detail-panel">
+
+                                {/* Column 1: Shipping + Timeline */}
                                 <div>
                                     <div className="order-detail-section-label">Shipping address</div>
                                     <div className="order-shipping-address">
@@ -126,8 +158,26 @@ export const OrderCard = () => {
                                         {order.shippingAddress.city}, {order.shippingAddress.province} {order.shippingAddress.postalCode}<br />
                                         {order.shippingAddress.phone}
                                     </div>
+
+                                    {/* Timeline */}
+                                    <div className="order-timeline">
+                                        <div className="order-detail-section-label">Timeline</div>
+                                        {timeline.map(({ label, field }) => {
+                                            const ts: string | undefined = (order as any)[field]
+                                            return (
+                                                <div key={field} className={`order-timeline-row ${ts ? "active" : "inactive"}`}>
+                                                    <div className="order-timeline-dot" />
+                                                    <span className="order-timeline-label">{label}</span>
+                                                    <span className="order-timeline-date">
+                                                        {ts ? formatDate(ts) : "—"}
+                                                    </span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
 
+                                {/* Column 2: Price breakdown */}
                                 <div>
                                     <div className="order-detail-section-label">Price breakdown</div>
                                     {order.items.map((item: any) => (
@@ -145,6 +195,7 @@ export const OrderCard = () => {
                                         <span>₱{order.totalPrice.toLocaleString()}</span>
                                     </div>
                                 </div>
+
                             </div>
                         )}
 

@@ -1,6 +1,16 @@
+import { useEffect } from "react"
 import { OrderCard } from "../cards/OrderCard"
+import { useGetOrderById } from "../../hooks/order/useGetOrder"
+import { getUserId } from "../../utils/getUserId"
 
 export const OrderSection = () => {
+    const userId = getUserId()
+    
+    const { getOrderById } = useGetOrderById()
+
+    useEffect(() => {
+        getOrderById(userId)
+    }, [])
     return (
         <div>
             <div className="card border-0 shadow-sm rounded-3 overflow-hidden">

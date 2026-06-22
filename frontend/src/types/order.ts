@@ -1,6 +1,8 @@
+import type { CartItem } from "../features/cartSlice"
+
 export type PaymentMethod  = "cod" | "gcash" | "card" | "paypal"
 
-export type Status = "pending" | "confirmed" | "shipped" | "delivered" | "cancelled"
+export type Status = "pending" | "shipped" | "delivered" | "cancelled"
 
 export type PaymentStatus = "unpaid" | "paid" | "refunded"
 
@@ -35,3 +37,9 @@ export interface Order {
     shippingAddress: AddressFormType
 }
 
+export interface OrderModalProps {
+  items: CartItem[];
+  shippingFee?: number;
+  isOpen: boolean;
+  onClose: () => void;
+}

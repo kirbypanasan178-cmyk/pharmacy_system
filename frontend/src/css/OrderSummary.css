@@ -9,72 +9,68 @@
   box-sizing: border-box;
 }
 
-.chart-label {
-  font-size: 0.7rem;
-  font-weight: 600;
+.order-summary-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.os-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9a9a8f;
-  margin: 0 0 0.6rem;
+  color: #a0a096;
+  margin: 0 0 8px;
+}
+
+.os-total {
+  font-size: 36px;
+  font-weight: 500;
+  color: #1c1c1a;
+  line-height: 1;
+}
+
+.os-total-label {
+  font-size: 13px;
+  color: #6b6b63;
+  margin-top: 4px;
+}
+
+.os-peak-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f0;
+  border: 0.5px solid rgba(0,0,0,0.08);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #6b6b63;
+}
+
+.os-peak-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #085a49;
+  flex-shrink: 0;
+}
+
+.os-peak-day {
+  font-weight: 500;
+  color: #1c1c1a;
+}
+
+.os-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
 }
 
 .chart-loading {
   color: #999;
   font-size: 13px;
   margin: 1rem 0;
-}
-
-/* Order Summary specific */
-.order-summary-card .chart-big-number {
-  font-size: 1.9rem;
-  font-weight: 700;
-  color: #1c1c1a;
-  margin: 0 0 1.1rem;
-  line-height: 1.1;
-}
-
-.chart-big-number-suffix {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #6b6b63;
-}
-
-.order-days {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.order-day-row {
-  display: grid;
-  grid-template-columns: 36px 1fr 28px;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.order-day-name {
-  font-size: 0.75rem;
-  color: #8a8a80;
-  font-weight: 500;
-}
-
-.order-day-track {
-  height: 6px;
-  border-radius: 3px;
-  background: #eef1e8;
-  overflow: hidden;
-}
-
-.order-day-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: #4d7c3f;
-  transition: width 0.3s ease;
-}
-
-.order-day-value {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #4a4a44;
-  text-align: right;
 }

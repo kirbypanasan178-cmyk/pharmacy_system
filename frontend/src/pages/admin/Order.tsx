@@ -60,8 +60,6 @@ export const Order = () => {
   const { data } = useGetOrderStatusDistribution();
 
   const pendingCount = data.find((d) => d.status === "pending")?.count || 0;
-  const processingCount =
-    data.find((d) => d.status === "processing")?.count || 0;
   const shippedCount = data.find((d) => d.status === "shipped")?.count || 0;
   const deliveredCount = data.find((d) => d.status === "delivered")?.count || 0;
   const cancelledCount = data.find((d) => d.status === "cancelled")?.count || 0;
@@ -132,15 +130,6 @@ export const Order = () => {
           iconColor="#d97706"
         />
 
-        <StatCard
-          title="Processing"
-          value={processingCount}
-          description="Orders currently being prepared"
-          icon="bi-truck"
-          accentColor="#0284c7"
-          iconBg="rgba(2,132,199,0.10)"
-          iconColor="#0284c7"
-        />
 
         <StatCard
           title="Shipped"
@@ -156,7 +145,7 @@ export const Order = () => {
           title="Delivered"
           value={deliveredCount}
           description="Orders successfully received by customers"
-          icon="bi-graph-up-arrow"
+          icon="bi-truck"
           accentColor="#7c3aed"
           iconBg="rgba(124,58,237,0.10)"
           iconColor="#7c3aed"

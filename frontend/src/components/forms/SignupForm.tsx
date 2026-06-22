@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { signupFormInitialState, type SignupFormType } from "../../types/user";
 import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
 import { ErrorLabel } from "../ui/errorLabel";
 import { useSignupUser } from "../../hooks/useSignupUser";
 import "../../css/SignupForm.css";
@@ -19,20 +17,18 @@ const PharmacyIcon = () => (
 
 export const SignupForm: React.FC = () => {
   const [form, setForm] = useState<SignupFormType>(signupFormInitialState);
-
   const [errors, setErrors] = useState<ValidationErrorsSignup>({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { signupUser } = useSignupUser();
-  const { error, loading } = useAppSelector((state) => state.auth)
+  const { error, loading } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
 
     const newErrors = signupValidation(form);
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -42,12 +38,11 @@ export const SignupForm: React.FC = () => {
     try {
       const success = await signupUser(form);
       if (!success) {
-        console.log("Signup failed")
-        return
+        console.log("Signup failed");
+        return;
       }
       setErrors({});
-      setForm(signupFormInitialState)
-      console.log("SIGNUP SUCCESS", form);
+      setForm(signupFormInitialState);
     } finally {
       setIsLoading(false);
     }
@@ -79,11 +74,10 @@ export const SignupForm: React.FC = () => {
     }
   };
 
-  // Helper: add input-error class when field has an error after submit
-  const inputClass = (field: keyof ValidationErrorsSignup) =>
+  const ic = (field: keyof ValidationErrorsSignup) =>
     `signup-input${submitted && errors?.[field] ? " input-error" : ""}`;
 
-  const selectClass = (field: keyof ValidationErrorsSignup) =>
+  const sc = (field: keyof ValidationErrorsSignup) =>
     `signup-select${submitted && errors?.[field] ? " input-error" : ""}`;
 
   return (
@@ -112,14 +106,14 @@ export const SignupForm: React.FC = () => {
             <div className="signup-grid-2">
               <div>
                 <Label htmlFor="fullname" className="signup-label">
-                  Fullname <span className="req">*</span>
+                  Full name <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="fullname"
                   value={form.fullname}
                   onChange={handleChange}
                   placeholder="John H. Batumbakal"
-                  className={inputClass("fullname")}
+                  className={ic("fullname")}
                 />
                 {submitted && errors?.fullname && (
                   <ErrorLabel message={errors.fullname} className="signup-error" />
@@ -130,12 +124,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="birthplace" className="signup-label">
                   Birthplace <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="birthplace"
                   value={form.birthplace}
                   onChange={handleChange}
                   placeholder="Davao City"
-                  className={inputClass("birthplace")}
+                  className={ic("birthplace")}
                 />
                 {submitted && errors?.birthplace && (
                   <ErrorLabel message={errors.birthplace} className="signup-error" />
@@ -148,13 +142,13 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="age" className="signup-label">
                   Age <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="age"
                   type="number"
                   min="0"
                   value={form.age}
                   onChange={handleChange}
-                  className={inputClass("age")}
+                  className={ic("age")}
                 />
                 {submitted && errors?.age && (
                   <ErrorLabel message={errors.age} className="signup-error" />
@@ -165,18 +159,17 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="gender" className="signup-label">
                   Gender <span className="req">*</span>
                 </Label>
-                <Select
+                <select
                   id="gender"
-                  selectSize="md"
                   value={form.gender}
                   onChange={handleChange}
-                  className={selectClass("gender")}
-                  options={[
-                    { label: "Male",   value: "male"   },
-                    { label: "Female", value: "female" },
-                    { label: "Other",  value: "other"  },
-                  ]}
-                />
+                  className={sc("gender")}
+                >
+                  <option value="" disabled>Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
                 {submitted && errors?.gender && (
                   <ErrorLabel message={errors.gender} className="signup-error" />
                 )}
@@ -186,12 +179,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="birthdate" className="signup-label">
                   Birthdate <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="birthdate"
                   type="date"
                   value={form.birthdate}
                   onChange={handleChange}
-                  className={inputClass("birthdate")}
+                  className={ic("birthdate")}
                 />
                 {submitted && errors?.birthdate && (
                   <ErrorLabel message={errors.birthdate} className="signup-error" />
@@ -203,13 +196,13 @@ export const SignupForm: React.FC = () => {
               <Label htmlFor="phone" className="signup-label">
                 Phone <span className="req">*</span>
               </Label>
-              <Input
+              <input
                 id="phone"
                 type="tel"
                 value={form.phone}
                 onChange={handleChange}
                 placeholder="09XXXXXXXX"
-                className={inputClass("phone")}
+                className={ic("phone")}
               />
               {submitted && errors?.phone && (
                 <ErrorLabel message={errors.phone} className="signup-error" />
@@ -225,12 +218,12 @@ export const SignupForm: React.FC = () => {
               <Label htmlFor="street" className="signup-label">
                 Street <span className="req">*</span>
               </Label>
-              <Input
+              <input
                 id="street"
                 value={form.address.street}
                 onChange={handleChange}
                 placeholder="Jacinto Street"
-                className={inputClass("street")}
+                className={ic("street")}
               />
               {submitted && errors?.street && (
                 <ErrorLabel message={errors.street} className="signup-error" />
@@ -242,12 +235,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="barangay" className="signup-label">
                   Barangay <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="barangay"
                   value={form.address.barangay}
                   onChange={handleChange}
                   placeholder="Brgy. New Clarin"
-                  className={inputClass("barangay")}
+                  className={ic("barangay")}
                 />
                 {submitted && errors?.barangay && (
                   <ErrorLabel message={errors.barangay} className="signup-error" />
@@ -258,12 +251,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="city" className="signup-label">
                   City <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="city"
                   value={form.address.city}
                   onChange={handleChange}
                   placeholder="Davao City"
-                  className={inputClass("city")}
+                  className={ic("city")}
                 />
                 {submitted && errors?.city && (
                   <ErrorLabel message={errors.city} className="signup-error" />
@@ -276,12 +269,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="province" className="signup-label">
                   Province <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="province"
                   value={form.address.province}
                   onChange={handleChange}
                   placeholder="Davao del Sur"
-                  className={inputClass("province")}
+                  className={ic("province")}
                 />
                 {submitted && errors?.province && (
                   <ErrorLabel message={errors.province} className="signup-error" />
@@ -292,12 +285,12 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="zipcode" className="signup-label">
                   ZIP code <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="zipcode"
                   value={form.address.zipcode}
                   onChange={handleChange}
                   placeholder="8000"
-                  className={inputClass("zipcode")}
+                  className={ic("zipcode")}
                 />
                 {submitted && errors?.zipcode && (
                   <ErrorLabel message={errors.zipcode} className="signup-error" />
@@ -314,13 +307,13 @@ export const SignupForm: React.FC = () => {
               <Label htmlFor="email" className="signup-label">
                 Email <span className="req">*</span>
               </Label>
-              <Input
+              <input
                 id="email"
                 type="email"
                 value={form.email}
                 onChange={handleChange}
                 placeholder="johntest@gmail.com"
-                className={inputClass("email")}
+                className={ic("email")}
               />
               {submitted && errors?.email && (
                 <ErrorLabel message={errors.email} className="signup-error" />
@@ -332,18 +325,18 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="password" className="signup-label">
                   Password <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="password"
                   type="password"
                   value={form.password}
                   onChange={handleChange}
-                  className={inputClass("password")}
+                  className={ic("password")}
                 />
                 {submitted && errors?.password && (
                   <ErrorLabel message={errors.password ?? error ?? undefined} className="signup-error" />
                 )}
                 {submitted && error && (
-                  <ErrorLabel message={error} className="signup-error"/>
+                  <ErrorLabel message={error} className="signup-error" />
                 )}
               </div>
 
@@ -351,15 +344,15 @@ export const SignupForm: React.FC = () => {
                 <Label htmlFor="confirmPassword" className="signup-label">
                   Confirm password <span className="req">*</span>
                 </Label>
-                <Input
+                <input
                   id="confirmPassword"
                   type="password"
                   value={form.confirmPassword}
                   onChange={handleChange}
-                  className={inputClass("confirmPassword")}
+                  className={ic("confirmPassword")}
                 />
                 {submitted && errors?.confirmPassword && (
-                  <ErrorLabel message={errors.confirmPassword }  className="signup-error" />
+                  <ErrorLabel message={errors.confirmPassword} className="signup-error" />
                 )}
               </div>
             </div>

@@ -13,10 +13,6 @@ export const ProtectedRoute = ({ children, adminOnly = false }: Props) => {
     try {
         const parsed = JSON.parse(user)
 
-        console.log("Parsed:", parsed)
-        console.log("Role:", parsed.user.role)
-        console.log("adminOnly check:", adminOnly)
-
         if (adminOnly && parsed.user.role !== "admin") {
             return <Navigate to="/home" replace />
         }

@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import type { PaymentMethod, PaymentStatus, Status } from "../types/order"
 import type { CartItem } from "./cartSlice"
 
-interface ShippingAddress {
+export interface ShippingAddress {
   _id: string
   fullname: string
   street: string
@@ -12,7 +12,7 @@ interface ShippingAddress {
   phone: string
 }
 
-interface Order {
+export interface Order {
     _id: string
     userId: string
     items: CartItem[]

@@ -2,9 +2,9 @@ import { getOrderAPI } from "../../api/orderAPI"
 import { getOrderByIdSuccess, getOrderFailure, getOrderStart } from "../../features/orderSlice"
 import { useAppDispatch } from "../redux/reduxHooks"
 
-export const useGetOrder = () => {
+export const useGetOrderById = () => {
     const dispatch = useAppDispatch()
-    const getOrder = async (id: string) => {
+    const getOrderById = async (id: string) => {
         dispatch(getOrderStart())
         try {
             const data = await getOrderAPI(id)
@@ -15,5 +15,5 @@ export const useGetOrder = () => {
             dispatch(getOrderFailure(error.message))
             }
         }
-    return { getOrder }
+    return { getOrderById }
 }

@@ -11,7 +11,7 @@ export const useGetAllOrder = () => {
             dispatch(getAllOrderSuccess(data))
         } catch (error: any) {
             console.log(error)
-            dispatch(getOrderFailure(error))
+            dispatch(getOrderFailure(error.message))
         }
     }
 

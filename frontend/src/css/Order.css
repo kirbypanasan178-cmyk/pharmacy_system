@@ -21,7 +21,7 @@
 }
 
 .order-page__heading {
-    font-size: 24px;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #1a2e0d;
     margin: 0 0 4px;
@@ -54,7 +54,7 @@
    ============================================= */
 .order-page__cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
     margin-bottom: 28px;
 }

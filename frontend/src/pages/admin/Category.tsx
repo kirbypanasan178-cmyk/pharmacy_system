@@ -43,10 +43,10 @@ export const Category = () => {
             <div className="cp-divider" />
 
             {/* Content */}
-            <div className="row g-4 align-items-start">
+            <div className="cp-content-row">
 
                 {/* Form Card */}
-                <div className="col-12 col-lg-5">
+                <div className="cp-col-form">
                     <div className="cp-card">
                         <div className="cp-card-header">
                             <p className="cp-card-title">
@@ -67,8 +67,6 @@ export const Category = () => {
                                 editingId={editingId}
                                 setEditingId={setEditingId}
                             />
-
-                            {/* Cancel button shown only while editing */}
                             {editingId && (
                                 <button
                                     className="cp-btn-secondary"
@@ -84,15 +82,14 @@ export const Category = () => {
                 </div>
 
                 {/* Table Card */}
-                <div className="col-12 col-lg-7">
-                    <div className="cp-card">
+                <div className="cp-col-table">
+                    <div className="cp-card cp-card-table">
                         <div className="cp-card-header">
                             <p className="cp-card-title">
                                 <i className="bi bi-table" />
                                 All Categories
                             </p>
                         </div>
-                        {/* no extra padding so table bleeds cleanly to edges */}
                         <CategoryTable
                             form={form}
                             setForm={setForm}

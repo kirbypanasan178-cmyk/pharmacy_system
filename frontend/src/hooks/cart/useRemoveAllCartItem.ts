@@ -8,8 +8,10 @@ export const useRemoveAllCartItem = () => {
     const removeAllCartItem = async (cartId: string) => {
         dispatch(cartStart())
         try {
-            await removeAllCartItemAPI(cartId)
+            const data = await removeAllCartItemAPI(cartId)
             dispatch(removeAllCartItemSuccess())
+            
+            return data
         } catch (error: any){
             console.log(error)
             dispatch(cartFailure(error.message || "Failed to delete cart"))

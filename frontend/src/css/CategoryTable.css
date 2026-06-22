@@ -17,14 +17,16 @@
   --ct-row-hover:     #f4f9f5;
   --ct-radius:        14px;
   --ct-radius-sm:     8px;
-  --ct-shadow:        0 4px 24px rgba(13,31,20,0.07), 0 1px 4px rgba(13,31,20,0.04);
   --ct-index-bg:      #eaf5ee;
   --ct-index-color:   #1a7a4a;
 }
 
-/* ── Table wrapper ── */
+/* ── Table wrapper — fills card, scrolls internally ── */
 .ct-table-wrap {
   overflow-x: auto;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 /* ── Table ── */
@@ -50,6 +52,10 @@
   letter-spacing: 0.07em;
   white-space: nowrap;
   border: none;
+  position: sticky;
+  top: 0;
+  background: var(--ct-bg-head);
+  z-index: 1;
 }
 
 /* Body rows */

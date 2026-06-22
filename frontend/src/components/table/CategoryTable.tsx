@@ -20,7 +20,7 @@ export const CategoryTable = ({ setForm, setEditingId }: CategoryFormTypeProps) 
     }
 
     return (
-        <>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
             {categories.length === 0 ? (
                 <div className="ct-empty">
                     <i className="bi bi-tags ct-empty-icon" />
@@ -74,6 +74,6 @@ export const CategoryTable = ({ setForm, setEditingId }: CategoryFormTypeProps) 
                     </table>
                 </div>
             )}
-        </>
+        </div>
     )
 }

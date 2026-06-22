@@ -25,10 +25,32 @@ function useWindowWidth() {
   return width;
 }
 
+const ProductCardWrapper = ({ product }: { product: Product }) => {
+  const { createCart, throttled } = useCreateCart()
+
+  const handleAddToCart = async (product: Product) => {
+    await createCart({
+      items: [{ product: product._id, quantity: 1, price: product.price }],
+    });
+  };
+
+  return (
+    <ProductCard 
+      name={product.name}
+      category={product.category?.name ?? ""}
+      price={product.price}
+      originalPrice={product.price}
+      image={product.image}
+      stock={product.stock}
+      stockStatus={getStockStatus(product.stock)}
+      onAdd={() => handleAddToCart(product)}
+      throttled={throttled}
+    />
+  )
+}
+
 export const Home = () => {
   const { products, error, loading } = useAppSelector((state) => state.product);
-
-  const { createCart } = useCreateCart();
   const { getAllCategory } = useGetAllCategory();
   const { getAllProduct } = useGetAllProduct();
   const { getAllCart } = useGetAllCart();
@@ -59,11 +81,7 @@ export const Home = () => {
   const items = cart?.items ?? [];
   const cartCount = items.length ?? 0;
 
-  const handleAddToCart = async (product: Product) => {
-    await createCart({
-      items: [{ product: product._id, quantity: 1, price: product.price }],
-    });
-  };
+  
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
@@ -265,17 +283,12 @@ export const Home = () => {
         {!loading && !error && filteredProducts.length > 0 && (
           <div className="product-grid mb-5 p-2">
             {filteredProducts.map((product) => (
-              <ProductCard
+
+              <ProductCardWrapper
                 key={product._id}
-                name={product.name}
-                category={product.category?.name ?? ""}
-                price={product.price}
-                originalPrice={product.price}
-                image={product.image}
-                stock={product.stock}
-                stockStatus={getStockStatus(product.stock)}
-                onAdd={() => handleAddToCart(product)}
+                product={product}
               />
+
             ))}
           </div>
         )}

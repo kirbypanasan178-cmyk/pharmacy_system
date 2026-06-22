@@ -1,46 +1,51 @@
 import { CartCard } from "../../components/cards/CartCard";
-import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux/reduxHooks";
 import "../../css/Cart.css";
 import { useEffect, useState } from "react";
 import { useRemoveAllCartItem } from "../../hooks/cart/useRemoveAllCartItem";
 import { OrderFormModal } from "../../components/modals/OrderFormModal";
-import { useRemoveSelectedItem } from "../../hooks/cart/useRemoveSelectedCartItem";
+import { useRemoveSelectedCartItem } from "../../hooks/cart/useRemoveSelectedCartItem";
 import { useGetAllCart } from "../../hooks/cart/useGetAllCart";
 import { useUser } from "../../hooks/useUser";
+import { setSelectedCartItemIds, toggleSelectedCartItem } from "../../features/cartSlice";
 
 export const Cart = () => {
-  const { cart, loading, error } = useAppSelector((state) => state.cart);
+  const { cart, loading, error, selectedCartItemIds } = useAppSelector((state) => state.cart);
   const { removeAllCartItem } = useRemoveAllCartItem();
-  const { removeSelectedCartItem } = useRemoveSelectedItem();
+  const { removeSelectedCartItem } = useRemoveSelectedCartItem();
   const { getAllCart } = useGetAllCart()
+
+  const dispatch = useAppDispatch()
 
   const parsedUser = useUser()
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const items = cart?.items ?? [];
-  const allSelected = items.length > 0 && selectedIds.size === items.length;
-  const selectedItems = items.filter((item) => selectedIds.has(item._id));
+  const allSelected = items.length > 0 && selectedCartItemIds.length === items.length;
+  const selectedItems = items.filter((item) => selectedCartItemIds.includes(item._id));
   const selectedTotal = selectedItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
 
+  const isDisabled = loading || !selectedItems || selectedItems.length === 0
+
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedIds(new Set(items.map((item) => item._id)));
+      dispatch(setSelectedCartItemIds(items.map((item) => item._id)))
     } else {
-      setSelectedIds(new Set());
+      dispatch(setSelectedCartItemIds([]))
     }
   };
 
   const handleSelectOne = (id: string, checked: boolean) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      checked ? next.add(id) : next.delete(id);
-      return next;
-    });
+    if (
+      (checked && !selectedCartItemIds.includes(id)) ||
+      (!checked && selectedCartItemIds.includes(id))
+    ) {
+      dispatch(toggleSelectedCartItem(id))
+    }
   };
 
   const handleRemoveAllCart = async (cartId: string) => {
@@ -48,12 +53,26 @@ export const Cart = () => {
       await removeAllCartItem(cartId);
       return
     }
-    await removeSelectedCartItem(cartId, [...selectedIds]);
+    await removeSelectedCartItem(cartId, selectedCartItemIds);
   };
 
   useEffect(() => {
     getAllCart(parsedUser.user._id)
-  }, [])
+  }, [parsedUser.user._id])
+
+  useEffect(() => {
+  const validIds = new Set(items.map((item) => item._id));
+
+  const cleaned = selectedCartItemIds.filter((id) => validIds.has(id));
+
+  const isDifferent =
+    cleaned.length !== selectedCartItemIds.length ||
+    cleaned.some((id, i) => id !== selectedCartItemIds[i]);
+
+  if (isDifferent) {
+    dispatch(setSelectedCartItemIds(cleaned));
+  }
+}, [items, selectedCartItemIds, dispatch]);
 
   /* ── Loading State ── */
   if (loading) {
@@ -209,7 +228,7 @@ export const Cart = () => {
               <CartCard
                 key={item._id}
                 item={item}
-                checked={selectedIds.has(item._id)}
+                checked={selectedCartItemIds.includes(item._id)}
                 onSelect={handleSelectOne}
               />
             ))
@@ -228,6 +247,7 @@ export const Cart = () => {
               />
               <span>Select All ({items.length})</span>
               <button
+              disabled={loading}
                 className="cart-footer__btn-delete"
                 onClick={() => {
                   if (!cart) return;
@@ -249,10 +269,10 @@ export const Cart = () => {
               </div>
               <button
                 className="cart-footer__btn-checkout"
-                disabled={selectedItems.length === 0}
+                disabled={isDisabled}
                 onClick={() => setIsModalOpen(true)}
               >
-                Check Out ({selectedItems.length})
+                {loading ? "Processing..." : `Checkout (${selectedItems.length})`}
               </button>
             </div>
           </div>
@@ -261,7 +281,6 @@ export const Cart = () => {
 
       <OrderFormModal
         items={selectedItems}
-        selectedItemIds={selectedItems.map((item) => item._id)}
         shippingFee={cart?.shippingFee}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

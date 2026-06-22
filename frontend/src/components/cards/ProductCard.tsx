@@ -10,6 +10,7 @@ type ProductCardProps = {
   stockStatus: string;
   stock?: number;
   onAdd?: () => void;
+  throttled: boolean
 };
 
 export const ProductCard = ({
@@ -21,11 +22,15 @@ export const ProductCard = ({
   stock,
   stockStatus,
   onAdd,
+  throttled,
 }: ProductCardProps) => {
   const discountPct =
     originalPrice && originalPrice !== price
       ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : null;
+
+  const isOutOfStock = stockStatus === "out"
+  const isDisabled = isOutOfStock || throttled
 
   return (
     <div className="sp-card">
@@ -77,7 +82,7 @@ export const ProductCard = ({
       <div className="sp-footer">
         <button
           className="sp-add-btn"
-          disabled={stockStatus === "out"}
+          disabled={isDisabled}
           onClick={onAdd}
         >
           <i className="bi bi-cart-plus" />

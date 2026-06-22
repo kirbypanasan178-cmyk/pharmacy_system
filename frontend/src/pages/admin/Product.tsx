@@ -33,7 +33,7 @@ export const Product = () => {
             marginBottom: 4,
           }}
         >
-          🏥 Product Management
+          Product Management
         </h1>
         <p style={{ color: "var(--c-muted)", fontSize: "0.875rem", margin: 0 }}>
           Manage your pharmacy inventory — add, edit, or remove products.
@@ -41,7 +41,7 @@ export const Product = () => {
       </div>
 
       {/* Main layout */}
-      <div className="row g-4 flex-grow-1 overflow-hidden" style={{ minHeight: 0 }}>
+      <div className="row g-4 flex-grow-1" style={{ minHeight: 0 }}>
 
         {/* Form column */}
         <div className="col-12 col-xl-4 col-lg-6 h-100 overflow-y-auto">

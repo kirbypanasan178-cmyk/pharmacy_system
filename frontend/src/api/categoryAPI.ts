@@ -41,7 +41,7 @@ export const getAllCategoryAPI = async () => {
 
 export const updateCategoryAPI = async (id: string, form: CategoryFormType) => {
     const token = getToken()
-    const response = await fetch(`http://localhost:2000:api/category/${id}`, {
+    const response = await fetch(`http://localhost:2000/api/category/${id}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",

@@ -20,6 +20,8 @@ import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { AdminLayout } from "./components/layout/AdminLayout";
 import { Map } from "./pages/admin/Map";
 import { Account } from "./pages/user/Account";
+import PaymentSuccess from "./pages/user/PaymentSuccess";
+import PaymentFailed from "./pages/user/PaymentFailed";
 
 function App() {
   return (
@@ -51,6 +53,24 @@ function App() {
           element={
             <ProtectedRoute>
               <PayPalSuccess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment/success"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment/failed"
+          element={
+            <ProtectedRoute>
+              <PaymentFailed />
             </ProtectedRoute>
           }
         />

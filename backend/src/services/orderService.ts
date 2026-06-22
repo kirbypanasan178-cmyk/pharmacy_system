@@ -19,7 +19,7 @@ export const createOrderService = async (
 
         const shippingFee =  totalPrice <= 20000 ? 150 : 200 
 
-        const order = Order.create({
+        const order = await Order.create({
             userId,
             items: cart.items.map(item => ({
                 product: item.product,
@@ -41,11 +41,13 @@ export const createOrderService = async (
     }
 }
 
-export const getOrderService = async (userId: string) => {
+export const getOrderByIdService = async (userId: string) => {
     try {
         const order = await Order.find({
             userId
-        }).populate("items.product")
+        })
+        .populate("items.product")
+        .sort({ createdAt: -1 })
 
         return order
     } catch (error) {
@@ -55,7 +57,7 @@ export const getOrderService = async (userId: string) => {
 
 export const getAllOrderService = async () => {
     try {
-        const order = await Order.find()
+        const order = await Order.find().populate("items.product")
 
         return order
     } catch (error) {

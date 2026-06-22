@@ -1,33 +1,48 @@
 import React, { useState } from "react";
-import { orderValidation, type ValidationErrorsOrder } from "../../validators/orderValidation";
+import {
+  orderValidation,
+  type ValidationErrorsOrder,
+} from "../../validators/orderValidation";
 import { useCreateOrder } from "../../hooks/order/useCreateOrder";
 import { addressInitialForm, type AddressFormType } from "../../types/order";
 import type { CartItem } from "../../features/cartSlice";
-import "../../css/OrderModal.css"
+import "../../css/OrderModal.css";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
-import { useRemoveSelectedItem } from "../../hooks/cart/useRemoveSelectedCartItem";
+import { useCreateGCashPaymentSource } from "../../hooks/payment/useCreateGcashPaymentSource";
+import { useRemoveSelectedCartItem } from "../../hooks/cart/useRemoveSelectedCartItem";
 
 type PaymentMethod = "cod" | "gcash" | "card" | "paypal";
 
 interface OrderModalProps {
   items: CartItem[];
-  selectedItemIds: string[]
   shippingFee?: number;
-  isOpen: boolean
+  isOpen: boolean;
   onClose: () => void;
 }
 
-
-const paymentOptions: { value: PaymentMethod; label: string; icon: React.ReactNode }[] = [
+const paymentOptions: {
+  value: PaymentMethod;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
   {
     value: "cod",
     label: "Cash on delivery",
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="6" width="20" height="12" rx="2"/>
-        <circle cx="12" cy="12" r="2"/>
-        <path d="M6 12h.01M18 12h.01"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="2" y="6" width="20" height="12" rx="2" />
+        <circle cx="12" cy="12" r="2" />
+        <path d="M6 12h.01M18 12h.01" />
       </svg>
     ),
   },
@@ -35,10 +50,19 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: React.ReactNo
     value: "gcash",
     label: "GCash",
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="7" y="2" width="10" height="20" rx="2"/>
-        <line x1="11" y1="18" x2="13" y2="18"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="7" y="2" width="10" height="20" rx="2" />
+        <line x1="11" y1="18" x2="13" y2="18" />
       </svg>
     ),
   },
@@ -46,10 +70,19 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: React.ReactNo
     value: "card",
     label: "Card",
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"/>
-        <line x1="2" y1="10" x2="22" y2="10"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <line x1="2" y1="10" x2="22" y2="10" />
       </svg>
     ),
   },
@@ -57,10 +90,19 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: React.ReactNo
     value: "paypal",
     label: "PayPal",
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M7 11C7 11 6 17 10 17H14C17 17 19 15 19 12C19 9 17 7 14 7H9C8 7 7 8 7 9V11Z"/>
-        <path d="M5 15C5 15 4 21 8 21H12C15 21 17 19 17 16"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7 11C7 11 6 17 10 17H14C17 17 19 15 19 12C19 9 17 7 14 7H9C8 7 7 8 7 9V11Z" />
+        <path d="M5 15C5 15 4 21 8 21H12C15 21 17 19 17 16" />
       </svg>
     ),
   },
@@ -68,14 +110,16 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: React.ReactNo
 
 export const OrderFormModal: React.FC<OrderModalProps> = ({
   items,
-  selectedItemIds,
   shippingFee = 0,
   isOpen,
   onClose,
 }) => {
   const { createOrder } = useCreateOrder();
-  const { removeSelectedCartItem } = useRemoveSelectedItem();
-  const cart = useAppSelector((state) => state.cart.cart);
+  const { createGCashPaymentSource } = useCreateGCashPaymentSource();
+  const { removeSelectedCartItem } = useRemoveSelectedCartItem()
+
+  const { cart, selectedCartItemIds } = useAppSelector((state) => state.cart);
+  const { loading } = useAppSelector((state) => state.order);
 
   const [form, setForm] = useState<AddressFormType>(addressInitialForm);
   const [selectPayment, setSelectPayment] = useState<PaymentMethod>("cod");
@@ -84,18 +128,56 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const total = subtotal + shippingFee;
 
-  const handleReset = () => { setForm(addressInitialForm); setErrors({}); };
+  const handleReset = () => {
+    setForm(addressInitialForm);
+    setErrors({});
+  };
 
-  const handleConfirm = async (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
+  const handleConfirm = async (
+    e: React.FormEvent<HTMLFormElement | HTMLButtonElement>,
+  ) => {
     e.preventDefault();
+
     const newErrors = orderValidation(form);
-    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     if (!cart) return;
-    console.log("Cart items today: ", cart)
+
+
     try {
-      const { approveUrl } = await createOrder(form, selectPayment);
-      if (approveUrl) { window.location.href = approveUrl; return; }
-      await removeSelectedCartItem(cart._id, selectedItemIds);
+      const result = await createOrder(form, selectPayment);
+      console.log("Result: ", result.order._id)
+
+      if (!result) {
+  console.error("Order creation failed")
+  return  // ← stop execution, don't try to access result._id
+}
+
+      if (!result.order._id) {
+        console.error("Order id not found")
+        return
+      }
+ 
+      if (selectPayment === "paypal") {
+        const { approveUrl } = result;
+        if (approveUrl) {
+          window.location.href = approveUrl;
+          return;
+        }
+      }
+
+      else if (selectPayment === "gcash") {
+        await createGCashPaymentSource(result._id, total);
+      }
+       
+      else if (selectPayment === "cod") {
+        await removeSelectedCartItem(cart._id, selectedCartItemIds)
+        console.log("Cart items remove successfully")
+      }
+
       onClose();
       handleReset();
     } catch (error) {
@@ -117,9 +199,13 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
     >
       <div
         className="d-flex flex-column bg-white overflow-hidden w-100"
-        style={{ maxWidth: 460, maxHeight: "90vh", borderRadius: 16, border: "0.5px solid #9FE1CB" }}
+        style={{
+          maxWidth: 460,
+          maxHeight: "90vh",
+          borderRadius: 16,
+          border: "0.5px solid #9FE1CB",
+        }}
       >
-
         {/* Header */}
         <div
           className="d-flex align-items-start justify-content-between px-4 pt-4 pb-3"
@@ -128,24 +214,49 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
           <div className="d-flex align-items-center gap-2">
             <div
               className="d-flex align-items-center justify-content-center flex-shrink-0 text-white"
-              style={{ width: 36, height: 36, borderRadius: 10, background: "#1D9E75", fontSize: 18 }}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: "#1D9E75",
+                fontSize: 18,
+              }}
             >
               {/* Shopping cart SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
               </svg>
             </div>
             <div>
-              <p className="mb-0 fw-medium" style={{ fontSize: 15, color: "#085041" }}>Place order</p>
-              <p className="mb-0" style={{ fontSize: 12, color: "#0F6E56" }}>Review and confirm your order details</p>
+              <p
+                className="mb-0 fw-medium"
+                style={{ fontSize: 15, color: "#085041" }}
+              >
+                Place order
+              </p>
+              <p className="mb-0" style={{ fontSize: 12, color: "#0F6E56" }}>
+                Review and confirm your order details
+              </p>
             </div>
           </div>
           <button
             className="d-flex align-items-center justify-content-center ms-3 flex-shrink-0"
-            onClick={() => { onClose(); handleReset(); }}
+            onClick={() => {
+              onClose();
+              handleReset();
+            }}
             style={{
               width: 28,
               height: 28,
@@ -157,48 +268,92 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
             }}
           >
             {/* Close X SVG */}
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
         {/* Body */}
         <div className="overflow-y-auto flex-grow-1 px-4 py-4 d-flex flex-column gap-4">
-
           {/* Order items */}
           <section>
-            <p className="section-label text-uppercase text-muted mb-2">Order items</p>
-            <div style={{ border: "0.5px solid #9FE1CB", borderRadius: 12, overflow: "hidden", background: "#f9fdfb" }}>
+            <p className="section-label text-uppercase text-muted mb-2">
+              Order items
+            </p>
+            <div
+              style={{
+                border: "0.5px solid #9FE1CB",
+                borderRadius: 12,
+                overflow: "hidden",
+                background: "#f9fdfb",
+              }}
+            >
               {items.map((item, idx) => (
                 <div
                   key={item._id}
                   className="d-flex align-items-center justify-content-between px-3 py-2"
-                  style={idx < items.length - 1 ? { borderBottom: "0.5px solid #9FE1CB" } : {}}
+                  style={
+                    idx < items.length - 1
+                      ? { borderBottom: "0.5px solid #9FE1CB" }
+                      : {}
+                  }
                 >
                   <div className="d-flex align-items-center gap-2">
                     <div
                       className="d-flex align-items-center justify-content-center flex-shrink-0"
-                      style={{ width: 32, height: 32, borderRadius: 8, background: "#E1F5EE", color: "#1D9E75", fontSize: 15 }}
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        background: "#E1F5EE",
+                        color: "#1D9E75",
+                        fontSize: 15,
+                      }}
                     >
                       {/* Package SVG */}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16.5 9.4 7.55 4.24"/>
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                        <polyline points="3.29 7 12 12 20.71 7"/>
-                        <line x1="12" y1="22" x2="12" y2="12"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M16.5 9.4 7.55 4.24" />
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.29 7 12 12 20.71 7" />
+                        <line x1="12" y1="22" x2="12" y2="12" />
                       </svg>
                     </div>
                     <div>
-                      <p className="mb-0 fw-medium" style={{ fontSize: 13 }}>{item.product.name}</p>
+                      <p className="mb-0 fw-medium" style={{ fontSize: 13 }}>
+                        {item.product.name}
+                      </p>
                       <small className="text-muted">Qty: {item.quantity}</small>
                     </div>
                   </div>
-                  <span className="fw-medium" style={{ fontSize: 13, color: "#085041" }}>
-                    ₱{(item.price * item.quantity).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                  <span
+                    className="fw-medium"
+                    style={{ fontSize: 13, color: "#085041" }}
+                  >
+                    ₱
+                    {(item.price * item.quantity).toLocaleString("en-PH", {
+                      minimumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
               ))}
@@ -207,10 +362,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
 
           {/* Shipping address */}
           <section>
-            <p className="section-label text-uppercase text-muted mb-2">Shipping address</p>
+            <p className="section-label text-uppercase text-muted mb-2">
+              Shipping address
+            </p>
             <div className="row g-2">
               <div className="col-12">
-                <label className="form-label" style={{ fontSize: 12 }}>Full name</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Full name
+                </label>
                 <input
                   name="fullname"
                   className={`form-control form-control-sm ${errors.fullname ? "is-invalid" : ""}`}
@@ -218,10 +377,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.fullname}
                   onChange={handleChange}
                 />
-                {errors.fullname && <div className="invalid-feedback">{errors.fullname}</div>}
+                {errors.fullname && (
+                  <div className="invalid-feedback">{errors.fullname}</div>
+                )}
               </div>
               <div className="col-6">
-                <label className="form-label" style={{ fontSize: 12 }}>Phone</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Phone
+                </label>
                 <input
                   name="phone"
                   className={`form-control form-control-sm ${errors.phone ? "is-invalid" : ""}`}
@@ -229,10 +392,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.phone}
                   onChange={handleChange}
                 />
-                {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                {errors.phone && (
+                  <div className="invalid-feedback">{errors.phone}</div>
+                )}
               </div>
               <div className="col-6">
-                <label className="form-label" style={{ fontSize: 12 }}>Postal code</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Postal code
+                </label>
                 <input
                   name="postalCode"
                   className={`form-control form-control-sm ${errors.postalCode ? "is-invalid" : ""}`}
@@ -240,10 +407,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.postalCode}
                   onChange={handleChange}
                 />
-                {errors.postalCode && <div className="invalid-feedback">{errors.postalCode}</div>}
+                {errors.postalCode && (
+                  <div className="invalid-feedback">{errors.postalCode}</div>
+                )}
               </div>
               <div className="col-12">
-                <label className="form-label" style={{ fontSize: 12 }}>Street address</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Street address
+                </label>
                 <input
                   name="street"
                   className={`form-control form-control-sm ${errors.street ? "is-invalid" : ""}`}
@@ -251,10 +422,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.street}
                   onChange={handleChange}
                 />
-                {errors.street && <div className="invalid-feedback">{errors.street}</div>}
+                {errors.street && (
+                  <div className="invalid-feedback">{errors.street}</div>
+                )}
               </div>
               <div className="col-6">
-                <label className="form-label" style={{ fontSize: 12 }}>City</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  City
+                </label>
                 <input
                   name="city"
                   className={`form-control form-control-sm ${errors.city ? "is-invalid" : ""}`}
@@ -262,10 +437,14 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.city}
                   onChange={handleChange}
                 />
-                {errors.city && <div className="invalid-feedback">{errors.city}</div>}
+                {errors.city && (
+                  <div className="invalid-feedback">{errors.city}</div>
+                )}
               </div>
               <div className="col-6">
-                <label className="form-label" style={{ fontSize: 12 }}>Province</label>
+                <label className="form-label" style={{ fontSize: 12 }}>
+                  Province
+                </label>
                 <input
                   name="province"
                   className={`form-control form-control-sm ${errors.province ? "is-invalid" : ""}`}
@@ -273,14 +452,18 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
                   value={form.province}
                   onChange={handleChange}
                 />
-                {errors.province && <div className="invalid-feedback">{errors.province}</div>}
+                {errors.province && (
+                  <div className="invalid-feedback">{errors.province}</div>
+                )}
               </div>
             </div>
           </section>
 
           {/* Payment method */}
           <section>
-            <p className="section-label text-uppercase text-muted mb-2">Payment method</p>
+            <p className="section-label text-uppercase text-muted mb-2">
+              Payment method
+            </p>
             <div className="row g-2">
               {paymentOptions.map((opt) => (
                 <div className="col-3" key={opt.value}>
@@ -301,20 +484,35 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
           <section className="border-top pt-3">
             <div className="d-flex justify-content-between mb-1">
               <small className="text-muted">Subtotal</small>
-              <small>₱{subtotal.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</small>
+              <small>
+                ₱
+                {subtotal.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+              </small>
             </div>
             <div className="d-flex justify-content-between mb-2">
               <small className="text-muted">Shipping fee</small>
-              <small>₱{shippingFee.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</small>
+              <small>
+                ₱
+                {shippingFee.toLocaleString("en-PH", {
+                  minimumFractionDigits: 2,
+                })}
+              </small>
             </div>
             <div className="d-flex justify-content-between align-items-center total-pill mt-1">
-              <span className="fw-medium" style={{ fontSize: 14, color: "#085041" }}>Total</span>
-              <span className="fw-medium" style={{ fontSize: 16, color: "#085041" }}>
+              <span
+                className="fw-medium"
+                style={{ fontSize: 14, color: "#085041" }}
+              >
+                Total
+              </span>
+              <span
+                className="fw-medium"
+                style={{ fontSize: 16, color: "#085041" }}
+              >
                 ₱{total.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
               </span>
             </div>
           </section>
-
         </div>
 
         {/* Footer */}
@@ -324,28 +522,51 @@ export const OrderFormModal: React.FC<OrderModalProps> = ({
         >
           <button
             className="btn flex-grow-1"
-            style={{ border: "0.5px solid #9FE1CB", color: "#0F6E56", background: "#fff", fontSize: 13 }}
-            onClick={() => { onClose(); handleReset(); }}
+            style={{
+              border: "0.5px solid #9FE1CB",
+              color: "#0F6E56",
+              background: "#fff",
+              fontSize: 13,
+            }}
+            onClick={() => {
+              onClose();
+              handleReset();
+            }}
           >
             Cancel
           </button>
+
           <button
+            
             className="btn d-flex align-items-center justify-content-center gap-2"
-            style={{ flex: 2, background: "#1D9E75", color: "#fff", fontSize: 13, border: "none" }}
+            style={{
+              flex: 2,
+              background: "#1D9E75",
+              color: "#fff",
+              fontSize: 13,
+              border: "none",
+            }}
             onClick={handleConfirm}
           >
-            {/* Cart check SVG */}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              <polyline points="9 11 11 13 15 9"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              <polyline points="9 11 11 13 15 9" />
             </svg>
-            Confirm order
+            {loading ? "Loading..." : "Confirm Order"}
           </button>
         </div>
-
       </div>
     </div>
   );

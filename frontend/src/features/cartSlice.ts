@@ -25,12 +25,14 @@ interface Cart {
 }
 
 type CartState = {
+  selectedCartItemIds: string[]
   cart: Cart | null;
   loading: boolean;
   error: string | null;
 };
 
 const initialState: CartState = {
+  selectedCartItemIds: [],
   cart: null,
   loading: false,
   error: null,
@@ -67,12 +69,30 @@ const cartSlice = createSlice({
       state.loading = false;
       state.cart = null;
     },
+
+    toggleSelectedCartItem: (state, action: PayloadAction<string>) => {
+      const id = action.payload
+      const index = state.selectedCartItemIds.indexOf(id)
+
+      if (index === -1) {
+        state.selectedCartItemIds.push(id)
+      } else {
+        state.selectedCartItemIds.splice(index, 1)
+      }
+    },
+
+    setSelectedCartItemIds: (state, action: PayloadAction<string[]>) => {
+      state.selectedCartItemIds = action.payload
+    },
     removeSelectedCartItemSuccess: (state, action: PayloadAction<string[]>) => {
       if (state.cart) {
         state.loading = false;
         state.cart.items = state.cart.items.filter(
           (item) => !action.payload.includes(item._id),
         );
+        state.selectedCartItemIds = state.selectedCartItemIds.filter(
+          (id) => !action.payload.includes(id)
+        )
       }
     },
     removeCartItemSuccess: (state, action: PayloadAction<string>) => {
@@ -80,6 +100,9 @@ const cartSlice = createSlice({
         state.loading = false;
         state.cart.items = state.cart.items.filter(
           (item) => item._id !== action.payload
+        );
+        state.selectedCartItemIds = state.selectedCartItemIds.filter(
+          (id) => id !== action.payload
         );
       }
     },
@@ -92,6 +115,8 @@ export const {
   cartFailure,
   updateCartItemSuccess,
   removeAllCartItemSuccess,
+  toggleSelectedCartItem,
+  setSelectedCartItemIds,
   removeSelectedCartItemSuccess,
   removeCartItemSuccess,
 } = cartSlice.actions;

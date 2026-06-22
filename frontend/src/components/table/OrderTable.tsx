@@ -3,6 +3,8 @@ import "../../css/OrderTable.css";
 import { useUpdateAdminOrder } from "../../hooks/order/useUpdateAdminOrder";
 import type { PaymentStatus, Status } from "../../types/order";
 import { getInitials } from "../../utils/getInitials";
+import type { Order } from "../../features/orderSlice";
+import { OrderDetailsModal } from "../modals/OrderDetailsModal";
 
 const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: "pending",   label: "Pending" },
@@ -49,6 +51,8 @@ export const OrderTable = ({ filteredOrders }: any) => {
   const [editingOrderId, setEditingOrderId]       = useState<string | null>(null);
   const [editStatus, setEditStatus]               = useState<string>("");
   const [editPaymentStatus, setEditPaymentStatus] = useState<string>("");
+  const [viewDetails, setViewDetails] = useState<boolean>(false)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
   const { updateAdminOrder } = useUpdateAdminOrder();
 
@@ -71,7 +75,8 @@ export const OrderTable = ({ filteredOrders }: any) => {
     );
     setEditingOrderId(null);
   };
-
+  
+  
   return (
     <div className="ot-wrap">
       {/* Toolbar */}
@@ -242,7 +247,14 @@ export const OrderTable = ({ filteredOrders }: any) => {
 
                           {openMenuId === order._id && (
                             <div className="ot-dropdown">
-                              <button className="ot-dd-item">
+                              <button 
+                              className="ot-dd-item"
+                              onClick={() => {
+                                setViewDetails(true)
+                                setSelectedOrder(order)
+                                console.log("Orders: ", order)
+                              }}
+                              >
                                 <i className="bi bi-eye" />
                                 View details
                               </button>
@@ -267,10 +279,19 @@ export const OrderTable = ({ filteredOrders }: any) => {
                   </tr>
                 );
               })}
+              
             </tbody>
           </table>
         )}
+        
       </div>
+
+      <OrderDetailsModal
+      selectedOrder={selectedOrder}
+      isOpen={viewDetails}
+      onClose={() => setViewDetails(false)}
+      />
+      
     </div>
   );
 };

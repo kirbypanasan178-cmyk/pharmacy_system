@@ -85,6 +85,8 @@ export const Dashboard = () => {
   const orders   = useAppSelector((state) => state.order?.adminOrders ?? []);
   const products = useAppSelector((state) => state.product?.products ?? []);
 
+  const lowStockProductCount = products.filter((prod) => prod.stock <= 5)
+
   const { getAllProduct }        = useGetAllProduct();
   const { getOrdersTodayCount } = useGetOrdersTodayCount();
   const { getSalesToday }       = useGetSalesToday();
@@ -151,7 +153,7 @@ export const Dashboard = () => {
         />
         <StatCard
           title="Low Stock Products"
-          value={products.length}
+          value={lowStockProductCount.length}
           description="Items in inventory"
           trend="Current stock"
           icon="bi-box-seam"
