@@ -1,54 +1,7 @@
-import User from "../models/userModel";
 import { Request, Response } from "express";
-import { signupService, deleteUserService, getAllUsersService, getUserByIdService, updateUserService, loginService, blockUserService, unblockUserService } from "../services/userService";
-import jwt from "jsonwebtoken";
-import config from "../config/env";
+import { deleteUserService, getAllUsersService, getUserByIdService, updateUserService, blockUserService, unblockUserService } from "../services/userService";
 import { Order } from "../models/orderModel";
 
-export const createToken = (_id: string): string => {
-  return jwt.sign(
-    { _id },
-    config.JWT_SECRET as string,
-    { expiresIn: "3d" }
-  );
-};
-
-export const signupController = async (req: Request, res: Response) => {
-    try {
-        const user = await signupService(req.body)
-
-        const { password, ...safeUser } = (user as any).toObject()
-
-        res.status(200).json(safeUser)
-
-    } catch (error: any) {
-        res.status(400).json({ error: error.message})
-    }
-}
-
-export const loginController = async (req: Request, res: Response) => {
-    const { email, password } = req.body
-    try {
-        const user = await loginService(email, password)
-        const token = createToken(user._id.toString())
-
-        res.status(200).json({ 
-            user: {
-                _id: user._id,
-                email: user.email,
-                role: user.role,
-                isActive: user.isActive
-            },
-            token })
-
-    } catch (error: unknown) {
-    if (error instanceof Error) {
-        return res.status(401).json({ error: error.message });
-    }
-
-    return res.status(500).json({ error: "Internal server error" });
-}
-}
 
 export const getUserByIdController = async (req: Request, res: Response) => {
     const id = req.params.id

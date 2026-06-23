@@ -65,7 +65,7 @@ export const createCartService = async (
 export const getCartByIdService = async (userId: string) => {
   try {
     const cart = await Cart.findOne({ userId }).populate("items.product");
-
+    
     return cart;
   } catch (error) {
     throw new Error(

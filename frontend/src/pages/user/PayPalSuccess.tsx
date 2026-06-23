@@ -32,10 +32,10 @@ export const PayPalSuccess = () => {
 
         await res.json()
 
-        navigate("/home")
+        navigate("/account/orders")
       } catch (err: unknown) {
         console.error("Capture failed:", err)
-        navigate("/home")
+        navigate("/cart")
       }
     }
 

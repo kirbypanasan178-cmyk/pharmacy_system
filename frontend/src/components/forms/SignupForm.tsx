@@ -6,6 +6,7 @@ import { useSignupUser } from "../../hooks/useSignupUser";
 import "../../css/SignupForm.css";
 import { signupValidation, type ValidationErrorsSignup } from "../../validators/signup";
 import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import { useNavigate } from "react-router-dom";
 
 const PharmacyIcon = () => (
   <svg viewBox="0 0 24 24">
@@ -20,6 +21,8 @@ export const SignupForm: React.FC = () => {
   const [errors, setErrors] = useState<ValidationErrorsSignup>({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate()
 
   const { signupUser } = useSignupUser();
   const { error, loading } = useAppSelector((state) => state.auth);
@@ -41,6 +44,7 @@ export const SignupForm: React.FC = () => {
         console.log("Signup failed");
         return;
       }
+      navigate("/login")
       setErrors({});
       setForm(signupFormInitialState);
     } finally {

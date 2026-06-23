@@ -22,6 +22,7 @@ import { Map } from "./pages/admin/Map";
 import { Account } from "./pages/user/Account";
 import PaymentSuccess from "./pages/user/PaymentSuccess";
 import PaymentFailed from "./pages/user/PaymentFailed";
+import { VerifyEmail } from "./pages/auth/VerifyEmail";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         {/* Public only */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
         {/* Protected routes */}
         <Route

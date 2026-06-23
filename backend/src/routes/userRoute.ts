@@ -1,7 +1,5 @@
 import express from "express"
 import { 
-    signupController, 
-    loginController, 
     deleteUserController, 
     getAllUsersController, 
     getUserByIdController, 
@@ -14,11 +12,14 @@ import { requireAuth } from "../middlewares/requireAuth"
 import { isAdmin } from "../middlewares/isAdmin"
 import { updateValidation } from "../validators/updateValidation"
 import { loginLimiter, signupLimiter } from "../middlewares/rateLimiter"
+import { loginController, resendVerificationEmailController, signupController, verifyEmailController } from "../controllers/authController"
 
 const router = express.Router()
 
 // for users only
 router.post("/signup", signupValidation, signupLimiter, signupController)
+router.get("/verify-email", verifyEmailController)
+router.post("/resend-verification", resendVerificationEmailController)
 // for users and admin
 router.post("/login", loginValidation, loginLimiter, loginController)
 // for admins only

@@ -6,7 +6,6 @@ import { useRemoveAllCartItem } from "../../hooks/cart/useRemoveAllCartItem";
 import { OrderFormModal } from "../../components/modals/OrderFormModal";
 import { useRemoveSelectedCartItem } from "../../hooks/cart/useRemoveSelectedCartItem";
 import { useGetAllCart } from "../../hooks/cart/useGetAllCart";
-import { useUser } from "../../hooks/useUser";
 import { setSelectedCartItemIds, toggleSelectedCartItem } from "../../features/cartSlice";
 
 export const Cart = () => {
@@ -16,8 +15,6 @@ export const Cart = () => {
   const { getAllCart } = useGetAllCart()
 
   const dispatch = useAppDispatch()
-
-  const parsedUser = useUser()
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -57,8 +54,8 @@ export const Cart = () => {
   };
 
   useEffect(() => {
-    getAllCart(parsedUser.user._id)
-  }, [parsedUser.user._id])
+    getAllCart()
+  }, [])
 
   useEffect(() => {
   const validIds = new Set(items.map((item) => item._id));

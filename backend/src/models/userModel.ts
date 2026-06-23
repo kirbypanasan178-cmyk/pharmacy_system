@@ -18,6 +18,26 @@ const userSchema = new Schema({
         enum: ["user", "admin"],
         default: "user"
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+        default: null,
+    },
+    verificationTokenExpiry: {
+        type: Date,
+        default: null,
+    },
+    passwordResetToken: {
+        type: String,
+        default: null,
+    },
+    passwordResetExpiry: {
+        type: Date,
+        default: null,
+    },
     isActive: {
         type: Boolean,
         default: false

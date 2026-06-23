@@ -73,7 +73,7 @@ export const Home = () => {
       getAllCategory();
       getAllProduct();
       if (!user || !user._id) return;
-      await getAllCart(user._id);
+      await getAllCart();
     };
     fetch();
   }, []);

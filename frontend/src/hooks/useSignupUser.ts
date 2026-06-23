@@ -12,9 +12,9 @@ export const useSignupUser = () => {
 
         return data
     } catch (error: any) {
-        console.log("Cannot create account: ", error)
-        dispatch(loginFailure(error.message))
-    }
+    const message = error.response?.data?.error || error.message
+    dispatch(loginFailure(message))
+}
     }
 
     return { signupUser }

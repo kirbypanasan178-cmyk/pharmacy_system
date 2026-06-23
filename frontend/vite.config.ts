@@ -7,4 +7,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ['leaflet'],
   },
+  server: {
+  proxy: {
+    "/api": "http://localhost:2000"  // your PORT from .env
+  }
+}
+
 })
