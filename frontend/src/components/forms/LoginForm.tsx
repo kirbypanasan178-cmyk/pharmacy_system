@@ -96,9 +96,10 @@ export const LoginForm = () => {
 
     try {
       const user = await loginUser(form);
+      
       if (!user) return;
 
-      if (user.user.role === "admin") {
+      if (user.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/home");

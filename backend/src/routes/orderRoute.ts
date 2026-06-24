@@ -1,5 +1,5 @@
 import express from "express"
-import { capturePayPalOrderController, createOrderController, getAllOrderController, getOrderByIdController, getOrdersTodayCountController, getSalesTodayController, updateAdminOrderController, updateUserOrderController } from "../controllers/orderController"
+import { cancelOrderController, capturePayPalOrderController, createOrderController, getAllOrderController, getOrderByIdController, getOrdersTodayCountController, getSalesTodayController, updateAdminOrderController, updateUserOrderController } from "../controllers/orderController"
 import { requireAuth } from "../middlewares/requireAuth"
 import { isAdmin } from "../middlewares/isAdmin"
 import { idempotencyMiddleware } from "../middlewares/idempotency"
@@ -17,5 +17,6 @@ router.get("/today/count", isAdmin, getOrdersTodayCountController)
 router.get("/today/sales", isAdmin, getSalesTodayController)
 router.patch("/admin/:id", isAdmin, updateAdminOrderController)
 router.patch("/user/:id", updateUserOrderController)
+router.patch("/admin/cancel-order/:orderId", isAdmin, cancelOrderController)
 
 export default router

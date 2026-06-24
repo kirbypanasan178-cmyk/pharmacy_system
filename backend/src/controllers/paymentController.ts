@@ -3,6 +3,7 @@ import { createGCashPaymentService, createGCashPaymentSourceService } from "../s
 import { Order } from "../models/orderModel";
 import { Cart } from "../models/cartModel";
 import { removeAllCartItemService, removeSelectedCartItemService } from "../services/cartService";
+import { decreaseStockService } from "../services/productService";
 
 // frontend redirects the user to checkout url 
 export const createGcashPaymentSourceController = async (req: Request, res: Response) => {
@@ -68,6 +69,7 @@ export const createGCashPaymentController = async (req: Request, res: Response) 
                 console.log("G-cash orders: ", updateOrder)
 
                 if (updateOrder) {
+                    await decreaseStockService(updateOrder.items)
                     const cart = await Cart.findOne({ userId: updateOrder.userId })
                     if (cart) {
 

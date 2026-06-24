@@ -40,7 +40,7 @@ export const AdminNavBar: React.FC = () => {
   const isActive = (path: string): boolean => location.pathname === path;
 
   useEffect(() => {
-    getUser(parsedUser.user._id)
+    getUser(parsedUser._id)
   }, [])
 
   return (

@@ -9,7 +9,6 @@ export const useGetUser = () => {
         dispatch(userStart())
         try {
             const data = await getUserAPI(userId)
-            console.log(data)
             dispatch(setUser(data))
             return data
         } catch (error: any) {

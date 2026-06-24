@@ -135,10 +135,19 @@ body .cart-topbar {
   display: flex;
   align-items: center;
   gap: 4px;
+
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--green-600);
+
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  cursor: pointer;
   text-decoration: none;
+
   transition: gap var(--ease), color var(--ease);
 }
 
@@ -150,6 +159,10 @@ body .cart-topbar {
 .cart-subbar__continue svg {
   width: 16px;
   height: 16px;
+}
+
+.cart-subbar__continue:focus {
+  outline: none;
 }
 
 /* ══════════════════════════════════

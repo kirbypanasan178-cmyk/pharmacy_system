@@ -8,10 +8,14 @@ import { profileFormInitialState, type ProfileFormType } from "../../types/user"
 import { useUpdateUser } from "../../hooks/users/useUpdateUser"
 import { ErrorLabel } from "../ui/errorLabel"
 import { profileValidation, type ValidationErrorsProfile } from "../../validators/profileValidation"
+import { getInitials } from "../../utils/getInitials"
+import { useAppSelector } from "../../hooks/redux/reduxHooks"
 
 export const ProfileSection = () => {
     const [form, setForm] = useState<ProfileFormType>(profileFormInitialState);
     const [errors, setErrors] = useState<ValidationErrorsProfile>({})
+
+    const user = useAppSelector((state) => state.user.user )
 
     const { getUser } = useGetUser()
     const { updateUser } = useUpdateUser()
@@ -20,7 +24,7 @@ export const ProfileSection = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-        const userAccountInfo = await getUser(parsedUser.user._id)
+        const userAccountInfo = await getUser(parsedUser._id)
         if (userAccountInfo) {
             setForm((prev) => ({
                 ...prev,
@@ -36,7 +40,7 @@ export const ProfileSection = () => {
         }
     }
     fetchUser()
-}, [parsedUser.user._id])
+}, [parsedUser._id])
 
    const handleChange = (
       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -75,8 +79,8 @@ export const ProfileSection = () => {
         return;
     }
 
-    console.log("Calling updateUser with:", parsedUser.user._id, form) // 👈 add this
-    const updatedUser = await updateUser(parsedUser.user._id, form)
+    console.log("Calling updateUser with:", parsedUser._id, form) // 👈 add this
+    const updatedUser = await updateUser(parsedUser._id, form)
     console.log("updateUser result:", updatedUser) // 👈 add this
 
     if (!updatedUser) {
@@ -88,7 +92,7 @@ export const ProfileSection = () => {
 }
 
     const handleCancel = async () => {
-        const userAccountInfo = await getUser(parsedUser.user._id)
+        const userAccountInfo = await getUser(parsedUser._id)
         if (userAccountInfo) {
             setForm((prev) => ({
                 ...prev,
@@ -116,7 +120,7 @@ export const ProfileSection = () => {
                             className="rounded-circle bg-light d-flex align-items-center justify-content-center fw-semibold text-secondary flex-shrink-0"
                             style={{ width: 72, height: 72, fontSize: 26, border: "3px solid #fff", boxShadow: "0 0 0 2px #dee2e6" }}
                         >
-                            JD
+                        {getInitials(user?.fullname)}
                         </div>
                         <div>
                             <h5 className="mb-0 fw-semibold">My Profile</h5>

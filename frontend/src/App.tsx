@@ -24,6 +24,7 @@ import PaymentSuccess from "./pages/user/PaymentSuccess";
 import PaymentFailed from "./pages/user/PaymentFailed";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { VerificationSection } from "./components/accounts/VerificationSection";
+import { ActiveUserRoute } from "./components/layout/ActiveUserRoute";
 
 function App() {
   return (
@@ -38,43 +39,45 @@ function App() {
         <Route
           path="/home"
           element={
-            <ProtectedRoute>
+            <ActiveUserRoute>
               <Home />
-            </ProtectedRoute>
+            </ActiveUserRoute>
           }
         />
+
         <Route
           path="/cart"
           element={
-            <ProtectedRoute>
+            <ActiveUserRoute>
               <Cart />
-            </ProtectedRoute>
+            </ActiveUserRoute>
           }
         />
+
         <Route
           path="/paypal-success"
           element={
-            <ProtectedRoute>
+            <ActiveUserRoute>
               <PayPalSuccess />
-            </ProtectedRoute>
+            </ActiveUserRoute>
           }
         />
 
         <Route
           path="/payment/success"
           element={
-            <ProtectedRoute>
+            <ActiveUserRoute>
               <PaymentSuccess />
-            </ProtectedRoute>
+            </ActiveUserRoute>
           }
         />
 
         <Route
           path="/payment/failed"
           element={
-            <ProtectedRoute>
+            <ActiveUserRoute>
               <PaymentFailed />
-            </ProtectedRoute>
+            </ActiveUserRoute>
           }
         />
 

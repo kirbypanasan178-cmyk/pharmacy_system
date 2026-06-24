@@ -5,6 +5,7 @@ import type {
   Status,
 } from "../types/order";
 import { getToken } from "../utils/getToken";
+import { API_URL } from "./apiUrl";
 
 export const createOrderAPI = async (
   userId: string,
@@ -157,3 +158,23 @@ export const getSalesTodayAPI = async () => {
 
   return data;
 };
+
+
+export const cancelOrderAPI = async (orderId: string) => {
+  const token = getToken()
+  const response = await fetch(`${API_URL}/order/admin/cancel-order/${orderId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.error)
+  }
+
+  return data
+
+}

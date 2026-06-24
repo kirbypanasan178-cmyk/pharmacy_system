@@ -8,7 +8,6 @@ export const useGetAllUsers = () => {
         dispatch(userStart())
         try {
             const data = await getAllUsersAPI()
-            console.log(data)
             dispatch(userSuccess(data))
         } catch (error: any) {
             console.log(error)

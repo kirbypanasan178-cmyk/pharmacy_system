@@ -9,12 +9,12 @@ export const getUserId = () => {
     try {
         const parsedUser = JSON.parse(storedUser)
 
-        if (!parsedUser?.user?._id) {
+        if (!parsedUser?._id) {
             console.error("Invalid user structure in local storage")
             return null
         }
 
-        return parsedUser.user._id
+        return parsedUser._id
 
     } catch (err) {
         console.error("Failedto parse user from local storage", err)

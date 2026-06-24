@@ -12,7 +12,7 @@ export const AccountLayout = () => {
   const parsedUser = storedUser ? JSON.parse(storedUser) : null
 
   const cart = useAppSelector((state) => state.cart.cart);
-
+  const user = useAppSelector((state) => state.auth.user)
   const items = cart?.items ?? [];
   const cartCount = items.length ?? 0;
 
@@ -42,11 +42,13 @@ export const AccountLayout = () => {
           </div>
 
           <span className="pc-navbar-sep">/</span>
-          <span className="pc-navbar-crumb">{parsedUser.user.email}</span>
+          <span className="pc-navbar-crumb">{parsedUser?.email}</span>
 
           {/* Actions */}
           <div className="pc-navbar-actions">
-            <button onClick={handleHome} className="pc-nav-btn" title="Home">
+            {user?.isActive && (
+              <>
+                <button onClick={handleHome} className="pc-nav-btn" title="Home">
               <span className="pc-nav-btn-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                   fill="currentColor" viewBox="0 0 16 16">
@@ -78,6 +80,8 @@ export const AccountLayout = () => {
               </span>
               <span className="pc-nav-label">Cart</span>
             </button>
+              </>
+            )}
           </div>
         </div>
       </nav>

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  cancelOrderService,
   createOrderService,
   getAllOrderService,
   getOrderByIdService,
@@ -18,6 +19,7 @@ import { redisClient } from "../config/redis";
 import User from "../models/userModel";
 import { removeSelectedCartItemService } from "../services/cartService";
 import { Cart } from "../models/cartModel";
+import { decreaseStockService } from "../services/productService";
 
 const TTL_SECONDS = 60 * 60 * 24;
 
@@ -41,7 +43,6 @@ export const createOrderController = async (req: Request, res: Response) => {
 
       const paypalOrder = await createPayPalOrder(order.totalPrice.toString());
       order.paypalOrderId = paypalOrder.id;
-      console.log("paypalOrder =", JSON.stringify(paypalOrder, null, 2));
       await order.save();
 
       const approveLink = paypalOrder.links?.find(
@@ -79,6 +80,9 @@ export const createOrderController = async (req: Request, res: Response) => {
         TTL_SECONDS,
       );
     }
+
+    await decreaseStockService(order.items)
+
     const cart = await Cart.findOne({ userId });
 
     if (cart) {
@@ -138,7 +142,6 @@ export const capturePayPalOrderController = async (
         return res.json({ message: "Order already captured" });
       }
 
-      console.error("PayPal capture error:", JSON.stringify(data, null, 2));
       return res.status(400).json({ error: data });
     }
 
@@ -152,9 +155,10 @@ export const capturePayPalOrderController = async (
       return res.status(404).json({ error: "Order not found" });
     }
 
+    await decreaseStockService(updateOrder.items);
+
     const cart = await Cart.findOne({ userId: updateOrder.userId });
     if (cart) {
-      
       const orderedProductIds = new Set(
         updateOrder.items.map((item) => item.product.toString()), // or item.productId
       );
@@ -308,3 +312,23 @@ export const getSalesTodayController = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const cancelOrderController = async (req: Request, res: Response) => {
+  try {
+    const { orderId } = req.params
+
+    const updateOrder = await cancelOrderService(orderId as string)
+
+    res.status(200).json({ 
+      message: "Order cancelled successfully",
+      order: updateOrder,
+    })
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+      return;
+    }
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

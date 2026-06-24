@@ -15,7 +15,6 @@ export const useGetRevenueThisYear = () => {
         const fetchData = async () => {
             try {
                 const result = await getRevenueThisYearAPI()
-                console.log("Get revenue this year: ", result)
                 setData(result)
             } catch (err: any) {
                 setError(err.message)

@@ -5,6 +5,7 @@ import type { PaymentStatus, Status } from "../../types/order";
 import { getInitials } from "../../utils/getInitials";
 import type { Order } from "../../features/orderSlice";
 import { OrderDetailsModal } from "../modals/OrderDetailsModal";
+import { useCancelOrder } from "../../hooks/order/useCancelOrder";
 
 const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: "pending",   label: "Pending" },
@@ -55,6 +56,7 @@ export const OrderTable = ({ filteredOrders }: any) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
   const { updateAdminOrder } = useUpdateAdminOrder();
+  const { cancelOrder } = useCancelOrder()
 
   const toggleMenu = (id: string) => {
     setOpenMenuId(openMenuId === id ? null : id);
@@ -75,6 +77,11 @@ export const OrderTable = ({ filteredOrders }: any) => {
     );
     setEditingOrderId(null);
   };
+
+  const handleCancel = async (orderId: string) => {
+    await cancelOrder(orderId)
+    setOpenMenuId(null)
+  }
   
   
   return (
@@ -266,7 +273,9 @@ export const OrderTable = ({ filteredOrders }: any) => {
                                 Edit order
                               </button>
                               <div className="ot-dd-sep" />
-                              <button className="ot-dd-item ot-dd-item--danger">
+                              <button 
+                              onClick={() => handleCancel(order._id)}
+                              className="ot-dd-item ot-dd-item--danger">
                                 <i className="bi bi-x-circle" />
                                 Cancel order
                               </button>

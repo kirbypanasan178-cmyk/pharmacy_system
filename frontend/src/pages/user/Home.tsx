@@ -56,7 +56,7 @@ export const Home = () => {
   const { getAllProduct } = useGetAllProduct();
   const { getAllCart } = useGetAllCart();
 
-  const categories = useAppSelector((state) => state.category.categories);
+  const categories = useAppSelector((state) => state?.category.categories);
   const navigate = useNavigate();
 
   const [search, setSearch] = useState<string>("");
@@ -74,7 +74,7 @@ export const Home = () => {
       getAllCategory();
       getAllProduct();
       if (!user || !user._id) return;
-      await getAllCart();
+      getAllCart();
     };
     fetch();
   }, []);

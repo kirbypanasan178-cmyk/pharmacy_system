@@ -81,13 +81,13 @@ export const loginController = async (req: Request, res: Response) => {
         const token = createToken(user._id.toString())
 
         res.status(200).json({ 
-            user: {
-                _id: user._id,
-                email: user.email,
-                role: user.role,
-                isActive: user.isActive
-            },
-            token })
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+            isActive: user.isActive,
+            createdAt: user.createdAt,
+            token,
+        })
 
     } catch (error: unknown) {
     if (error instanceof Error) {

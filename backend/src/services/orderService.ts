@@ -1,5 +1,6 @@
 import { Cart } from "../models/cartModel"
 import { Order } from "../models/orderModel"
+import Product from "../models/productModel"
 import { AddressType, PaymentMethod, PaymentStatus, Status } from "../types/order"
  "../models/orderModel"
 
@@ -179,5 +180,34 @@ export const getTotalSalesTodayService = async () => {
 
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Failed to get orders today")
+    }
+}
+
+export const cancelOrderService = async (orderId: string) => {
+    try {
+        const order = await Order.findById(orderId)
+
+        if (!order) throw new Error("Order not found")
+        
+        if (order.status === "cancelled") {
+            throw new Error("Order already cancelled")
+        }
+
+        const restoreOperations = order.items.map((item: any) => ({
+            updateOne: {
+                filter: { _id: item.product, stock: {$gte: 0} },
+                update: { $inc: { stock: item.quantity } }
+            }
+        }))
+
+        await Product.bulkWrite(restoreOperations)
+
+        order.status = "cancelled"
+        order.save()
+
+        return order
+
+    } catch (error) {
+
     }
 }

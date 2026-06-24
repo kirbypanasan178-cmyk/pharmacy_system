@@ -5,7 +5,7 @@ interface User {
     email: string;
     role: string;
     token: string;
-    isActive: string;
+    isActive: boolean;
     createdAt: string
 }
 

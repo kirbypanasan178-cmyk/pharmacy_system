@@ -15,7 +15,6 @@ export const useGetWeeklyRevenue = () => {
         const fetchData = async () => {
             try {
                 const result = await getWeeklyRevenueAPI()
-                console.log("Weekly revenue: ", result)
                 setData({
                     day: result.map((r: { day: string; revenue: number }) => r.day),
                     revenue: result.map((r: { day: string; revenue: number }) => r.revenue),
