@@ -8,6 +8,7 @@ import type { Product } from "../../features/productSlice";
 import { useGetAllCategory } from "../../hooks/category/useGetAllCategory";
 import { useGetAllProduct } from "../../hooks/product/useGetAllProduct";
 import { useGetAllCart } from "../../hooks/cart/useGetAllCart";
+import { Footer } from "../../components/layout/Footer";
 
 const getStockStatus = (stock: number): "in-stock" | "low-stock" | "out" => {
   if (stock <= 0)  return "out";
@@ -293,6 +294,7 @@ export const Home = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 };

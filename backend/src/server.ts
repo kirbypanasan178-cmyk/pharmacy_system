@@ -11,6 +11,7 @@ import orderRoute from "./routes/orderRoute.js"
 import analyticsRoute from "./routes/analyticsRoute.js"
 import pharmacyRoute from "./routes/pharmacyRoute.js"
 import paymentRoute from "./routes/paymentRoute.js"
+import emailRoute from "./routes/emailRoute.js"
 
 dotenv.config()
 
@@ -32,6 +33,7 @@ app.use("/api/order", orderRoute)
 app.use("/api/analytics", analyticsRoute)
 app.use("/api/pharmacy", pharmacyRoute)
 app.use("/api/payment", paymentRoute)
+app.use("/api/email", emailRoute)
 
 const startServer = async (): Promise<void> => {
     try {

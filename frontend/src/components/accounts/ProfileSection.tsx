@@ -107,7 +107,7 @@ export const ProfileSection = () => {
 
     return (
         <div style={{ width: "80vw", maxWidth: "100%" }}>
-            <div className="card shadow-sm rounded-3 overflow-hidden border-0">
+            <div className="card shadow-sm rounded-3 overflow-auto border-0">
 
                 {/* Header */}
                 <div className="px-4 pt-4 pb-3 border-bottom" style={{ background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)" }}>

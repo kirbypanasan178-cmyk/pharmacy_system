@@ -8,10 +8,15 @@ export interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Profile",         path: "/account/profile",  icon: "ti ti-user"         },
-  { label: "Change Password", path: "/account/password", icon: "ti ti-lock"         },
-  { label: "Privacy",         path: "/account/privacy",  icon: "ti ti-shield"       },
-  { label: "My Orders",       path: "/account/orders",   icon: "ti ti-shopping-bag" },
+  { label: "Profile", path: "/account/profile", icon: "ti ti-user" },
+  {
+    label: "Verification",
+    path: "/account/verification",
+    icon: "ti ti-briefcase",
+  },
+  { label: "Change Password", path: "/account/password", icon: "ti ti-lock" },
+  { label: "Privacy", path: "/account/privacy", icon: "ti ti-shield" },
+  { label: "My Orders", path: "/account/orders", icon: "ti ti-shopping-bag" },
 ];
 
 interface AccountNavbarProps {
@@ -35,8 +40,6 @@ export const AccountNavbar = ({
 
   return (
     <nav aria-label="Account navigation" className="account-nav">
-  
-
       {/* Section label */}
       <p className="account-nav-section-label">My Account</p>
 
@@ -59,7 +62,10 @@ export const AccountNavbar = ({
 
       {/* Logout */}
       <div className="account-nav-logout-wrap">
-        <button className="account-nav-btn account-nav-logout" onClick={handleLogout}>
+        <button
+          className="account-nav-btn account-nav-logout"
+          onClick={handleLogout}
+        >
           <i className="ti ti-logout account-nav-icon" aria-hidden="true" />
           <span>Log out</span>
         </button>

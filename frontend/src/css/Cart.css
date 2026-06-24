@@ -46,7 +46,6 @@
   margin: 0 auto;
   padding: 0 20px 100px;
   font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
   background: var(--surface);
 }
 

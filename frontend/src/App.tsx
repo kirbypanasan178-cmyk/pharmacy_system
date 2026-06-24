@@ -23,6 +23,7 @@ import { Account } from "./pages/user/Account";
 import PaymentSuccess from "./pages/user/PaymentSuccess";
 import PaymentFailed from "./pages/user/PaymentFailed";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
+import { VerificationSection } from "./components/accounts/VerificationSection";
 
 function App() {
   return (
@@ -88,6 +89,7 @@ function App() {
         >
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<ProfileSection />} />
+          <Route path="verification" element={<VerificationSection />} />
           <Route path="password" element={<PasswordSection />} />
           <Route path="privacy" element={<PrivacySection />} />
           <Route path="orders" element={<OrderSection />} />

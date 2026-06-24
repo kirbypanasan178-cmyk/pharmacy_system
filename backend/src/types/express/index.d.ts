@@ -6,6 +6,8 @@ declare global {
       user?: {
         _id: Types.ObjectId;
         role: string;
+        fullname: string;
+        email: string;
       };
     }
   }

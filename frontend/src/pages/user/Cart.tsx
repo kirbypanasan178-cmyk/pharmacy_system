@@ -7,6 +7,7 @@ import { OrderFormModal } from "../../components/modals/OrderFormModal";
 import { useRemoveSelectedCartItem } from "../../hooks/cart/useRemoveSelectedCartItem";
 import { useGetAllCart } from "../../hooks/cart/useGetAllCart";
 import { setSelectedCartItemIds, toggleSelectedCartItem } from "../../features/cartSlice";
+import { Footer } from "../../components/layout/Footer";
 
 export const Cart = () => {
   const { cart, loading, error, selectedCartItemIds } = useAppSelector((state) => state.cart);
@@ -282,6 +283,8 @@ export const Cart = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
+      <Footer />
     </div>
   );
 };
